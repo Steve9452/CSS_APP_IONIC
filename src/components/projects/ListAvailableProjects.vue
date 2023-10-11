@@ -1,7 +1,17 @@
 <template>
 <div>
-    <div v-if="!applyPermission" class="alert alert-warning" role="alert">
-        No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.
+    <div >
+        <p v-if="!applyPermission" class="alert alert-warning" role="alert">
+            No es posible aplicar a un nuevo proyecto.
+        </p>
+        <p v-if="!applyPermission" class="alert alert-warning" role="alert">
+            Ha excedido la cantidad de solicitudes diarias. Inténtelo nuevamente mañana. 
+        </p>
+
+    </div>
+
+    <div v-if="activeProject" class="alert alert-warning" role="alert">
+        Ya se encuentra inscrito en un proyecto activo. Le invitamos a revisar el estado de la solicitud en proyectos aplicados.
     </div>
 
     <div v-if="projects.length > 0">
@@ -10,6 +20,7 @@
             :key="project.idProyecto"
             :project-data="project"
             :apply-permission="applyPermission"
+            :active-project="activeProject"
             :show-unapply="false"
             v-on:dataUpdated="getAvailableProjects()">
         </show-project>
@@ -38,7 +49,7 @@
 		components: {
 			ShowProject
 		},
-        props: ['applyPermission'],
+        props: ['applyPermission', 'activeProject'	],
         data: function () {
             return {
                 apiToken: '',
@@ -58,7 +69,6 @@
                         'Authorization': 'Bearer ' + this.apiToken
                     }
                 });
-
                 const data = await request.json();
 
                 if(request.status === 200) {

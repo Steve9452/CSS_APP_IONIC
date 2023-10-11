@@ -23,6 +23,13 @@
                 <ion-label><small>Estudiantes</small></ion-label>
                 <ion-icon :icon="people"></ion-icon>
             </ion-segment-button>
+
+            <ion-segment-button value="reunion" @click="view = 'reunion';">
+                <ion-label>
+                    <small>Reunion</small>
+                </ion-label>
+                <ion-icon :icon="list"></ion-icon>
+            </ion-segment-button>
         </ion-segment>
 
         <ion-card class="my-3" color="light" v-if="view === 'general'">
@@ -153,41 +160,41 @@
                     </h6>
                 </div>
 
-                <div v-for="student in project.students" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
-                        <ion-label>
-                            <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
-                            <small>
-                                {{ student.correo }}
-                                <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
-                            </small>
-                        </ion-label>
+                <div v-for="student in project.students" :key="student.idUser">    
+                <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                    <ion-label>
+                        <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
+                        <small>
+                            {{ student.correo }}
+                            <br>
+                            <small class="text-muted">{{ student.carrera.nombre }} -
+                                {{ student.carrera.facultad.nombre }}</small>
+                        </small>
+                    </ion-label>
 
-                        <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
-                            <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
-                                <ion-icon :icon="checkmark"></ion-icon>
-                            </ion-button>
-                            <ion-button color="danger" @click="sendApplicationRequest(student, 'deny')">
-                                <ion-icon :icon="closeCircle"></ion-icon>
-                            </ion-button>
-                        </ion-buttons>
+                    <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
+                        <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
+                            <ion-icon :icon="checkmark"></ion-icon>
+                        </ion-button>
+                        <ion-button color="danger" @click="sendApplicationRequest(student, 'deny')">
+                            <ion-icon :icon="closeCircle"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
 
-                        <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
-                            <small>PENDIENTE</small>
-                        </ion-badge>
+                    <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
+                        <small>PENDIENTE</small>
+                    </ion-badge>
 
-                        <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
-                            <small>ACEPTADO</small>
-                        </ion-badge>
+                    <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
+                        <small>ACEPTADO</small>
+                    </ion-badge>
 
-                        <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
-                            <small>RECHAZADO</small>
-                        </ion-badge>
-                    </ion-item>
-                </div>
-
+                    <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
+                        <small>RECHAZADO</small>
+                    </ion-badge>
+                </ion-item>
+</div>
+                
                 <ion-button class="mt-3" expand="block" color="dark" @click="closeModal()">
                     REGRESAR
                 </ion-button>
@@ -204,6 +211,88 @@
             </ion-card-content>
         </ion-card>
 
+        <!-- Pestana Programar Reunion  -->
+        <ion-card class="my-3" color="light" v-if="view === 'reunion'">
+            <ion-card-content>
+                <div class="form-group py-3 border-top border-bottom">
+                    <h2 class="text-center text-muted font-weight-bold">
+                        Programar reunion
+                    </h2>
+                </div>
+            
+                
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="fas fa-align-center"></i>&nbsp;Nombre del proyecto</label>
+                    <input v-model="project.name" type="text" class="form-control" placeholder="Nombre del Proyecto" disabled>
+                    <div class="text-danger">{{ validation.firstError('project.name') }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="fas fa-envelope-open-text"></i>&nbsp;Lugar o enlace</label>
+                    <input v-model="meetingPlace" type="text" class="form-control"
+                        placeholder="" >
+                    <div class="text-danger">{{ validation.firstError('project.ownerEmail') }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="fas fa-align-center"></i>&nbsp;Descripción</label>
+                    <textarea v-model="meetingDescription" class="form-control" placeholder="Opcional"></textarea>
+                    <div class="text-danger">{{ validation.firstError('project.description') }}</div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="far fa-calendar-alt"></i>&nbsp;Fecha</label>
+                    <ion-datetime v-model="meetingScheduleDate" display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"></ion-datetime>
+                    <div class="text-danger">{{ validation.firstError('project.startDate') }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="far fa-calendar-alt"></i>&nbsp;Hora (24h)</label>
+                    <ion-datetime v-model="meetingScheduleTime"  display-format="HH:mm" picker-format="HH:mm" >
+                    </ion-datetime>
+                    <div class="text-danger">{{ validation.firstError('project.endDate') }}</div>
+                </div>
+
+                <label class="text-muted font-weight-bold text-uppercase"><i
+                    class="fas fa-envelope-open-text"></i>&nbsp;Miembros</label>
+                <div v-for="student in project.acceptedStudents" :key="student.idUser">
+                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                        <ion-label>
+                            <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
+                            <small>
+                                {{ student.correo }}
+                                <br>
+                                <small class="text-muted">{{ student.carrera.nombre }} -
+                                    {{ student.carrera.facultad.nombre }}</small>
+                            </small>
+                        </ion-label>
+
+
+
+                        <ion-badge v-if="student.pivot.estado === 1" color="primary">
+                            <small>ACEPTADO</small>
+                        </ion-badge>
+
+
+                    </ion-item>
+                </div>
+
+                <div class="form-group mt-4" v-if="!disableInput">
+                    <ion-button expand="block" color="secondary" :disabled=this.meetingMailButtonStatus @click="sendMeetingRequest()">
+                        PROGRAMAR REUNION
+                    </ion-button>
+                </div>
+
+            </ion-card-content>
+        </ion-card>
+        
     </ion-content>
 </template>
 
@@ -211,7 +300,7 @@
     import SimpleVueValidator from 'simple-vue-validator';
     const Validator = SimpleVueValidator.Validator;
     import {
-        modalController
+        modalController,
     } from "@ionic/vue";
     import {
         checkmark,
@@ -245,17 +334,32 @@
                     ownerEmail: '',
                     careers: [],
                     students: [],
+                    acceptedStudents: [],
                 },
                 checkmark,
                 closeCircle,
                 list,
-                people
+                people,
+                meetingScheduleDate:'',
+                meetingScheduleTime:'',
+                meetingPlace:'',
+                meetingDescription:'',
+                acceptedStudentsEmails: [],
+                meetingMailButtonStatus: false,
             };
         },
         props: ['projectData'],
         created() {
             this.apiToken = this.getApiToken();
             this.userRol = this.getUserRolId();
+            // const currentDate = new Date();
+
+
+            // this.meetingScheduleDate = currentDate.toLocaleDateString('es-ES', { day: '2-digit',month: '2-digit', year: 'numeric'});
+            //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+
+
             if (this.userRol === 1) {
                 this.getAllCollegeCareers();
             }
@@ -420,10 +524,89 @@
                 console.log(this.projectData.estudiantes)
                 if (this.projectData.estudiantes) {
                     this.project.students = this.projectData.estudiantes;
+
+                    // filter students accepted
+                    this.project.acceptedStudents = this.project.students.filter(student => {
+                        return student.pivot.estado === 1;
+                    });
                 }
             },
             async closeModal() {
                 await modalController.dismiss();
+            },
+            async sendMeetingRequest(){
+
+                // Validate inputs 
+                if(this.meetingScheduleDate === '' || this.meetingScheduleTime === '' || this.meetingPlace === ''){
+                    this.showErrorToast('La fecha, hora y lugar son obligatorios.');
+                    return;
+                }
+
+                this.meetingMailButtonStatus = true;
+                const API_ENDOINT = this.getAPIEndpoint();
+
+                const emails = [];
+
+                this.project.acceptedStudents.forEach(element => {
+                    console.log(element.correo)
+                    emails.push(element.correo);
+                });
+                
+
+            
+                const selectedTime = new Date(this.meetingScheduleTime);
+                const parsedTime = selectedTime.toLocaleTimeString('us-EN', { hour: '2-digit', minute: '2-digit' });
+                
+                const selectedDate = new Date(this.meetingScheduleDate);
+                const parsedDate = selectedDate.toLocaleDateString('us-EN', { day: '2-digit',month: '2-digit', year: 'numeric'});
+
+                // console.log("Body");
+                // console.log(JSON.stringify({
+                //         estudiantes: emails,
+                //         fecha: parsedDate,
+                //         hora: parsedTime,
+                //         lugar: this.meetingPlace,
+                //         // eslint-disable-next-line
+                //         nombre_proyecto: this.project.name,
+                //         descripcion: this.meetingDescription,
+                //         encargado: this.project.owner,
+                //         // eslint-disable-next-line
+                //         encargado_correo : this.project.ownerEmail,
+                //     }));
+
+                
+                
+                const request = await fetch(API_ENDOINT+'/admin/sendMeetingMail',{
+                    method: "POST",
+                    // eslint-disable-next-line
+                    body: JSON.stringify({
+                        estudiantes: emails,
+                        fecha: parsedDate,
+                        hora: parsedTime,
+                        lugar: this.meetingPlace,
+                        // eslint-disable-next-line
+                        nombre_proyecto: this.project.name,
+                        descripcion: this.meetingDescription,
+                        encargado: this.project.owner,
+                        // eslint-disable-next-line
+                        encargado_correo : this.project.ownerEmail,
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                        'Authorization': 'Bearer ' + this.apiToken
+                    }
+                })
+
+                if(request.status === 200){
+                    this.showSuccessToast('Reunion programada exitosamente.');
+                this.closeModal();
+                }
+                else{
+                    this.showErrorToast('Algo salió mal al programar la reunion.');
+                   this.closeModal();
+                }
+
+                
             }
         },
         computed: {

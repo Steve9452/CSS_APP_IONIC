@@ -53,7 +53,7 @@
 	} from 'ionicons/icons';
 
 	export default {
-		props: ['projectData', 'applyPermission', 'showUnapply'],
+		props: ['projectData', 'applyPermission', 'showUnapply','activeProject'],
 		data: function () {
 			return {
 				userId: '',
@@ -271,7 +271,10 @@
 				}
 			},
 			async applyToProject() {
-				if (this.applyPermission) {
+
+				console.log("Apply permission " + this.applyPermission)
+				console.log("Proyecto activo " + this.activeProject)
+				if (this.applyPermission && !this.activeProject) {
 					const API_ENDOINT = this.getAPIEndpoint();
 					const request = await fetch(API_ENDOINT + `/postAplicarProyecto`, {
 						method: "POST",
@@ -289,9 +292,10 @@
 					if (request.status === 200) {
 						this.showSuccessToast('Solicitud enviada exitosamente.');
 						this.$emit('dataUpdated');
-						// location.reload();
+						location.reload();
 					} else {
 						this.showErrorToast('Algo salió mal al enviar la solicitud.');
+						location.reload();
 					}
 				} else {
 					this.showErrorToast('No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.');

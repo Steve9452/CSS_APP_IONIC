@@ -168,7 +168,6 @@ export default {
                     }),
                     headers: { "Content-type": "application/json; charset=UTF-8" }
                 })
-
                 if(request.status === 200) {
                     this.processCompleted = true;
                 } else {

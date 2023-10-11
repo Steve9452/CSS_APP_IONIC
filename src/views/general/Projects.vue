@@ -45,7 +45,8 @@
 		<!-- STUDENTS -->
 		<list-available-projects 
 			v-if="view === 'available'"
-			:applyPermission="applyPermission"/>
+			:applyPermission="applyPermission"
+			:activeProject="activeProject"/>
 
 		<list-applied-projects 
 			v-if="view === 'applied'"
@@ -78,6 +79,7 @@ export default {
 	data() {
 		return {
 			applyPermission: false,
+			activeProject: true,
 			apiToken: '',
 			userRol: '',
 			view: '',
@@ -107,15 +109,34 @@ export default {
 					"Content-type": "application/json; charset=UTF-8",
 					'Authorization': 'Bearer ' + this.apiToken
 				}
+			}).then(response => response.json()).then(data => {
+				console.log(data)
+				this.applyPermission = data.permiso === 1 ? true : false;
+				this.activeProject = data.proyectoActivo === 0 ? false : true;
+
+
 			});
+			console.log("Permisos apply/active")
+			console.log(this.applyPermission, this.activeProject)
 
-			if(request.status === 200) {
-				this.applyPermission = true;
-			} else {
-				this.showErrorToast('No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.');
-			}
+			// Refactorizar condiciones para que sean más legibles
+
+			// proyecto activo = 0 si no tiene proyecto activo
+			// permiso = 1 si no ha inscrito un proyecto ese dia
+
+
+			
+			// if(request.permiso === 1 && request.proyectoActivo === 0) {
+			// 	this.applyPermission = true;
+			// 	this.activeProject = false;
+			// } else {
+			// 	this.activeProject = request.proyectoActivo !== 0;
+			// 	this.showErrorToast(
+			// 		`${request.proyectoActivo !== 0 ? "Ya se encuentra inscrito en un proyecto actualmente. " : ""}` 
+			// 		+ `${request.permiso !== 1 ? "Ha excedido el numero máximo de solicitudes diarias. Inténtelo mañana nuevamente" : ""}`
+			// 		);
+			// }
 		},
-
 	},
 }
 </script>
