@@ -19,7 +19,7 @@
 					<small>{{ project.spaces_act }}/{{ project.spaces }} CUPOS</small>
 				</ion-badge>
 				<ion-badge :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
-					<small>{{ project.status === 1 ? 'ACTIVO' : 'INACTIVO'}}</small>
+					<small>{{ project.projectStatus }}</small>
 				</ion-badge>
 			</p>
 			<p>
@@ -49,7 +49,7 @@
 		heart,
 		addCircle,
 		trash,
-		chevronDown
+		chevronDown,
 	} from 'ionicons/icons';
 
 	export default {
@@ -63,11 +63,13 @@
 					id: '',
 					name: '',
 					status: '',
+					projectStatus: '',
 					counterpart: '',
 					spaces: '',
 					// eslint-disable-next-line
 					spaces_act: '',
 					description: '',
+					profile: '',
 					owner: '',
 					startDate: '',
 					endDate: '',
@@ -98,11 +100,13 @@
 				this.project.id = this.projectData.idProyecto;
 				this.project.name = this.projectData.nombre;
 				this.project.status = this.projectData.estado;
+				this.project.projectStatus = this.projectData.estado_proyecto;
 				this.project.counterpart = this.projectData.contraparte;
 				this.project.spaces = this.projectData.cupos;
 				// eslint-disable-next-line
 				this.project.spaces_act = this.projectData.cupos_act;
 				this.project.description = this.projectData.descripcion;
+				this.project.profile = this.projectData.perfil_estudiante;
 				this.project.owner = this.projectData.encargado;
 				this.project.startDate = this.projectData.fecha_inicio;
 				this.project.endDate = this.projectData.fecha_fin;
@@ -114,12 +118,7 @@
 
 				if (this.userRol === 1) {
 					this.projectOptions = [{
-							text: this.project.status === 1 ? 'Desactivar' : 'Activar',
-							icon: trash,
-							role: 'changeStatus',
-						},
-						{
-							text: 'Editar',
+							text: 'Editar proyecto',
 							icon: create,
 							role: 'details',
 						},
@@ -186,9 +185,6 @@
 				} = await actionSheet.onDidDismiss();
 
 				switch (role) {
-					case 'changeStatus':
-						this.changeProjectStatus();
-						break;
 					case 'details':
 						this.openModal();
 						break;
@@ -204,29 +200,6 @@
 					case 'unapply':
 						this.unapplyToProject();
 						break;
-				}
-			},
-			async changeProjectStatus() {
-				const estado = !this.project.status;
-				const API_ENDOINT = this.getAPIEndpoint();
-				const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
-					method: "PUT",
-					body: JSON.stringify({
-						idProyecto: this.project.id,
-						estado: estado
-					}),
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-						'Authorization': 'Bearer ' + this.apiToken
-					}
-				})
-
-				if (request.status === 200) {
-					this.showSuccessToast('Proyecto actualizado exitosamente.');
-					this.$emit('dataUpdated');
-					// location.reload();
-				} else {
-					this.showErrorToast('Algo salió mal al actualizar el proyecto.');
 				}
 			},
 			async addStudent() {

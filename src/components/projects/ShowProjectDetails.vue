@@ -28,7 +28,14 @@
                 <ion-label>
                     <small>Reunion</small>
                 </ion-label>
-                <ion-icon :icon="list"></ion-icon>
+                <ion-icon :icon="calendar"></ion-icon>
+            </ion-segment-button>
+
+            <ion-segment-button value="change-status" @click="view = 'change-status';" :hidden="disableInput">
+                <ion-label>
+                    <small>Cambiar estado</small>
+                </ion-label>
+                <ion-icon :icon="sync"></ion-icon>
             </ion-segment-button>
         </ion-segment>
 
@@ -97,6 +104,14 @@
                     <textarea v-model="project.description" class="form-control" placeholder="Descripcion"
                         :disabled="disableInput"></textarea>
                     <div class="text-danger">{{ validation.firstError('project.description') }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="fas fa-align-center"></i>&nbsp;Perfil del estudiante</label>
+                    <textarea v-model="project.profile" class="form-control" placeholder="Perfil del estudiante"
+                        :disabled="disableInput"></textarea>
+                    <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
                 </div>
 
                 <div class="form-group">
@@ -292,6 +307,38 @@
 
             </ion-card-content>
         </ion-card>
+
+        <ion-card class="my-3" color="light" v-if="view === 'change-status'" :hidden="disableInput">
+            <ion-card-content>
+                <div class="form-group py-3 border-top border-bottom">
+                    <h2 class="text-center text-muted font-weight-bold">
+                        Estado del Proyecto
+                    </h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="fas fa-people-arrows"></i>&nbsp;Estado del proyecto</label>
+                    <ion-select placeholder="Seleccionar" v-model="project.projectStatus" cancel-text="Cancelar">
+                        <ion-select-option value="En curso">En curso</ion-select-option>
+                        <ion-select-option value="Finalizado">Finalizado</ion-select-option>
+                        <ion-select-option value="Cancelado">Cancelado</ion-select-option>
+                    </ion-select>
+                    <!--<div class="text-danger">{{ validation.firstError('project.hoursType') }}</div>-->
+                </div>
+
+                <div class="form-group mt-4" v-if="!disableInput">
+                    <ion-button expand="block" color="primary" @click="changeProjectStatus()">
+                        ACTUALIZAR
+                    </ion-button>
+                </div>
+                <div class="form-group">
+                    <ion-button expand="block" color="dark" @click="closeModal()">
+                        REGRESAR
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
         
     </ion-content>
 </template>
@@ -306,7 +353,9 @@
         checkmark,
         closeCircle,
         list,
-        people
+        people,
+        calendar,
+        sync,
     } from 'ionicons/icons';
 
     export default {
@@ -340,6 +389,8 @@
                 closeCircle,
                 list,
                 people,
+                calendar,
+                sync,
                 meetingScheduleDate:'',
                 meetingScheduleTime:'',
                 meetingPlace:'',
@@ -456,6 +507,31 @@
                     this.FormValidationFailed();
                 }
             },
+            async changeProjectStatus() {
+				const estadoProyecto = this.project.projectStatus;
+                const estado = (estadoProyecto === 'En curso') ? 1 : 0;
+				const API_ENDOINT = this.getAPIEndpoint();
+				const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
+					method: "PUT",
+					body: JSON.stringify({
+						idProyecto: this.project.id,
+						estado: estado,
+						estadoProyecto: estadoProyecto
+					}),
+					headers: {
+						"Content-type": "application/json; charset=UTF-8",
+						'Authorization': 'Bearer ' + this.apiToken
+					}
+				})
+
+				if (request.status === 200) {
+					this.showSuccessToast('Proyecto actualizado exitosamente.');
+					this.$emit('dataUpdated');
+					// location.reload();
+				} else {
+					this.showErrorToast('Algo salió mal al actualizar el proyecto.');
+				}
+			},
             async sendApplicationRequest(student, status) {
                 const API_ENDOINT = this.getAPIEndpoint();
 
@@ -498,11 +574,13 @@
                 this.project.id = this.projectData.idProyecto;
                 this.project.name = this.projectData.nombre;
                 this.project.status = this.projectData.estado;
+                this.project.projectStatus = this.projectData.estado_proyecto;
                 this.project.counterpart = this.projectData.contraparte;
                 // eslint-disable-next-line
                 this.project.spacesAct = this.projectData.cupos_act;
                 this.project.spaces = this.projectData.cupos;
                 this.project.description = this.projectData.descripcion;
+                this.project.profile = this.projectData.perfil_estudiante;
                 this.project.owner = this.projectData.encargado;
                 // eslint-disable-next-line
                 this.project.startDate = this.projectData.fecha_inicio;
@@ -521,7 +599,7 @@
                     this.project.careers = careerIds;
                 }
 
-                console.log(this.projectData.estudiantes)
+                console.log(this.projectData)
                 if (this.projectData.estudiantes) {
                     this.project.students = this.projectData.estudiantes;
 
