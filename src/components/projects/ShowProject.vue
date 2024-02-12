@@ -19,7 +19,7 @@
 					<small>{{ project.spaces_act }}/{{ project.spaces }} CUPOS</small>
 				</ion-badge>
 				<ion-badge :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
-					<small>{{ project.projectStatus }}</small>
+					<small>{{ project.projectStatus.toUpperCase() }}</small>
 				</ion-badge>
 			</p>
 			<p>

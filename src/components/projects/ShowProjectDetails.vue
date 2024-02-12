@@ -429,6 +429,9 @@
             'project.description': function (value) {
                 return Validator.value(value).required('El campo descripción es obligatorio.');
             },
+            'project.profile': function (value) {
+                return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
+            },
             'project.owner': function (value) {
                 return Validator.value(value).required('El campo encargado es obligatorio.');
             },
@@ -599,7 +602,6 @@
                     this.project.careers = careerIds;
                 }
 
-                console.log(this.projectData)
                 if (this.projectData.estudiantes) {
                     this.project.students = this.projectData.estudiantes;
 

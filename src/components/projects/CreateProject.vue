@@ -49,6 +49,12 @@
     </div>
 
     <div class="form-group">
+        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Perfil del estudiante</label>
+        <textarea v-model="project.profile" class="form-control" placeholder="Perfil del estudiante"></textarea>
+        <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
+    </div>
+
+    <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Contraparte</label>
         <input v-model="project.counterpart" type="text" class="form-control" placeholder="Contraparte">
         <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
@@ -133,6 +139,9 @@ export default {
         },
         'project.description': function (value) {
             return Validator.value(value).required('El campo descripción es obligatorio.');
+        },
+        'project.profile': function (value) {
+            return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
         },
         'project.owner': function (value) {
             return Validator.value(value).required('El campo encargado es obligatorio.');
