@@ -8,17 +8,15 @@
 					<ion-label>
 						<small>Todos</small>
 					</ion-label>
-					<ion-icon :icon="rocket"></ion-icon>
 				</ion-segment-button>
 
 				<ion-segment-button value="history" @click="view = 'history';" v-if="userRol === 1">
 					<ion-label><small>Historial</small></ion-label>
-					<ion-icon :icon="timer"></ion-icon>
 				</ion-segment-button>
 
 				<ion-segment-button value="add" @click="view = 'add';" v-if="userRol === 1">
-					<ion-label><small>Nuevo</small></ion-label>
-					<ion-icon :icon="add"></ion-icon>
+					<ion-label> <small>Nuevo</small></ion-label>
+					
 				</ion-segment-button>
 
 
@@ -26,12 +24,10 @@
 					<ion-label>
 						<small>Disponibles</small>
 					</ion-label>
-					<ion-icon :icon="rocket"></ion-icon>
 				</ion-segment-button>
 
 				<ion-segment-button value="applied" @click="view = 'applied';" v-if="userRol === 2">
-					<ion-label><small>Aplicados</small></ion-label>
-					<ion-icon :icon="checkmarkDone"></ion-icon>
+					<ion-label class="ion-center"><small>Aplicados</small></ion-label>
 				</ion-segment-button>
 
 			</ion-segment>
@@ -65,7 +61,7 @@ import ListAvailableProjects from '../../components/projects/ListAvailableProjec
 import ListAppliedProjects from '../../components/projects/ListAppliedProjects.vue';
 
 
-import { rocket, checkmarkDone, logOut, timer, add } from 'ionicons/icons';
+import { rocket, checkmarkDone, addCircleOutline, logOut, timer, add } from 'ionicons/icons';
 
 export default {
 	components: {
@@ -87,6 +83,7 @@ export default {
 			checkmarkDone,
 			logOut,
 			timer,
+			addCircleOutline,
 			add
 		}
 	},
@@ -140,3 +137,9 @@ export default {
 	},
 }
 </script>
+
+<style scoped>
+	ion-icon {
+		font-size: 19px;
+	}
+</style>

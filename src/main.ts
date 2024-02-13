@@ -6,6 +6,13 @@ import router from './router';
 import mixins from './mixins';
 
 import {
+  IonChip,
+  IonCol,
+  IonGrid,
+  IonList,
+  IonMenu,
+  IonMenuToggle,
+  IonRow,
   IonicVue
 } from '@ionic/vue';
 
@@ -73,6 +80,8 @@ import {
   IonItem,
   IonBadge,
   IonSegmentButton,
+
+  IonMenuButton
   
 } from '@ionic/vue';
 
@@ -107,3 +116,17 @@ app.component('ion-segment', IonSegment);
 app.component('ion-item', IonItem);
 app.component('ion-badge', IonBadge);
 app.component('ion-segment-button', IonSegmentButton);
+
+app.component('ion-row', IonRow);
+app.component('ion-grid', IonGrid);
+app.component('ion-col', IonCol);
+
+app.component('ion-searchbar', IonSearchbar);
+
+app.component('ion-menu-button', IonMenuButton);
+app.component('ion-menu-toogle', IonMenuToggle);
+app.component('ion-list', IonList);
+app.component('ion-menu', IonMenu);
+app.component('ion-chip', IonChip);
+
+

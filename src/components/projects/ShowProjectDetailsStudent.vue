@@ -2,178 +2,143 @@
     <ion-header translucent>
         <ion-toolbar>
             <ion-buttons>
-                <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline" size="medium"></ion-icon>
-                </ion-button>
-                <ion-title>
-                    <h4>Editar</h4>
-                </ion-title>
+                <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline"></ion-icon> </ion-button>
             </ion-buttons>
+
+
+            <ion-segment :value="view">
+
+                <ion-segment-button value="general" @click="view = 'general';">
+                    <ion-label>
+                        <small>
+                            Info
+                        </small>
+                    </ion-label>
+                </ion-segment-button>
+
+                <ion-segment-button value="students" @click="view = 'students';">
+                    <ion-label><small>Estudiantes</small></ion-label>
+                </ion-segment-button>
+            </ion-segment>
         </ion-toolbar>
     </ion-header>
 
     <ion-content>
-
-        <ion-segment :value="view">
-
-            <ion-segment-button value="general" @click="view = 'general';">
-                <ion-label>
-                    <small>General</small>
-                </ion-label>
-                <ion-icon :icon="list"></ion-icon>
-            </ion-segment-button>
-
-            <ion-segment-button value="students" @click="view = 'students';">
-                <ion-label><small>Estudiantes</small></ion-label>
-                <ion-icon :icon="people"></ion-icon>
-            </ion-segment-button>
-
-            <ion-segment-button value="reunion" @click="view = 'reunion';">
-                <ion-label>
-                    <small>Reunion</small>
-                </ion-label>
-                <ion-icon :icon="list"></ion-icon>
-            </ion-segment-button>
-        </ion-segment>
-
-        <ion-card class="my-3" color="light" v-if="view === 'general'">
+        <ion-grid v-if="view === 'general'">
             <ion-card-content>
-                <div class="form-group py-3 border-top border-bottom">
-                    <h2 class="text-center text-muted font-weight-bold">
-                        Información del Proyecto
-                    </h2>
-                </div>
+                <ion-item>
+                    <ion-grid>
+                        <ion-row>
+                            <ion-text class="modal-title" v-text="project.name"> </ion-text>
+                        </ion-row>
+                        <ion-row>
+                            <ion-text>
+                                <ion-label class="text-muted font-weight-ligth">
 
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Nombre</label>
-                    <input v-model="project.name" type="text" class="form-control" placeholder="Nombre del Proyecto"
-                        :disabled="disableInput">
-                    <div class="text-danger">{{ validation.firstError('project.name') }}</div>
-                </div>
+                                    {{ project.counterpart }}
+                                </ion-label>
+                            </ion-text>
+                        </ion-row>
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="far fa-user"></i>{{ `
+                                ${project.owner}` }} &nbsp;</ion-label>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
 
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="far fa-user"></i>&nbsp;Encargado</label>
-                    <input v-model="project.owner" type="text" class="form-control" placeholder="Encargado del Proyecto"
-                        :disabled="disableInput">
-                    <div class="text-danger">{{ validation.firstError('project.owner') }}</div>
-                </div>
+                <ion-item>
+                    <ion-grid  class="gapped-grid-2">
 
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-envelope-open-text"></i>&nbsp;Correo</label>
-                    <input v-model="project.ownerEmail" type="text" class="form-control" placeholder="Correo del Encargado"
-                        :disabled="disableInput">
-                    <div class="text-danger">{{ validation.firstError('project.ownerEmail') }}</div>
-                </div>
+                        <ion-row>
+                            <ion-button color="secondary"> Aplicar </ion-button>
+                        </ion-row>
+                        
+                        <ion-row>
+                            <ion-chip color="primary" class="mr-1">
+                                <small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
+                            </ion-chip>
+                            <ion-chip :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
+                                <small>{{ project.hoursType }}</small>
+                            </ion-chip>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
 
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-people-arrows"></i>&nbsp;Cupos</label>
-                    <input v-model="project.spaces" type="number" class="form-control" placeholder="Numero de cupos"
-                        :disabled="disableInput">
-                    <div class="text-danger">{{ validation.firstError('project.spaces') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-people-arrows"></i>&nbsp;Tipo
-                        de
-                        Horas</label>
-                    <ion-select placeholder="Seleccionar" v-model="project.hoursType" cancel-text="Cancelar">
-                        <ion-select-option value="Internas">Internas</ion-select-option>
-                        <ion-select-option value="Externas">Externas</ion-select-option>
-                    </ion-select>
-                    <div class="text-danger">{{ validation.firstError('project.hoursType') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-people-arrows"></i>&nbsp;Horario</label>
-                    <input v-model="project.schedule" type="text" class="form-control" placeholder="Horario"
-                        :disabled="disableInput">
-                    <div class="text-danger">{{ validation.firstError('project.schedule') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Descripción</label>
-                    <textarea v-model="project.description" class="form-control" placeholder="Descripcion"
-                        :disabled="disableInput"></textarea>
-                    <div class="text-danger">{{ validation.firstError('project.description') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Contraparte</label>
-                    <input v-model="project.counterpart" type="text" class="form-control" placeholder="Contraparte"
-                        :disabled="disableInput">
-                    <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
-                </div>
+                <ion-item>
+                    <ion-grid  class="gapped-grid">
+                        <ion-label class="text-muted font-weight-ligth">
+                            <i class="fas fa-envelope-open-text"></i>Correo &nbsp;</ion-label>
+                        <ion-row>
+                            <ion-text>
+                                {{ project.ownerEmail }}
+                            </ion-text>
+                        </ion-row>
 
 
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha
-                        de
-                        Inicio</label>
-                    <ion-datetime v-model="project.startDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY"
-                        :disabled="disableInput"></ion-datetime>
-                    <div class="text-danger">{{ validation.firstError('project.startDate') }}</div>
-                </div>
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="fas fa-people-arrows"></i>Horario
+                                &nbsp;</ion-label>
+                            <ion-text v-text="project.schedule" type="text" class="" placeholder="Horario"> </ion-text>
+                        </ion-row>
 
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha
-                        de
-                        Finalización</label>
-                    <ion-datetime v-model="project.endDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY"
-                        :disabled="disableInput">
-                    </ion-datetime>
-                    <div class="text-danger">{{ validation.firstError('project.endDate') }}</div>
-                </div>
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Descripción
+                                &nbsp;</ion-label>
+                            <ion-text v-text="project.description" class="" placeholder="Descripcion"> </ion-text>
+                        </ion-row>
 
-                <div class="form-group" v-if="userRol === 1">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-graduation-cap"></i>&nbsp;Carreras</label>
-                    <ion-select v-model="project.careers" placeholder="Seleccionar" cancel-text="Cancelar" multiple>
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="far fa-calendar-alt"></i>Fecha de
+                                Inicio &nbsp;</ion-label>
+                            <ion-text v-text="project.startDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY">
+                            </ion-text>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="far fa-calendar-alt"></i>Fecha de
+                                Finalización &nbsp;</ion-label>
+                            <ion-text v-text="project.endDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY">
+                            </ion-text>
+
+                        </ion-row>
+
+                        <!---ion-row v-if="userRol === 1">
+                    <ion-label class="text-muted font-weight-ligth"><i
+                            class="fas fa-graduation-cap"></i>&nbsp;Carreras</ion-label>
+                    <ion-select v-text="project.careers" placeholder="Seleccionar" cancel-text="Cancelar" multiple>
                         <ion-select-option v-for="item in collegeCareers" :key="item.idCarrera" :value="item.idCarrera">
                             {{ item.nombre }}
                         </ion-select-option>
                     </ion-select>
-                    <div class="text-danger">{{ validation.firstError('project.careers') }}</div>
-                </div>
+                </div-->
 
-                <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" color="primary" @click="updateProject()">
-                        ACTUALIZAR
-                    </ion-button>
-                </div>
-                <div class="form-group">
-                    <ion-button expand="block" color="dark" @click="closeModal()">
-                        REGRESAR
-                    </ion-button>
-                </div>
+                    </ion-grid>
+                </ion-item>
+
             </ion-card-content>
-        </ion-card>
+        </ion-grid>
 
 
-        <ion-card class="my-3" color="light" v-if="view === 'students'">
+
+        <ion-grid class="my-3" color="light" v-if="view === 'students'">
             <ion-card-content v-if="project.students.length > 0">
-                <div class="form-group py-2 border-top border-bottom">
-                    <h6 class="text-center text-muted font-weight-bold">
-                        Solicitudes de Estudiantes
+                <ion-row class="form-group py-2 border-top border-bottom">
+                    <h6 class="text-center text-muted font-weight-ligth">
+                        Solicitudes
                     </h6>
-                </div>
+                </ion-row>
 
-                <div v-for="student in project.students" :key="student.idUser">
+                <ion-row v-for="student in project.students" :key="student.idUser">
                     <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
-                        <ion-label>
-                            <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
+                        <ion-ion-label>
+                            <h6 class="text-primary">{{ student.nombres }} {{ student.apellidos }}</h6>
                             <small>
                                 {{ student.correo }}
                                 <br>
                                 <small class="text-muted">{{ student.carrera.nombre }} -
                                     {{ student.carrera.facultad.nombre }}</small>
                             </small>
-                        </ion-label>
+                        </ion-ion-label>
 
                         <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
                             <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
@@ -196,11 +161,9 @@
                             <small>RECHAZADO</small>
                         </ion-badge>
                     </ion-item>
-                </div>
+                </ion-row>
 
-                <ion-button class="mt-3" expand="block" color="dark" @click="closeModal()">
-                    REGRESAR
-                </ion-button>
+
             </ion-card-content>
 
             <ion-card-content v-else>
@@ -208,95 +171,12 @@
                 <h1 class="text-primary text-center font-weight-bolder">
                     Hmmm
                 </h1>
-                <p class="text-muted text-center">
+                <ion-text class="text-muted text-center">
                     Parece ser que no se encontraron registros.
-                </p>
+                </ion-text>
             </ion-card-content>
-        </ion-card>
+        </ion-grid>
 
-        <!-- Pestana Programar Reunion  -->
-        <ion-card class="my-3" color="light" v-if="view === 'reunion'">
-            <ion-card-content>
-                <div class="form-group py-3 border-top border-bottom">
-                    <h2 class="text-center text-muted font-weight-bold">
-                        Programar reunion
-                    </h2>
-                </div>
-
-
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Nombre del proyecto</label>
-                    <input v-model="project.name" type="text" class="form-control" placeholder="Nombre del Proyecto"
-                        disabled>
-                    <div class="text-danger">{{ validation.firstError('project.name') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-envelope-open-text"></i>&nbsp;Lugar o enlace</label>
-                    <input v-model="meetingPlace" type="text" class="form-control" placeholder="">
-                    <div class="text-danger">{{ validation.firstError('project.ownerEmail') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Descripción</label>
-                    <textarea v-model="meetingDescription" class="form-control" placeholder="Opcional"></textarea>
-                    <div class="text-danger">{{ validation.firstError('project.description') }}</div>
-                </div>
-
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="far fa-calendar-alt"></i>&nbsp;Fecha</label>
-                    <ion-datetime v-model="meetingScheduleDate" display-format="DD/MM/YYYY"
-                        picker-format="DD/MM/YYYY"></ion-datetime>
-                    <div class="text-danger">{{ validation.firstError('project.startDate') }}</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Hora
-                        (24h)</label>
-                    <ion-datetime v-model="meetingScheduleTime" display-format="HH:mm" picker-format="HH:mm">
-                    </ion-datetime>
-                    <div class="text-danger">{{ validation.firstError('project.endDate') }}</div>
-                </div>
-
-                <label class="text-muted font-weight-bold text-uppercase"><i
-                        class="fas fa-envelope-open-text"></i>&nbsp;Miembros</label>
-                <div v-for="student in project.acceptedStudents" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
-                        <ion-label>
-                            <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
-                            <small>
-                                {{ student.correo }}
-                                <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
-                            </small>
-                        </ion-label>
-
-
-
-                        <ion-badge v-if="student.pivot.estado === 1" color="primary">
-                            <small>ACEPTADO</small>
-                        </ion-badge>
-
-
-                    </ion-item>
-                </div>
-
-                <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" color="secondary" :disabled=this.meetingMailButtonStatus
-                        @click="sendMeetingRequest()">
-                        PROGRAMAR REUNION
-                    </ion-button>
-                </div>
-
-            </ion-card-content>
-        </ion-card>
 
     </ion-content>
 </template>
@@ -311,8 +191,9 @@ import {
     checkmark,
     closeCircle,
     list,
+    people,
     arrowBackOutline,
-    people
+
 } from 'ionicons/icons';
 
 export default {
@@ -344,9 +225,9 @@ export default {
             },
             checkmark,
             closeCircle,
-            arrowBackOutline,
             list,
             people,
+            arrowBackOutline,
             meetingScheduleDate: '',
             meetingScheduleTime: '',
             meetingPlace: '',
@@ -625,7 +506,25 @@ export default {
 </script>
 
 <style scoped>
-    ion-icon {
-        font-size: 1.5em;
-    }
+
+
+
+ion-grid.gapped-grid-2 > ion-row{
+
+    margin-top: 0.3em;
+    margin-bottom: 0.5em;
+}
+
+ion-grid.gapped-grid > ion-row{
+
+    margin-bottom: 1em;
+}
+ion-grid {
+
+    --ion-grid-row-padding: 30px;
+}
+
+ion-row {
+    border: 0px;
+}
 </style>

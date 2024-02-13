@@ -13,3 +13,7 @@ ion-select, ion-datetime {
     --placeholder-color: #6D767E;
     --placeholder-opacity: 1;
 }
+
+.modal-title {
+    font-size: 1.9em;
+}

@@ -1,44 +1,43 @@
 <template>
-	<ion-card class="my-3">
+	<ion-card class="my-3" >
 		<ion-item color="primary">
-			<ion-label>
+			<ion-label  @click="openModal">
 				<ion-card-subtitle style="color:white;">
 					{{ project.name }}
 				</ion-card-subtitle>
 			</ion-label>
 
 			<ion-buttons slot="end">
-				<ion-button v-if="project.status === 1" @click="presentActionSheet">
+				<ion-button v-if="project.status === 1" @click.prevent="presentActionSheet">
 					<ion-icon :icon="ellipsisHorizontal"></ion-icon>
 				</ion-button>
 			</ion-buttons>
 		</ion-item>
-		<ion-card-content>
-			<p>
-				<ion-badge color="primary" class="mr-1">
-					<small>{{ project.spaces_act }}/{{ project.spaces }} CUPOS</small>
-				</ion-badge>
-				<ion-badge :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
-					<small>{{ project.status === 1 ? 'ACTIVO' : 'INACTIVO'}}</small>
-				</ion-badge>
-			</p>
+		<ion-card-content @click="openModal">
 			<p>
 				{{ project.description }}
 			</p>
-			<ion-button @click="openModal" color="primary" fill="clear" size="small" class="mt-2" expand="block">
-				Ver Detalles
-				<ion-icon :icon="chevronDown"></ion-icon>
-			</ion-button>
+			<p>
+				<ion-chip color="primary" class="mr-1">
+					<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
+				</ion-chip>
+				<ion-chip :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
+					<small>{{ project.hoursType }}</small>
+				</ion-chip>
+			</p>
+							
 		</ion-card-content>
 	</ion-card>
 </template>
 
 <script>
 	import ShowProjectDetails from './ShowProjectDetails.vue';
+	import ShowProjectDetailsStudent from './ShowProjectDetailsStudent.vue';
 	import {
 		actionSheetController,
 		alertController,
-		modalController
+		modalController,
+		IonChip,
 	} from '@ionic/vue';
 	import {
 		ellipsisHorizontal,
@@ -53,6 +52,9 @@
 	} from 'ionicons/icons';
 
 	export default {
+		components:{
+			IonChip
+		},
 		props: ['projectData', 'applyPermission', 'showUnapply','activeProject'],
 		data: function () {
 			return {
@@ -327,7 +329,7 @@
 			async openModal() {
 				const modal = await modalController
 					.create({
-						component: ShowProjectDetails,
+						component: this.userRol === 1 ? ShowProjectDetails : ShowProjectDetailsStudent ,
 						componentProps: {
 							projectData: this.projectData
 						},
