@@ -61,9 +61,26 @@
 
         </ion-grid>
         <div v-if="projects.length > 0">
-            <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
+            <!-- <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                 :show-unapply="false" v-on:dataUpdated="getAllProjects()">
+            </show-project> -->
+
+            <ion-list>
+                <show-project  v-for="project in projects" :key="project.idProyecto" :project-data="project"
+                :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
+                v-on:dataUpdated="getAvailableProjects()">
             </show-project>
+            </ion-list>
+
+            <!-- <show-project  v-for="project in projects" :key="project.idProyecto" :project-data="project"
+                :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
+                v-on:dataUpdated="getAvailableProjects()">
+            </show-project> -->
+
+            <ion-infinite-scroll threshold="100px" @ionInfinite="getAllProjects($event)">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más proyectos...">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
 
         </div>
 
@@ -87,11 +104,16 @@
 import ShowProject from './ShowProject.vue'
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
 
-import { IonActionSheet, IonChip, actionSheetController } from '@ionic/vue';
+import { IonActionSheet, IonChip, actionSheetController, IonList,
+        IonInfiniteScroll,
+        IonInfiniteScrollContent, } from '@ionic/vue';
 
 export default {
     components: {
-        ShowProject, IonActionSheet, IonChip
+        ShowProject, IonActionSheet, IonChip,IonList,
+        // IonItem,
+        IonInfiniteScroll,
+        IonInfiniteScrollContent,
     },
     data: function () {
         return {
@@ -99,31 +121,75 @@ export default {
             searchOutline,
             filterOutline,
             swapVerticalOutline,
-            projects: []
+            projects: [],
+            page: 1,
         };
     },
     async created() {
         this.apiToken = await this.getApiToken();
-        this.getAllProjects();
+        this.loadData();
     },
     methods: {
-        async getAllProjects() {
+
+        async fetchData(){
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + '/admin/getTodosLosProyectos', {
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    'Authorization': 'Bearer ' + this.apiToken
-                }
+            const request = await fetch(API_ENDOINT + `/getAllProjects?page=${this.page}`, {
+
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                'Authorization': 'Bearer ' + this.apiToken
+            }
             });
-
             const data = await request.json();
-
             if (request.status === 200) {
-                this.projects = data;
+                this.page++;
             } else {
                 this.showErrorToast('Ups! Algo salió mal.');
             }
+            return data;
         },
+        async getAllProjects(ev = null) {
+            // console.log(ev)
+            
+            try{
+                // const request = await fetch(API_ENDOINT + '/getProyectosDisponibles', {
+                const data = await this.fetchData();
+                if(this.page === data.pagination.lastPage){
+                    console.log("No hay más proyectos")
+                    return;
+                }
+                data.proyectos.data.forEach(project => {
+                    this.projects.push(project);
+                });
+            // console.log(">>>>>>>>>>data: ")
+            // console.log(data);
+            
+            if (ev) {
+                ev.target.complete();
+            }
+            }
+            catch (error) {
+                console.log("Error: " + error);
+            }
+        },
+        async loadData() {
+        // const API_ENDOINT = this.getAPIEndpoint();
+        try{
+            const data = await this.fetchData();
+            // console.log(">>>>>>>>>>data:")
+            // console.log(data);
+            this.projects =data.proyectos.data;
+            // if (request.status === 200) {
+            //     this.page++;
+            // } else {
+            //     this.showErrorToast('Ups! Algo salió mal.');
+            // }
+
+            }
+            catch (error) {
+                console.log("Error: " + error);
+            }
+    },
 
     },
     setup() {
