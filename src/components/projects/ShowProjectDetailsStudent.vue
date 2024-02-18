@@ -4,8 +4,11 @@
             <ion-buttons>
                 <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline"></ion-icon> </ion-button>
             </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
 
-
+    <ion-content>
+        <ion-toolbar>
             <ion-segment :value="view">
 
                 <ion-segment-button value="general" @click="view = 'general';">
@@ -21,9 +24,6 @@
                 </ion-segment-button>
             </ion-segment>
         </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
         <ion-grid v-if="view === 'general'">
             <ion-card-content>
                 <ion-item>
@@ -47,12 +47,12 @@
                 </ion-item>
 
                 <ion-item>
-                    <ion-grid  class="gapped-grid-2">
+                    <ion-grid class="gapped-grid-2">
 
                         <ion-row>
                             <ion-button color="secondary"> Aplicar </ion-button>
                         </ion-row>
-                        
+
                         <ion-row>
                             <ion-chip color="primary" class="mr-1">
                                 <small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
@@ -65,7 +65,7 @@
                 </ion-item>
 
                 <ion-item>
-                    <ion-grid  class="gapped-grid">
+                    <ion-grid class="gapped-grid">
                         <ion-label class="text-muted font-weight-ligth">
                             <i class="fas fa-envelope-open-text"></i>Correo &nbsp;</ion-label>
                         <ion-row>
@@ -506,19 +506,17 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-ion-grid.gapped-grid-2 > ion-row{
+ion-grid.gapped-grid-2>ion-row {
 
     margin-top: 0.3em;
     margin-bottom: 0.5em;
 }
 
-ion-grid.gapped-grid > ion-row{
+ion-grid.gapped-grid>ion-row {
 
     margin-bottom: 1em;
 }
+
 ion-grid {
 
     --ion-grid-row-padding: 30px;

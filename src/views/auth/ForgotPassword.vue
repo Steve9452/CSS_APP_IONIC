@@ -7,7 +7,7 @@
 
                     <div class="form-group mt-3">
                         <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
-                        <input v-model="user.carnet" type="text" class="form-control" placeholder="Ingrese su carnet">
+                        <input v-model="user.carnet" type="text" class="form-control custom-form" placeholder="Ingrese su carnet">
                         <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
                     </div>
 

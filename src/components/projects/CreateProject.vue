@@ -2,25 +2,25 @@
 <div class="ion-padding">
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Nombre</label>
-        <input v-model="project.name" type="text" class="form-control" placeholder="Nombre del Proyecto">
+        <input v-model="project.name" type="text" class="form-control custom-form" placeholder="Nombre del Proyecto">
         <div class="text-danger">{{ validation.firstError('project.name') }}</div>
     </div>
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-user"></i>Encargado</label>
-        <input v-model="project.owner" type="text" class="form-control" placeholder="Encargado del Proyecto">
+        <input v-model="project.owner" type="text" class="form-control custom-form" placeholder="Encargado del Proyecto">
         <div class="text-danger">{{ validation.firstError('project.owner') }}</div>
     </div>
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-envelope-open-text"></i>&nbsp;Correo</label>
-        <input v-model="project.ownerEmail" type="text" class="form-control" placeholder="Correo del Encargado">
+        <input v-model="project.ownerEmail" type="text" class="form-control custom-form" placeholder="Correo del Encargado">
         <div class="text-danger">{{ validation.firstError('project.ownerEmail') }}</div>
     </div>
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-people-arrows"></i>&nbsp;Cupos</label>
-        <input v-model="project.spaces" type="number" class="form-control" placeholder="Numero de cupos">
+        <input v-model="project.spaces" type="number" class="form-control custom-form" placeholder="Numero de cupos">
         <div class="text-danger">{{ validation.firstError('project.spaces') }}</div>
     </div>
 
@@ -38,19 +38,19 @@
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-clock"></i>&nbsp;Horario</label>
-        <input v-model="project.schedule" type="text" class="form-control" placeholder="Horario">
+        <input v-model="project.schedule" type="text" class="form-control custom-form" placeholder="Horario">
         <div class="text-danger">{{ validation.firstError('project.schedule') }}</div>
     </div>
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Descripción</label>
-        <textarea v-model="project.description" class="form-control" placeholder="Descripcion"></textarea>
+        <textarea v-model="project.description" class="form-control custom-form" placeholder="Descripcion"></textarea>
         <div class="text-danger">{{ validation.firstError('project.description') }}</div>
     </div>
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Contraparte</label>
-        <input v-model="project.counterpart" type="text" class="form-control" placeholder="Contraparte">
+        <input v-model="project.counterpart" type="text" class="form-control custom-form" placeholder="Contraparte">
         <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
     </div>
 

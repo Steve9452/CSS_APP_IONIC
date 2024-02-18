@@ -23,7 +23,7 @@
 
         <div class="form-group">
             <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-envelope-open-text"></i>&nbsp;Correo</label>
-            <input v-model="student.email" type="text" class="form-control" placeholder="0980980@uca.edu.sv">
+            <input v-model="student.email" type="text" class="form-control custom-form" placeholder="0980980@uca.edu.sv">
             <div class="text-danger">{{ validation.firstError('student.email') }}</div>
         </div>
 

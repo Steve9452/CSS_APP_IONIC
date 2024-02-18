@@ -98,6 +98,10 @@ http://ionicframework.com/docs/theming/ */
     --ion-toolbar-segment-color-checked: #8ac5fc;
     --color-checked: #8ac5fc;
 
+    --ion-input-color: #414141; 
+    --ion-input-color-disabled: #1c1c1c; 
+    --ion-input-color-selected: #515151; 
+    --ion-overlay-background-color: #515151;
 
     --ion-color-primary-rgb: 78, 154, 212;
     --ion-color-primary-contrast: white;
