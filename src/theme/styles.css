@@ -32,7 +32,19 @@ ion-select, ion-datetime {
 .modal-title {
     font-size: 1.9em;
 }
-
+.action-sheet-title {
+    color: white;
+}
+.action-sheet-button {
+    color: white;
+    --button-color: white;
+}
+.center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
   ion-datetime {
     --background: rgb(245, 235, 247);
     --background-rgb: 245, 235, 247;

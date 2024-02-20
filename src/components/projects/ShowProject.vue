@@ -331,7 +331,10 @@
 					.create({
 						component: this.userRol === 1 ? ShowProjectDetails : ShowProjectDetailsStudent ,
 						componentProps: {
-							projectData: this.projectData
+							projectData: this.projectData,
+							showUnapply: this.showUnapply,
+							applyPermission: this.applyPermission,
+							activeProject: this.activeProject
 						},
 					});
 				modal.onDidDismiss().then(() => {
