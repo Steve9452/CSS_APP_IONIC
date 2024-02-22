@@ -37,18 +37,18 @@
                 <ion-col size="6">
                     <ion-chip class="large-chip" size="large" :outline="true">
                         <ion-icon :icon="searchOutline" color="secundary"></ion-icon>
-                        <ion-input placeholder="Buscar"></ion-input>
+                        <ion-input @ionInput="inputHandler" placeholder="Buscar"></ion-input>
                     </ion-chip>
                 </ion-col>
                 <ion-col size="3">
-                    <ion-chip @click="presentActionSheetFilter">
+                    <ion-chip @click="presentActionSheetFilter(presentActionSheetFilterFacultad, faculties, presentActionSheetFilterCarreras, careers, handleFilter, handleFilterId)">
                         <ion-icon :icon="filterOutline" color="secundary"></ion-icon>
                         <ion-label>Filtro</ion-label>
                     </ion-chip>
                 </ion-col>
 
                 <ion-col size="3">
-                    <ion-chip @click="presentActionSheetOrder">
+                    <ion-chip @click="presentActionSheetOrder(handleOrder)">
                         <ion-icon :icon="swapVerticalOutline" color="secundary"></ion-icon>
                         <ion-label>Orden</ion-label>
                     </ion-chip>
@@ -66,10 +66,10 @@
             </show-project> -->
 
             <ion-list>
-                <show-project  v-for="project in projects" :key="project.idProyecto" :project-data="project"
-                :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
-                v-on:dataUpdated="getAvailableProjects()">
-            </show-project>
+                <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
+                    :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
+                    v-on:dataUpdated="getAvailableProjects()">
+                </show-project>
             </ion-list>
 
             <!-- <show-project  v-for="project in projects" :key="project.idProyecto" :project-data="project"
@@ -104,13 +104,15 @@
 import ShowProject from './ShowProject.vue'
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
 
-import { IonActionSheet, IonChip, actionSheetController, IonList,
-        IonInfiniteScroll,
-        IonInfiniteScrollContent, } from '@ionic/vue';
+import {
+    IonActionSheet, IonChip, actionSheetController, IonList,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+} from '@ionic/vue';
 
 export default {
     components: {
-        ShowProject, IonActionSheet, IonChip,IonList,
+        ShowProject, IonActionSheet, IonChip, IonList,
         // IonItem,
         IonInfiniteScroll,
         IonInfiniteScrollContent,
@@ -122,23 +124,53 @@ export default {
             filterOutline,
             swapVerticalOutline,
             projects: [],
+            careers: [],
+            faculties: [],
+            nombreABuscar: "",
+            filtrarPor: "carrera",
+            filtroId: "-1",
+            orderBy: "recientes",
             page: 1,
+            carrersAndFaculties: {},
         };
     },
     async created() {
         this.apiToken = await this.getApiToken();
+        
+        this.carrersAndFaculties = await this.getCarrersAndFaculties();
+        
+        this.careers = this.carrersAndFaculties.data.carreras
+        
+        this.faculties = this.carrersAndFaculties.data.facultades
+
         this.loadData();
     },
     methods: {
 
-        async fetchData(){
+        async getCarrersAndFaculties() {
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + `/getAllProjects?page=${this.page}`, {
+            const request = await fetch(API_ENDOINT + `/getCarrerasYFacultades`, {
 
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                'Authorization': 'Bearer ' + this.apiToken
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            });
+            const data = await request.json();
+            if (request.status !== 200) {
+                this.showErrorToast('Ups! Algo salió mal.');
             }
+            return data;
+        },
+
+        async fetchData() {
+            const API_ENDOINT = this.getAPIEndpoint();
+            const request = await fetch(API_ENDOINT + `/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
+
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
             });
             const data = await request.json();
             if (request.status === 200) {
@@ -150,124 +182,182 @@ export default {
         },
         async getAllProjects(ev = null) {
             // console.log(ev)
-            
-            try{
+
+            try {
                 // const request = await fetch(API_ENDOINT + '/getProyectosDisponibles', {
                 const data = await this.fetchData();
-                if(this.page === data.pagination.lastPage){
+                if (this.page === data.pagination.lastPage) {
                     console.log("No hay más proyectos")
                     return;
                 }
-                data.proyectos.data.forEach(project => {
-                    this.projects.push(project);
-                });
-            // console.log(">>>>>>>>>>data: ")
-            // console.log(data);
-            
-            if (ev) {
-                ev.target.complete();
-            }
+                this.projects = this.projects.concat(data.proyectos.data);
+
+                // console.log(">>>>>>>>>>data: ")
+                // console.log(data);
+
+                if (ev) {
+                    ev.target.complete();
+                }
             }
             catch (error) {
                 console.log("Error: " + error);
             }
         },
         async loadData() {
-        // const API_ENDOINT = this.getAPIEndpoint();
-        try{
-            const data = await this.fetchData();
-            // console.log(">>>>>>>>>>data:")
-            // console.log(data);
-            this.projects =data.proyectos.data;
-            // if (request.status === 200) {
-            //     this.page++;
-            // } else {
-            //     this.showErrorToast('Ups! Algo salió mal.');
-            // }
+            // const API_ENDOINT = this.getAPIEndpoint();
+            try {
+                const data = await this.fetchData();
+                // console.log(">>>>>>>>>>data:")
+                // console.log(data);
+                this.projects = data.proyectos.data;
+                // if (request.status === 200) {
+                //     this.page++;
+                // } else {
+                //     this.showErrorToast('Ups! Algo salió mal.');
+                // }
 
             }
             catch (error) {
                 console.log("Error: " + error);
             }
-    },
-
-    },
-    setup() {
-        const presentActionSheetFilter = async () => {
+        },
+        resetData() {
+            this.page = 1
+            this.loadData()
+        },
+        inputHandler(ev) {
+            this.nombreABuscar = ev.target.value;
+            this.resetData()
+        },
+        handleOrder(order) {
+            this.orderBy = order;
+            this.resetData()
+        },
+        handleFilter(filter) {
+            this.filtrarPor = filter;
+        },
+        handleFilterId(id) {
+            this.filtroId = id;
+            this.resetData()
+        },
+        presentActionSheetFilter: async (actionFaculty, faculties, actionCareer, careers, handleFilter, handleFilterId) => {
             const actionSheet = await actionSheetController.create({
                 header: 'Filtrar por: ',
                 buttons: [
                     {
                         text: 'Facultad',
                         role: 'destructive',
-                        data: {
-                            action: 'delete',
-                        },
+                        handler: () => {
+                            handleFilter("facultad")
+                            actionFaculty(faculties, handleFilterId)
+                        }
                     },
                     {
                         text: 'Carrera',
-                        data: {
-                            action: 'share',
+                        role: 'destructive',
+                        handler: () => {
+                            handleFilter("carrera")
+                            actionCareer(careers, handleFilterId)
+
+                        }
+                    },{
+                        text: "Sin filtros",
+                        role: 'destructive',
+                        handler: () => {
+                            handleFilter("carrera")
+                            handleFilterId(-1)
                         },
-                    },
+                    } 
                 ],
             });
 
             await actionSheet.present();
-        };
+        },
 
-        const presentActionSheetOrder = async () => {
+        presentActionSheetOrder: async (handleOrder) => {
             const actionSheet = await actionSheetController.create({
+                header: "Ordenar por",
                 buttons: [
-                    /*header: 'Ordenar por:',
-                        {
-                        text: 'Horas Internas',
-                        role: 'destructive',
-                        data: {
-                            action: 'delete',
-                        },
-                        },
-                        {
-                        text: 'Horas Externas',
-                        role: 'destructive',
-                        data: {
-                            action: 'delete',
-                        },
-                        },
-                        */
                     {
                         text: 'Recientes',
-                        data: {
-                            action: 'share',
-                        },
+                        role: 'destructive',
+                        handler: () => {
+                            handleOrder('recientes')
+                        }
+                    },
+                    {
+                        text: 'Antiguos',
+                        role: 'destructive',
+                        handler: () => {
+                            handleOrder('antiguos')
+                        }
                     },
                     {
                         text: 'Mas cupos libres',
-                        data: {
-                            action: 'share',
-                        },
+                        role: 'destructive',
+                        handler: () => {
+                            handleOrder('mas_cupos')
+                        }
                     },
                     {
                         text: 'Menos cupos libres',
-                        data: {
-                            action: 'share',
-                        },
+                        role: 'destructive',
+                        handler: () => {
+                            handleOrder('menos_cupos')
+                        }
                     },
                     {
                         text: 'Número Solicitudes',
-                        data: {
-                            action: 'share',
-                        },
+                        role: 'destructive',
+                        handler: () => {
+                            handleOrder('n_solicitudes')
+                        }
                     },
 
                 ],
             });
 
             await actionSheet.present();
-        };
+        },
 
-        return { presentActionSheetFilter, presentActionSheetOrder };
-    },
+        presentActionSheetFilterCarreras: async (carrers, handleFilterId) => {
+
+            const actionSheet = await actionSheetController.create({
+                header: 'Carrera: ',
+                buttons: carrers.map(c => {
+                    return {
+                        text: c.nombre,
+                        role: 'destructive',
+                        handler: () => {
+                            handleFilterId(c.idCarrera)
+                        },
+                    }
+                })
+            });
+
+            await actionSheet.present();
+
+        },
+
+        presentActionSheetFilterFacultad: async (faculties, handleFilterId) => {
+            const actionSheet = await actionSheetController.create({
+                header: 'Carrera: ',
+                buttons: faculties.map(f => {
+                    return {
+                        text: f.nombre,
+                        role: 'destructive',
+                        handler: () => {
+                            handleFilterId(f.idFacultad)
+                        },
+                    }
+                }) 
+            });
+
+            await actionSheet.present();
+
+        }
+
+    }
 }
 </script>
 
