@@ -113,6 +113,7 @@
 				this.project.schedule = this.projectData.horario;
 				this.project.hoursType = this.projectData.tipo_horas;
 				this.project.ownerEmail = this.projectData.correo_encargado;
+				
 			},
 			async presentActionSheet() {
 

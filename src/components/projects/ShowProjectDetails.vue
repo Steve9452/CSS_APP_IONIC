@@ -490,7 +490,9 @@
                             tipo_horas: this.project.hoursType,
                             // eslint-disable-next-line
                             correo_encargado: this.project.ownerEmail,
-                            carreraPerfil: selectedCareers
+                            carreraPerfil: selectedCareers,
+                            // eslint-disable-next-line
+				            estado_proyecto: 'En curso'
                         }),
                         headers: {
                             "Content-type": "application/json; charset=UTF-8",
