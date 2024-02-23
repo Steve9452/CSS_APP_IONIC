@@ -85,7 +85,7 @@ http://ionicframework.com/docs/theming/ */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ion-color-primary: #003C71;
+    --ion-color-primary: #044d8d;
 
     --ion-background-color: #282828;
     --ion-text-color: white;
@@ -97,8 +97,13 @@ http://ionicframework.com/docs/theming/ */
     --ion-tab-bar-color-selected: #8ac5fc;
     --ion-toolbar-segment-color-checked: #8ac5fc;
     --color-checked: #8ac5fc;
-
-
+    --color: #ffff;
+    --button-color: #ffff;
+    --ion-input-color: #414141; 
+    --ion-input-color-disabled: #1c1c1c; 
+    --ion-input-color-selected: #515151; 
+    --ion-overlay-background-color: #515151;
+    --ion-color-step-850: #fffff;
     --ion-color-primary-rgb: 78, 154, 212;
     --ion-color-primary-contrast: white;
     --ion-color-primary-contrast-rgb: #030202;

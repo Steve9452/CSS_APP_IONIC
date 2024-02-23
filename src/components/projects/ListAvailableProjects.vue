@@ -220,15 +220,3 @@ export default {
 </script>
 
 
-<ion-col size="6">
-    <ion-chip class="large-chip" size="large" :outline="true">
-        <ion-icon :icon="searchOutline" color="secundary"></ion-icon>
-        <ion-input placeholder="Buscar"></ion-input>
-    </ion-chip>
-</ion-col>
-<ion-col size="3">
-    <ion-chip @click="presentActionSheetFilter">
-        <ion-icon :icon="filterOutline" color="secundary"></ion-icon>
-        <ion-label>Filtro</ion-label>
-    </ion-chip>
-</ion-col>

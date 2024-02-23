@@ -4,8 +4,11 @@
             <ion-buttons>
                 <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline"></ion-icon> </ion-button>
             </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
 
-
+    <ion-content>
+        <ion-toolbar>
             <ion-segment :value="view">
 
                 <ion-segment-button value="general" @click="view = 'general';">
@@ -21,9 +24,6 @@
                 </ion-segment-button>
             </ion-segment>
         </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
         <ion-grid v-if="view === 'general'">
             <ion-card-content>
                 <ion-item>
@@ -47,15 +47,18 @@
                 </ion-item>
 
                 <ion-item>
-                    <ion-grid  class="gapped-grid-2">
+                    <ion-grid class="gapped-grid-2">
+
+                        <ion-row v-if="!showUnapply">
+                            <ion-button color="secondary" @click="applyToProject()"> Aplicar </ion-button>
+                        </ion-row>
+                        <ion-row v-else> 
+                            <ion-button color="secondary" @click="unapplyToProject()"> Desaplicar </ion-button>
+                        </ion-row>
 
                         <ion-row>
-                            <ion-button color="secondary"> Aplicar </ion-button>
-                        </ion-row>
-                        
-                        <ion-row>
                             <ion-chip color="primary" class="mr-1">
-                                <small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
+                                <small>{{ project.spacesAct }}/{{ project.spaces }} Cupos</small>
                             </ion-chip>
                             <ion-chip :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
                                 <small>{{ project.hoursType }}</small>
@@ -65,7 +68,7 @@
                 </ion-item>
 
                 <ion-item>
-                    <ion-grid  class="gapped-grid">
+                    <ion-grid class="gapped-grid">
                         <ion-label class="text-muted font-weight-ligth">
                             <i class="fas fa-envelope-open-text"></i>Correo &nbsp;</ion-label>
                         <ion-row>
@@ -120,13 +123,8 @@
 
 
 
-        <ion-grid class="my-3" color="light" v-if="view === 'students'">
+        <ion-grid class="my-3" v-if="view === 'students'">
             <ion-card-content v-if="project.students.length > 0">
-                <ion-row class="form-group py-2 border-top border-bottom">
-                    <h6 class="text-center text-muted font-weight-ligth">
-                        Solicitudes
-                    </h6>
-                </ion-row>
 
                 <ion-row v-for="student in project.students" :key="student.idUser">
                     <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
@@ -166,7 +164,7 @@
 
             </ion-card-content>
 
-            <ion-card-content v-else>
+            <ion-card-content class="center" v-else>
                 <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
                 <h1 class="text-primary text-center font-weight-bolder">
                     Hmmm
@@ -236,10 +234,12 @@ export default {
             meetingMailButtonStatus: false,
         };
     },
-    props: ['projectData'],
+    props: ['projectData', 'showUnapplyProp', 'applyPermission', 'activeProject' ],
     created() {
         this.apiToken = this.getApiToken();
         this.userRol = this.getUserRolId();
+        this.userId = this.getUserId();
+        this.showUnapply = this.showUnapplyProp;
         // const currentDate = new Date();
 
 
@@ -247,7 +247,7 @@ export default {
         //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
 
-
+                              console.log(this.projectData);
         if (this.userRol === 1) {
             this.getAllCollegeCareers();
         }
@@ -289,6 +289,61 @@ export default {
         },
     },
     methods: {
+        async unapplyToProject() {
+            const API_ENDOINT = this.getAPIEndpoint();
+            const request = await fetch(API_ENDOINT + `/postDesaplicarProyecto`, {
+                method: "POST",
+                body: JSON.stringify({
+                    idProyecto: this.project.id,
+                    idUser: this.userId,
+                    estado: 0
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            })
+
+            if (request.status === 200) {
+                this.showSuccessToast('Solicitud enviada exitosamente.');
+                this.$emit('dataUpdated');
+                this.showUnapply = !this.showUnapply;
+            } else {
+                this.showErrorToast('Algo salió mal al enviar la solicitud.');
+            }
+        },
+        async applyToProject() {
+
+            console.log("Apply permission " + this.applyPermission)
+            console.log("Proyecto activo " + this.activeProject)
+            if (this.applyPermission && !this.activeProject) {
+                const API_ENDOINT = this.getAPIEndpoint();
+                const request = await fetch(API_ENDOINT + `/postAplicarProyecto`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        idProyecto: this.project.id,
+                        idUser: this.userId,
+                        estado: 0
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                        'Authorization': 'Bearer ' + this.apiToken
+                    }
+                })
+
+                if (request.status === 200) {
+                    this.showSuccessToast('Solicitud enviada exitosamente.');
+                    this.$emit('dataUpdated');
+                    this.showUnapply = !this.showUnapply
+                    // location.reload();
+                } else {
+                    this.showErrorToast('Algo salió mal al enviar la solicitud.');
+                    //location.reload();
+                }
+            } else {
+                this.showErrorToast('No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.');
+            }
+        },
         async updateProject() {
             const validation = await this.$validate();
             if (validation) {
@@ -506,19 +561,17 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-ion-grid.gapped-grid-2 > ion-row{
+ion-grid.gapped-grid-2>ion-row {
 
     margin-top: 0.3em;
     margin-bottom: 0.5em;
 }
 
-ion-grid.gapped-grid > ion-row{
+ion-grid.gapped-grid>ion-row {
 
     margin-bottom: 1em;
 }
+
 ion-grid {
 
     --ion-grid-row-padding: 30px;

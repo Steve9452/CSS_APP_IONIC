@@ -13,19 +13,19 @@
 
                     <div class="form-group">
                         <label>Código</label>
-                        <input v-model="code" type="text" class="form-control" placeholder="Ingrese el código de verificación">
+                        <input v-model="code" type="text" class="form-control custom-form" placeholder="Ingrese el código de verificación">
                         <div class="text-danger">{{ validation.firstError('code') }}</div>
                     </div>
 
                     <div class="form-group">
                         <label>Contraseña</label>
-                        <input v-model="password" type="password" class="form-control" placeholder="Ingrese su clave">
+                        <input v-model="password" type="password" class="form-control custom-form" placeholder="Ingrese su clave">
                         <div class="text-danger">{{ validation.firstError('password') }}</div>
                     </div>
 
                     <div class="form-group">
                         <label>Confirmar Contraseña</label>
-                        <input v-model="repeat" type="password" class="form-control" placeholder="Confirmar clave">
+                        <input v-model="repeat" type="password" class="form-control custom-form" placeholder="Confirmar clave">
                         <div class="text-danger font-weight-bold">{{ validation.firstError('repeat') }}</div>
                     </div>
 

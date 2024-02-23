@@ -17,13 +17,13 @@
 
                     <div class="form-group">
                         <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
-                        <input v-model="user.carnet" type="text" class="form-control" placeholder="Ingrese su carnet">
+                        <input v-model="user.carnet" type="text" class="form-control custom-form" placeholder="Ingrese su carnet">
                         <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
                     </div>
 
                     <div class="form-group mt-4">
                         <label class="text-muted"><i class="fas fa-unlock-alt"></i>&nbsp;Contraseña</label>
-                        <input v-model="user.password" type="password" class="form-control" placeholder="Ingrese su contraseña">
+                        <input v-model="user.password" type="password" class="form-control custom-form" placeholder="Ingrese su contraseña">
                         <div class="text-danger">{{ validation.firstError('user.password') }}</div>
                     </div>
 

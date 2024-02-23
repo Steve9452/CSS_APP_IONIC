@@ -1,28 +1,4 @@
 <template>
-    <ion-menu side="end" content-id="main-content">
-        <ion-text>
-        </ion-text>
-        <ion-content class="ion-padding">
-            <ion-item>
-                <h2> Filtros: </h2>
-            </ion-item>
-            <ion-list>
-                <div style="width: 100%;">
-                    <label>
-                        Filtar por:
-                    </label>
-                </div>
-                <ion-item>
-
-                    <ion-select interface="action-sheet" label="Default label" placeholder="Favorite Fruit">
-                        <ion-select-option value="apple">Apple</ion-select-option>
-                        <ion-select-option value="banana">Banana</ion-select-option>
-                        <ion-select-option value="orange">Orange</ion-select-option>
-                    </ion-select>
-                </ion-item>
-            </ion-list>
-        </ion-content>
-    </ion-menu>
     <div id="main-content">
         <ion-grid>
 
@@ -31,9 +7,6 @@
                     <ion-searchbar class="custom" placeholder="Nombre" show-clear-button="focus"></ion-searchbar>
                 </ion-col> 
                 -->
-
-
-
                 <ion-col size="6">
                     <ion-chip class="large-chip" size="large" :outline="true">
                         <ion-icon :icon="searchOutline" color="secundary"></ion-icon>
@@ -242,6 +215,7 @@ export default {
         },
         presentActionSheetFilter: async (actionFaculty, faculties, actionCareer, careers, handleFilter, handleFilterId) => {
             const actionSheet = await actionSheetController.create({
+                htmlAttributes: {class: "custom-alert"},
                 header: 'Filtrar por: ',
                 buttons: [
                     {
@@ -394,4 +368,6 @@ ion-icon {
     justify-content: center;
     font-size: 1em;
 }
+
+
 </style>

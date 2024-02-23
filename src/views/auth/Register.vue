@@ -13,19 +13,19 @@
 
                 <div class="form-group">
                     <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
-                    <input v-model="user.carnet" type="text" class="form-control" placeholder="Ingrese su carnet">
+                    <input v-model="user.carnet" type="text" class="form-control custom-form" placeholder="Ingrese su carnet">
                     <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
                 </div>
 
                 <div class="form-group">
                     <label class="text-muted"><i class="fas fa-align-center"></i>&nbsp;Nombres</label>
-                    <input v-model="user.fname" type="text" class="form-control" placeholder="Ingrese sus nombres">
+                    <input v-model="user.fname" type="text" class="form-control custom-form" placeholder="Ingrese sus nombres">
                     <div class="text-danger">{{ validation.firstError('user.fname') }}</div>
                 </div>
 
                 <div class="form-group">
                     <label class="text-muted"><i class="fas fa-align-center"></i>&nbsp;Apellidos</label>
-                    <input v-model="user.lname" type="text" class="form-control" placeholder="Ingrese sus apellidos">
+                    <input v-model="user.lname" type="text" class="form-control custom-form" placeholder="Ingrese sus apellidos">
                     <div class="text-danger">{{ validation.firstError('user.lname') }}</div>
                 </div>
 
