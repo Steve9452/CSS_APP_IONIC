@@ -2,9 +2,13 @@
     <ion-content :fullscreen="true">
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-                <div class="col">
-                    <img src="/assets/img/css.png">
+                <div class="col flex-col">
+                    <div class="flex-center">
 
+                        <img src="/assets/img/uca.png" style="width: 5em;" >
+                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; ">  Centro de Servicio Social </p>
+                        
+                    </div>
                     <div class="form-group">
                         <ion-router-link class="d-block text-center" href="/register" color="medium">
                             ¿Aún no tengo una cuenta?
@@ -100,3 +104,11 @@ export default {
 }
 </script>
 
+<style scoped>
+    .flex-center{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

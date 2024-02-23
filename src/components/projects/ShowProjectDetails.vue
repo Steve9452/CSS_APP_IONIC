@@ -16,30 +16,26 @@
                 <ion-label>
                     <small>General</small>
                 </ion-label>
-                <ion-icon :icon="list"></ion-icon>
             </ion-segment-button>
 
             <ion-segment-button value="students" @click="view = 'students';">
                 <ion-label><small>Estudiantes</small></ion-label>
-                <ion-icon :icon="people"></ion-icon>
             </ion-segment-button>
 
             <ion-segment-button value="reunion" @click="view = 'reunion';">
                 <ion-label>
                     <small>Reunion</small>
                 </ion-label>
-                <ion-icon :icon="calendar"></ion-icon>
             </ion-segment-button>
 
             <ion-segment-button value="change-status" @click="view = 'change-status';" :hidden="disableInput">
                 <ion-label>
                     <small>Cambiar estado</small>
                 </ion-label>
-                <ion-icon :icon="sync"></ion-icon>
             </ion-segment-button>
         </ion-segment>
 
-        <ion-card class="my-3" color="light" v-if="view === 'general'">
+        <ion-card class="my-3"  v-if="view === 'general'">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -167,7 +163,7 @@
         </ion-card>
 
 
-        <ion-card class="my-3" color="light" v-if="view === 'students'">
+        <ion-card class="my-3"  v-if="view === 'students'">
             <ion-card-content v-if="project.students.length > 0">
                 <div class="form-group py-2 border-top border-bottom">
                     <h6 class="text-center text-muted font-weight-bold">
@@ -227,7 +223,7 @@
         </ion-card>
 
         <!-- Pestana Programar Reunion  -->
-        <ion-card class="my-3" color="light" v-if="view === 'reunion'">
+        <ion-card class="my-3"  v-if="view === 'reunion'">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -308,7 +304,7 @@
             </ion-card-content>
         </ion-card>
 
-        <ion-card class="my-3" color="light" v-if="view === 'change-status'" :hidden="disableInput">
+        <ion-card class="my-3"  v-if="view === 'change-status'" :hidden="disableInput">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -490,9 +486,7 @@
                             tipo_horas: this.project.hoursType,
                             // eslint-disable-next-line
                             correo_encargado: this.project.ownerEmail,
-                            carreraPerfil: selectedCareers,
-                            // eslint-disable-next-line
-				            estado_proyecto: 'En curso'
+                            carreraPerfil: selectedCareers
                         }),
                         headers: {
                             "Content-type": "application/json; charset=UTF-8",
@@ -698,3 +692,9 @@
         }
     }
 </script>
+
+<style scoped>
+    ion-icon {
+        font-size: 1.5em;
+    }
+</style>

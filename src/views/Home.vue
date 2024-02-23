@@ -1,9 +1,9 @@
 <template>
 <ion-page>
 	<ion-header translucent>
-		<ion-toolbar class="py-3">
-			<img src="/assets/img/css_horizontal.jpg" style="margin-left: 20px;max-height:50px;text-align:center;" />
-
+		<ion-toolbar class="py-1">
+			<img src="/assets/img/uca.png" style="margin-top: 5px; margin-left: 20px;max-height:35px;text-align:center;" />
+			<p style="margin-left: 20px; margin-bottom: 10px;  font-size: 0.6em; max-width: 140px;">  Centro de Servicio Social </p>
 			<ion-buttons slot="end">
 				<ion-button @click="signout()">
 					<ion-icon color="primary" :icon="logOut"/>
