@@ -6,24 +6,23 @@
                 <ion-button @click="closeModal()">CERRAR&nbsp;<i class="fas fa-chevron-down"></i></ion-button>
             </ion-buttons>
 
-           
+
         </ion-toolbar>
     </ion-header>
 
-    <ion-content>
 
-        <ion-toolbar>
-            <ion-segment :value="view">
+    <ion-toolbar>
+        <ion-segment :value="view">
 
-<ion-segment-button value="general" @click="view = 'general';">
-    <ion-label>
-        <small>General</small>
-    </ion-label>
-</ion-segment-button>
+            <ion-segment-button value="general" @click="view = 'general';">
+                <ion-label>
+                    <small>General</small>
+                </ion-label>
+            </ion-segment-button>
 
-<ion-segment-button value="students" @click="view = 'students';">
-    <ion-label><small>Estudiantes</small></ion-label>
-</ion-segment-button>
+            <ion-segment-button value="students" @click="view = 'students';">
+                <ion-label><small>Estudiantes</small></ion-label>
+            </ion-segment-button>
 
             <ion-segment-button value="reunion" @click="view = 'reunion';">
                 <ion-label>
@@ -37,7 +36,9 @@
                 </ion-label>
             </ion-segment-button>
         </ion-segment>
+    </ion-toolbar>
 
+    <ion-content>
         <ion-card class="my-3" color="" v-if="view === 'general'">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
@@ -49,38 +50,38 @@
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-align-center"></i>&nbsp;Nombre</label>
-                    <input v-model="project.name" type="text" class="form-control custom-form" placeholder="Nombre del Proyecto"
-                        :disabled="disableInput">
+                    <input v-model="project.name" type="text" class="form-control custom-form"
+                        placeholder="Nombre del Proyecto" :disabled="disableInput">
                     <div class="text-danger">{{ validation.firstError('project.name') }}</div>
                 </div>
 
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="far fa-user"></i>&nbsp;Encargado</label>
-                    <input v-model="project.owner" type="text" class="form-control custom-form" placeholder="Encargado del Proyecto"
-                        :disabled="disableInput">
+                    <input v-model="project.owner" type="text" class="form-control custom-form"
+                        placeholder="Encargado del Proyecto" :disabled="disableInput">
                     <div class="text-danger">{{ validation.firstError('project.owner') }}</div>
                 </div>
 
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-envelope-open-text"></i>&nbsp;Correo</label>
-                    <input v-model="project.ownerEmail" type="text" class="form-control custom-form" placeholder="Correo del Encargado"
-                        :disabled="disableInput">
+                    <input v-model="project.ownerEmail" type="text" class="form-control custom-form"
+                        placeholder="Correo del Encargado" :disabled="disableInput">
                     <div class="text-danger">{{ validation.firstError('project.ownerEmail') }}</div>
                 </div>
 
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-people-arrows"></i>&nbsp;Cupos</label>
-                    <input v-model="project.spaces" type="number" class="form-control custom-form" placeholder="Numero de cupos"
-                        :disabled="disableInput">
+                    <input v-model="project.spaces" type="number" class="form-control custom-form"
+                        placeholder="Numero de cupos" :disabled="disableInput">
                     <div class="text-danger">{{ validation.firstError('project.spaces') }}</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-people-arrows"></i>&nbsp;Tipo de
+                    <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-people-arrows"></i>&nbsp;Tipo
+                        de
                         Horas</label>
                     <ion-select placeholder="Seleccionar" v-model="project.hoursType" cancel-text="Cancelar">
                         <ion-select-option value="Internas">Internas</ion-select-option>
@@ -107,7 +108,8 @@
 
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Perfil del estudiante</label>
+                            class="fas fa-align-center"></i>&nbsp;Perfil
+                        del estudiante</label>
                     <textarea v-model="project.profile" class="form-control" placeholder="Perfil del estudiante"
                         :disabled="disableInput"></textarea>
                     <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
@@ -116,15 +118,15 @@
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-align-center"></i>&nbsp;Contraparte</label>
-                    <input v-model="project.counterpart" type="text" class="form-control custom-form" placeholder="Contraparte"
-                        :disabled="disableInput">
+                    <input v-model="project.counterpart" type="text" class="form-control custom-form"
+                        placeholder="Contraparte" :disabled="disableInput">
                     <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
                 </div>
 
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="far fa-calendar-alt"></i>&nbsp;Fecha de
+                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha
+                        de
                         Inicio</label>
                     <ion-datetime v-model="project.startDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY"
                         :disabled="disableInput"></ion-datetime>
@@ -132,8 +134,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="far fa-calendar-alt"></i>&nbsp;Fecha de
+                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha
+                        de
                         Finalización</label>
                     <ion-datetime v-model="project.endDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY"
                         :disabled="disableInput">
@@ -174,46 +176,46 @@
                     </h6>
                 </div>
 
-                <div v-for="student in project.students" :key="student.idUser">    
-                <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
-                    <ion-label>
-                        <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
-                        <small>
-                            {{ student.correo }}
-                            <br>
-                            <small class="text-muted">{{ student.carrera.nombre }} -
-                                {{ student.carrera.facultad.nombre }}</small>
-                        </small>
-                    </ion-label>
+                <div v-for="student in project.students" :key="student.idUser">
+                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                        <ion-label>
+                            <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
+                            <small>
+                                {{ student.correo }}
+                                <br>
+                                <small class="text-muted">{{ student.carrera.nombre }} -
+                                    {{ student.carrera.facultad.nombre }}</small>
+                            </small>
+                        </ion-label>
 
-                    <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
-                        <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
-                            <ion-icon :icon="checkmark"></ion-icon>
-                        </ion-button>
-                        <ion-button color="danger" @click="sendApplicationRequest(student, 'deny')">
-                            <ion-icon :icon="closeCircle"></ion-icon>
-                        </ion-button>
-                    </ion-buttons>
+                        <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
+                            <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
+                                <ion-icon :icon="checkmark"></ion-icon>
+                            </ion-button>
+                            <ion-button color="danger" @click="sendApplicationRequest(student, 'deny')">
+                                <ion-icon :icon="closeCircle"></ion-icon>
+                            </ion-button>
+                        </ion-buttons>
 
-                    <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
-                        <small>PENDIENTE</small>
-                    </ion-badge>
+                        <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
+                            <small>PENDIENTE</small>
+                        </ion-badge>
 
-                    <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
-                        <small>ACEPTADO</small>
-                    </ion-badge>
+                        <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
+                            <small>ACEPTADO</small>
+                        </ion-badge>
 
-                    <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
-                        <small>RECHAZADO</small>
-                    </ion-badge>
-                </ion-item>
-</div>
-                
+                        <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
+                            <small>RECHAZADO</small>
+                        </ion-badge>
+                    </ion-item>
+                </div>
+
                 <ion-button class="mt-3" expand="block" color="dark" @click="closeModal()">
                     REGRESAR
                 </ion-button>
             </ion-card-content>
-            
+
             <ion-card-content v-else>
                 <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
                 <h1 class="text-primary text-center font-weight-bolder">
@@ -236,9 +238,10 @@
 
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-align-center"></i>&nbsp;Nombre del proyecto</label>
-                    <input v-model="project.name" type="text" class="form-control custom-form" placeholder="Nombre del Proyecto"
-                        disabled>
+                            class="fas fa-align-center"></i>&nbsp;Nombre
+                        del proyecto</label>
+                    <input v-model="project.name" type="text" class="form-control custom-form"
+                        placeholder="Nombre del Proyecto" disabled>
                     <div class="text-danger">{{ validation.firstError('project.name') }}</div>
                 </div>
 
@@ -252,7 +255,8 @@
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-align-center"></i>&nbsp;Descripción</label>
-                    <textarea v-model="meetingDescription" class="form-control custom-form" placeholder="Opcional"></textarea>
+                    <textarea v-model="meetingDescription" class="form-control custom-form"
+                        placeholder="Opcional"></textarea>
                     <div class="text-danger">{{ validation.firstError('project.description') }}</div>
                 </div>
 
@@ -260,20 +264,21 @@
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="far fa-calendar-alt"></i>&nbsp;Fecha</label>
-                    <ion-datetime v-model="meetingScheduleDate" display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"></ion-datetime>
+                    <ion-datetime v-model="meetingScheduleDate" display-format="DD/MM/YYYY"
+                        picker-format="DD/MM/YYYY"></ion-datetime>
                     <div class="text-danger">{{ validation.firstError('project.startDate') }}</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="far fa-calendar-alt"></i>&nbsp;Hora (24h)</label>
-                    <ion-datetime v-model="meetingScheduleTime"  display-format="HH:mm" picker-format="HH:mm" >
+                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Hora
+                        (24h)</label>
+                    <ion-datetime v-model="meetingScheduleTime" display-format="HH:mm" picker-format="HH:mm">
                     </ion-datetime>
                     <div class="text-danger">{{ validation.firstError('project.endDate') }}</div>
                 </div>
 
                 <label class="text-muted font-weight-bold text-uppercase"><i
-                    class="fas fa-envelope-open-text"></i>&nbsp;Miembros</label>
+                        class="fas fa-envelope-open-text"></i>&nbsp;Miembros</label>
                 <div v-for="student in project.acceptedStudents" :key="student.idUser">
                     <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
                         <ion-label>
@@ -297,7 +302,8 @@
                 </div>
 
                 <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" color="secondary" :disabled=this.meetingMailButtonStatus @click="sendMeetingRequest()">
+                    <ion-button expand="block" color="secondary" :disabled=this.meetingMailButtonStatus
+                        @click="sendMeetingRequest()">
                         PROGRAMAR REUNION
                     </ion-button>
                 </div>
@@ -305,7 +311,7 @@
             </ion-card-content>
         </ion-card>
 
-        <ion-card class="my-3"  v-if="view === 'change-status'" :hidden="disableInput">
+        <ion-card class="my-3" v-if="view === 'change-status'" :hidden="disableInput">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -315,7 +321,8 @@
 
                 <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
-                            class="fas fa-people-arrows"></i>&nbsp;Estado del proyecto</label>
+                            class="fas fa-people-arrows"></i>&nbsp;Estado
+                        del proyecto</label>
                     <ion-select placeholder="Seleccionar" v-model="project.projectStatus" cancel-text="Cancelar">
                         <ion-select-option value="En curso">En curso</ion-select-option>
                         <ion-select-option value="Finalizado">Finalizado</ion-select-option>
@@ -336,212 +343,158 @@
                 </div>
             </ion-card-content>
         </ion-card>
-        
+
     </ion-content>
 </template>
 
 <script>
-    import SimpleVueValidator from 'simple-vue-validator';
-    const Validator = SimpleVueValidator.Validator;
-    import {
-        modalController,
-    } from "@ionic/vue";
-    import {
-        checkmark,
-        closeCircle,
-        list,
-        people,
-        calendar,
-        sync,
-    } from 'ionicons/icons';
+import SimpleVueValidator from 'simple-vue-validator';
+const Validator = SimpleVueValidator.Validator;
+import {
+    modalController,
+} from "@ionic/vue";
+import {
+    checkmark,
+    closeCircle,
+    list,
+    people,
+    calendar,
+    sync,
+} from 'ionicons/icons';
 
-    export default {
-        mixins: [SimpleVueValidator.mixin],
-        data() {
-            return {
-                apiToken: '',
-                userRol: '',
-                view: 'general',
-                collegeCareers: [],
-                project: {
-                    id: '',
-                    name: '',
-                    status: '',
-                    counterpart: '',
-                    // eslint-disable-next-line
-                    spacesAct: '',
-                    spaces: '',
-                    description: '',
-                    owner: '',
-                    startDate: '',
-                    endDate: '',
-                    schedule: '',
-                    hoursType: '',
-                    ownerEmail: '',
-                    careers: [],
-                    students: [],
-                    acceptedStudents: [],
-                },
-                checkmark,
-                closeCircle,
-                list,
-                people,
-                calendar,
-                sync,
-                meetingScheduleDate:'',
-                meetingScheduleTime:'',
-                meetingPlace:'',
-                meetingDescription:'',
-                acceptedStudentsEmails: [],
-                meetingMailButtonStatus: false,
-            };
+export default {
+    mixins: [SimpleVueValidator.mixin],
+    data() {
+        return {
+            apiToken: '',
+            userRol: '',
+            view: 'general',
+            collegeCareers: [],
+            project: {
+                id: '',
+                name: '',
+                status: '',
+                counterpart: '',
+                // eslint-disable-next-line
+                spacesAct: '',
+                spaces: '',
+                description: '',
+                owner: '',
+                startDate: '',
+                endDate: '',
+                schedule: '',
+                hoursType: '',
+                ownerEmail: '',
+                careers: [],
+                students: [],
+                acceptedStudents: [],
+            },
+            checkmark,
+            closeCircle,
+            list,
+            people,
+            calendar,
+            sync,
+            meetingScheduleDate: '',
+            meetingScheduleTime: '',
+            meetingPlace: '',
+            meetingDescription: '',
+            acceptedStudentsEmails: [],
+            meetingMailButtonStatus: false,
+        };
+    },
+    props: ['projectData'],
+    created() {
+        this.apiToken = this.getApiToken();
+        this.userRol = this.getUserRolId();
+        // const currentDate = new Date();
+
+
+        // this.meetingScheduleDate = currentDate.toLocaleDateString('es-ES', { day: '2-digit',month: '2-digit', year: 'numeric'});
+        //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+
+
+        if (this.userRol === 1) {
+            this.getAllCollegeCareers();
+        }
+        this.setProjectData();
+    },
+    validators: {
+        'project.name': function (value) {
+            return Validator.value(value).required('El nombre es obligatorio.');
         },
-        props: ['projectData'],
-        created() {
-            this.apiToken = this.getApiToken();
-            this.userRol = this.getUserRolId();
-            // const currentDate = new Date();
-
-
-            // this.meetingScheduleDate = currentDate.toLocaleDateString('es-ES', { day: '2-digit',month: '2-digit', year: 'numeric'});
-            //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-
-
-
-            if (this.userRol === 1) {
-                this.getAllCollegeCareers();
-            }
-            this.setProjectData();
+        'project.counterpart': function (value) {
+            return Validator.value(value).required('El campo contraparte es obligatorio.');
         },
-        validators: {
-            'project.name': function (value) {
-                return Validator.value(value).required('El nombre es obligatorio.');
-            },
-            'project.counterpart': function (value) {
-                return Validator.value(value).required('El campo contraparte es obligatorio.');
-            },
-            'project.spaces': function (value) {
-                return Validator.value(value).required('El campo cupos es obligatorio.');
-            },
-            'project.description': function (value) {
-                return Validator.value(value).required('El campo descripción es obligatorio.');
-            },
-            'project.profile': function (value) {
-                return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
-            },
-            'project.owner': function (value) {
-                return Validator.value(value).required('El campo encargado es obligatorio.');
-            },
-            'project.startDate': function (value) {
-                return Validator.value(value).required('El campo fecha de inicio es obligatorio.');
-            },
-            'project.endDate': function (value) {
-                return Validator.value(value).required('El campo fecha de finalización es obligatorio.');
-            },
-            'project.schedule': function (value) {
-                return Validator.value(value).required('El campo horario es obligatorio.');
-            },
-            'project.hoursType': function (value) {
-                return Validator.value(value).required('El campo tipo de horas es obligatorio.');
-            },
-            'project.ownerEmail': function (value) {
-                return Validator
-                    .value(value).required('El campo correo del encargado es obligatorio.')
-                    .maxLength(100, 'El correo no debe contener más 100 caracteres.')
-                    .email('Ingrese un correo valido.');
-            },
+        'project.spaces': function (value) {
+            return Validator.value(value).required('El campo cupos es obligatorio.');
         },
-        methods: {
-            async updateProject() {
-                const validation = await this.$validate();
-                if (validation) {
-                    const API_ENDOINT = this.getAPIEndpoint();
-                    const selectedCareers = [];
-
-                    if (this.userRol === 1) {
-                        this.project.careers.forEach(element => {
-                            const career = [];
-                            career[0] = element;
-                            career[1] = 0;
-                            career[2] = 6;
-                            selectedCareers.push(career);
-                        });
-                    }
-
-                    const request = await fetch(API_ENDOINT + '/admin/putUpdateProyecto', {
-                        method: "PUT",
-                        // eslint-disable-next-line
-                        body: JSON.stringify({
-                            idProyecto: this.project.id,
-                            nombre: this.project.name,
-                            contraparte: this.project.counterpart,
-                            cupos: this.project.spaces,
-                            descripcion: this.project.description,
-                            encargado: this.project.owner,
-                            // eslint-disable-next-line
-                            fecha_inicio: this.project.startDate,
-                            // eslint-disable-next-line
-                            fecha_fin: this.project.endDate,
-                            horario: this.project.schedule,
-                            // eslint-disable-next-line
-                            tipo_horas: this.project.hoursType,
-                            // eslint-disable-next-line
-                            correo_encargado: this.project.ownerEmail,
-                            carreraPerfil: selectedCareers
-                        }),
-                        headers: {
-                            "Content-type": "application/json; charset=UTF-8",
-                            'Authorization': 'Bearer ' + this.apiToken
-                        }
-                    })
-
-                    if (request.status === 200) {
-                        this.showSuccessToast('Proyecto actualizado exitosamente.');
-                        this.closeModal();
-                        this.$emit('dataUpdated');
-                        location.reload();
-                    } else {
-                        this.showErrorToast('Algo salió mal al actualizar el proyecto.');
-                    }
-                } else {
-                    this.FormValidationFailed();
-                }
-            },
-            async changeProjectStatus() {
-				const estadoProyecto = this.project.projectStatus;
-                const estado = (estadoProyecto === 'En curso') ? 1 : 0;
-				const API_ENDOINT = this.getAPIEndpoint();
-				const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
-					method: "PUT",
-					body: JSON.stringify({
-						idProyecto: this.project.id,
-						estado: estado,
-						estadoProyecto: estadoProyecto
-					}),
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-						'Authorization': 'Bearer ' + this.apiToken
-					}
-				})
-
-				if (request.status === 200) {
-					this.showSuccessToast('Proyecto actualizado exitosamente.');
-					this.$emit('dataUpdated');
-					// location.reload();
-				} else {
-					this.showErrorToast('Algo salió mal al actualizar el proyecto.');
-				}
-			},
-            async sendApplicationRequest(student, status) {
+        'project.description': function (value) {
+            return Validator.value(value).required('El campo descripción es obligatorio.');
+        },
+        'project.profile': function (value) {
+            return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
+        },
+        'project.owner': function (value) {
+            return Validator.value(value).required('El campo encargado es obligatorio.');
+        },
+        'project.startDate': function (value) {
+            return Validator.value(value).required('El campo fecha de inicio es obligatorio.');
+        },
+        'project.endDate': function (value) {
+            return Validator.value(value).required('El campo fecha de finalización es obligatorio.');
+        },
+        'project.schedule': function (value) {
+            return Validator.value(value).required('El campo horario es obligatorio.');
+        },
+        'project.hoursType': function (value) {
+            return Validator.value(value).required('El campo tipo de horas es obligatorio.');
+        },
+        'project.ownerEmail': function (value) {
+            return Validator
+                .value(value).required('El campo correo del encargado es obligatorio.')
+                .maxLength(100, 'El correo no debe contener más 100 caracteres.')
+                .email('Ingrese un correo valido.');
+        },
+    },
+    methods: {
+        async updateProject() {
+            const validation = await this.$validate();
+            if (validation) {
                 const API_ENDOINT = this.getAPIEndpoint();
+                const selectedCareers = [];
 
-                const request = await fetch(API_ENDOINT + '/admin/putAplicarEnProyecto', {
+                if (this.userRol === 1) {
+                    this.project.careers.forEach(element => {
+                        const career = [];
+                        career[0] = element;
+                        career[1] = 0;
+                        career[2] = 6;
+                        selectedCareers.push(career);
+                    });
+                }
+
+                const request = await fetch(API_ENDOINT + '/admin/putUpdateProyecto', {
                     method: "PUT",
                     // eslint-disable-next-line
                     body: JSON.stringify({
                         idProyecto: this.project.id,
-                        idUser: student.idUser,
-                        estado: status === 'accept' ? 1 : 2 
+                        nombre: this.project.name,
+                        contraparte: this.project.counterpart,
+                        cupos: this.project.spaces,
+                        descripcion: this.project.description,
+                        encargado: this.project.owner,
+                        // eslint-disable-next-line
+                        fecha_inicio: this.project.startDate,
+                        // eslint-disable-next-line
+                        fecha_fin: this.project.endDate,
+                        horario: this.project.schedule,
+                        // eslint-disable-next-line
+                        tipo_horas: this.project.hoursType,
+                        // eslint-disable-next-line
+                        correo_encargado: this.project.ownerEmail,
+                        carreraPerfil: selectedCareers
                     }),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
@@ -550,154 +503,204 @@
                 })
 
                 if (request.status === 200) {
-                    this.showSuccessToast('Estado de alumno en el proyecto Actualizado.');
+                    this.showSuccessToast('Proyecto actualizado exitosamente.');
                     this.closeModal();
                     this.$emit('dataUpdated');
-                    // location.reload();
+                    location.reload();
                 } else {
                     this.showErrorToast('Algo salió mal al actualizar el proyecto.');
                 }
-            },
-            async getAllCollegeCareers() {
-                const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + "/getCarreras");
-
-                const data = await request.json();
-
-                if (request.status === 200) {
-                    this.collegeCareers = data;
-                } else {
-                    this.showErrorToast('Algo salió mal al obtener las carreras.');
-                }
-            },
-            setProjectData() {
-                this.project.id = this.projectData.idProyecto;
-                this.project.name = this.projectData.nombre;
-                this.project.status = this.projectData.estado;
-                this.project.projectStatus = this.projectData.estado_proyecto;
-                this.project.counterpart = this.projectData.contraparte;
-                // eslint-disable-next-line
-                this.project.spacesAct = this.projectData.cupos_act;
-                this.project.spaces = this.projectData.cupos;
-                this.project.description = this.projectData.descripcion;
-                this.project.profile = this.projectData.perfil_estudiante;
-                this.project.owner = this.projectData.encargado;
-                // eslint-disable-next-line
-                this.project.startDate = this.projectData.fecha_inicio;
-                // eslint-disable-next-line
-                this.project.endDate = this.projectData.fecha_fin;
-                this.project.schedule = this.projectData.horario;
-                this.project.hoursType = this.projectData.tipo_horas;
-                // eslint-disable-next-line
-                this.project.ownerEmail = this.projectData.correo_encargado;
-
-                if (this.userRol === 1 && this.projectData.carreras) {
-                    const careerIds = [];
-                    this.projectData.carreras.forEach(element => {
-                        careerIds.push(element.idCarrera);
-                    });
-                    this.project.careers = careerIds;
-                }
-
-                if (this.projectData.estudiantes) {
-                    this.project.students = this.projectData.estudiantes;
-
-                    // filter students accepted
-                    this.project.acceptedStudents = this.project.students.filter(student => {
-                        return student.pivot.estado === 1;
-                    });
-                }
-            },
-            async closeModal() {
-                await modalController.dismiss();
-            },
-            async sendMeetingRequest(){
-
-                // Validate inputs 
-                if(this.meetingScheduleDate === '' || this.meetingScheduleTime === '' || this.meetingPlace === ''){
-                    this.showErrorToast('La fecha, hora y lugar son obligatorios.');
-                    return;
-                }
-
-                this.meetingMailButtonStatus = true;
-                const API_ENDOINT = this.getAPIEndpoint();
-
-                const emails = [];
-
-                this.project.acceptedStudents.forEach(element => {
-                    console.log(element.correo)
-                    emails.push(element.correo);
-                });
-                
-
-            
-                const selectedTime = new Date(this.meetingScheduleTime);
-                const parsedTime = selectedTime.toLocaleTimeString('us-EN', { hour: '2-digit', minute: '2-digit' });
-                
-                const selectedDate = new Date(this.meetingScheduleDate);
-                const parsedDate = selectedDate.toLocaleDateString('us-EN', { day: '2-digit',month: '2-digit', year: 'numeric'});
-
-                // console.log("Body");
-                // console.log(JSON.stringify({
-                //         estudiantes: emails,
-                //         fecha: parsedDate,
-                //         hora: parsedTime,
-                //         lugar: this.meetingPlace,
-                //         // eslint-disable-next-line
-                //         nombre_proyecto: this.project.name,
-                //         descripcion: this.meetingDescription,
-                //         encargado: this.project.owner,
-                //         // eslint-disable-next-line
-                //         encargado_correo : this.project.ownerEmail,
-                //     }));
-
-                
-                
-                const request = await fetch(API_ENDOINT+'/admin/sendMeetingMail',{
-                    method: "POST",
-                    // eslint-disable-next-line
-                    body: JSON.stringify({
-                        estudiantes: emails,
-                        fecha: parsedDate,
-                        hora: parsedTime,
-                        lugar: this.meetingPlace,
-                        // eslint-disable-next-line
-                        nombre_proyecto: this.project.name,
-                        descripcion: this.meetingDescription,
-                        encargado: this.project.owner,
-                        // eslint-disable-next-line
-                        encargado_correo : this.project.ownerEmail,
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8",
-                        'Authorization': 'Bearer ' + this.apiToken
-                    }
-                })
-
-                if(request.status === 200){
-                    this.showSuccessToast('Reunion programada exitosamente.');
-                this.closeModal();
-                }
-                else{
-                    this.showErrorToast('Algo salió mal al programar la reunion.');
-                   this.closeModal();
-                }
-
-                
+            } else {
+                this.FormValidationFailed();
             }
         },
-        computed: {
-            disableInput: function () {
-                return this.userRol !== 1;
+        async changeProjectStatus() {
+            const estadoProyecto = this.project.projectStatus;
+            const estado = (estadoProyecto === 'En curso') ? 1 : 0;
+            const API_ENDOINT = this.getAPIEndpoint();
+            const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
+                method: "PUT",
+                body: JSON.stringify({
+                    idProyecto: this.project.id,
+                    estado: estado,
+                    estadoProyecto: estadoProyecto
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            })
+
+            if (request.status === 200) {
+                this.showSuccessToast('Proyecto actualizado exitosamente.');
+                this.$emit('dataUpdated');
+                // location.reload();
+            } else {
+                this.showErrorToast('Algo salió mal al actualizar el proyecto.');
             }
+        },
+        async sendApplicationRequest(student, status) {
+            const API_ENDOINT = this.getAPIEndpoint();
+
+            const request = await fetch(API_ENDOINT + '/admin/putAplicarEnProyecto', {
+                method: "PUT",
+                // eslint-disable-next-line
+                body: JSON.stringify({
+                    idProyecto: this.project.id,
+                    idUser: student.idUser,
+                    estado: status === 'accept' ? 1 : 2
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            })
+
+            if (request.status === 200) {
+                this.showSuccessToast('Estado de alumno en el proyecto Actualizado.');
+                this.closeModal();
+                this.$emit('dataUpdated');
+                // location.reload();
+            } else {
+                this.showErrorToast('Algo salió mal al actualizar el proyecto.');
+            }
+        },
+        async getAllCollegeCareers() {
+            const API_ENDOINT = this.getAPIEndpoint();
+            const request = await fetch(API_ENDOINT + "/getCarreras");
+
+            const data = await request.json();
+
+            if (request.status === 200) {
+                this.collegeCareers = data;
+            } else {
+                this.showErrorToast('Algo salió mal al obtener las carreras.');
+            }
+        },
+        setProjectData() {
+            this.project.id = this.projectData.idProyecto;
+            this.project.name = this.projectData.nombre;
+            this.project.status = this.projectData.estado;
+            this.project.projectStatus = this.projectData.estado_proyecto;
+            this.project.counterpart = this.projectData.contraparte;
+            // eslint-disable-next-line
+            this.project.spacesAct = this.projectData.cupos_act;
+            this.project.spaces = this.projectData.cupos;
+            this.project.description = this.projectData.descripcion;
+            this.project.profile = this.projectData.perfil_estudiante;
+            this.project.owner = this.projectData.encargado;
+            // eslint-disable-next-line
+            this.project.startDate = this.projectData.fecha_inicio;
+            // eslint-disable-next-line
+            this.project.endDate = this.projectData.fecha_fin;
+            this.project.schedule = this.projectData.horario;
+            this.project.hoursType = this.projectData.tipo_horas;
+            // eslint-disable-next-line
+            this.project.ownerEmail = this.projectData.correo_encargado;
+
+            if (this.userRol === 1 && this.projectData.carreras) {
+                const careerIds = [];
+                this.projectData.carreras.forEach(element => {
+                    careerIds.push(element.idCarrera);
+                });
+                this.project.careers = careerIds;
+            }
+
+            if (this.projectData.estudiantes) {
+                this.project.students = this.projectData.estudiantes;
+
+                // filter students accepted
+                this.project.acceptedStudents = this.project.students.filter(student => {
+                    return student.pivot.estado === 1;
+                });
+            }
+        },
+        async closeModal() {
+            await modalController.dismiss();
+        },
+        async sendMeetingRequest() {
+
+            // Validate inputs 
+            if (this.meetingScheduleDate === '' || this.meetingScheduleTime === '' || this.meetingPlace === '') {
+                this.showErrorToast('La fecha, hora y lugar son obligatorios.');
+                return;
+            }
+
+            this.meetingMailButtonStatus = true;
+            const API_ENDOINT = this.getAPIEndpoint();
+
+            const emails = [];
+
+            this.project.acceptedStudents.forEach(element => {
+                console.log(element.correo)
+                emails.push(element.correo);
+            });
+
+
+
+            const selectedTime = new Date(this.meetingScheduleTime);
+            const parsedTime = selectedTime.toLocaleTimeString('us-EN', { hour: '2-digit', minute: '2-digit' });
+
+            const selectedDate = new Date(this.meetingScheduleDate);
+            const parsedDate = selectedDate.toLocaleDateString('us-EN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+            // console.log("Body");
+            // console.log(JSON.stringify({
+            //         estudiantes: emails,
+            //         fecha: parsedDate,
+            //         hora: parsedTime,
+            //         lugar: this.meetingPlace,
+            //         // eslint-disable-next-line
+            //         nombre_proyecto: this.project.name,
+            //         descripcion: this.meetingDescription,
+            //         encargado: this.project.owner,
+            //         // eslint-disable-next-line
+            //         encargado_correo : this.project.ownerEmail,
+            //     }));
+
+
+
+            const request = await fetch(API_ENDOINT + '/admin/sendMeetingMail', {
+                method: "POST",
+                // eslint-disable-next-line
+                body: JSON.stringify({
+                    estudiantes: emails,
+                    fecha: parsedDate,
+                    hora: parsedTime,
+                    lugar: this.meetingPlace,
+                    // eslint-disable-next-line
+                    nombre_proyecto: this.project.name,
+                    descripcion: this.meetingDescription,
+                    encargado: this.project.owner,
+                    // eslint-disable-next-line
+                    encargado_correo: this.project.ownerEmail,
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            })
+
+            if (request.status === 200) {
+                this.showSuccessToast('Reunion programada exitosamente.');
+                this.closeModal();
+            }
+            else {
+                this.showErrorToast('Algo salió mal al programar la reunion.');
+                this.closeModal();
+            }
+
+
+        }
+    },
+    computed: {
+        disableInput: function () {
+            return this.userRol !== 1;
         }
     }
+}
 </script>
 
-<style scoped>
-ion-icon {
+<style scoped>ion-icon {
     font-size: 1.5em;
-}
-
-
-</style>
+}</style>
