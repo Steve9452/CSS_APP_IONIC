@@ -144,7 +144,8 @@ export default {
                 }
                 this.projects = this.projects.concat(data.proyectos.data)
 
-                // console.log(">>>>>>>>>>data: ")
+                //console.log(">>>>>>>>>>data: ")
+                this.$emit("getPermissions")
                 // console.log(data);
 
                 if (ev) {

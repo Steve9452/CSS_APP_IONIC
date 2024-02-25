@@ -53,6 +53,7 @@ export default {
             const data = await request.json();
 
             if (request.status === 200) {
+                this.$emit("getPermissions")
                 this.projects = data;
             } else {
                 this.showErrorToast('Ups! Algo salió mal.');
