@@ -50,7 +50,7 @@
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Perfil del estudiante</label>
-        <textarea v-model="project.profile" class="form-control" placeholder="Perfil del estudiante"></textarea>
+        <textarea v-model="project.profile" class="form-control custom-form" placeholder="Perfil del estudiante"></textarea>
         <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
     </div>
 
