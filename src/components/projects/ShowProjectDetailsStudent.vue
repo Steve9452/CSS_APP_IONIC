@@ -4,26 +4,11 @@
             <ion-buttons>
                 <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline"></ion-icon> </ion-button>
             </ion-buttons>
+            <ion-progress-bar v-if="fetching" type="indeterminate"></ion-progress-bar>
         </ion-toolbar>
     </ion-header>
 
     <ion-content>
-        <ion-toolbar>
-            <ion-segment :value="view">
-
-                <ion-segment-button value="general" @click="view = 'general';">
-                    <ion-label>
-                        <small>
-                            Info
-                        </small>
-                    </ion-label>
-                </ion-segment-button>
-
-                <ion-segment-button value="students" @click="view = 'students';">
-                    <ion-label><small>Estudiantes</small></ion-label>
-                </ion-segment-button>
-            </ion-segment>
-        </ion-toolbar>
         <ion-grid v-if="view === 'general'">
             <ion-card-content>
                 <ion-item>
@@ -51,6 +36,12 @@
 
                         <ion-row v-if="!showUnapply">
                             <ion-button color="secondary" @click="applyToProject()"> Aplicar </ion-button>
+                        </ion-row>
+                        <ion-row v-else-if="acepted == 1"> 
+                            <ion-button color="success" > Aceptado </ion-button>
+                        </ion-row>
+                        <ion-row v-else-if="acepted == 2"> 
+                            <ion-button color="danger" > Rechazado </ion-button>
                         </ion-row>
                         <ion-row v-else> 
                             <ion-button color="secondary" @click="unapplyToProject()"> Desaplicar </ion-button>
@@ -120,62 +111,6 @@
 
             </ion-card-content>
         </ion-grid>
-
-
-
-        <ion-grid class="my-3" v-if="view === 'students'">
-            <ion-card-content v-if="project.students.length > 0">
-
-                <ion-row v-for="student in project.students" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
-                        <ion-ion-label>
-                            <h6 class="text-primary">{{ student.nombres }} {{ student.apellidos }}</h6>
-                            <small>
-                                {{ student.correo }}
-                                <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
-                            </small>
-                        </ion-ion-label>
-
-                        <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
-                            <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
-                                <ion-icon :icon="checkmark"></ion-icon>
-                            </ion-button>
-                            <ion-button color="danger" @click="sendApplicationRequest(student, 'deny')">
-                                <ion-icon :icon="closeCircle"></ion-icon>
-                            </ion-button>
-                        </ion-buttons>
-
-                        <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
-                            <small>PENDIENTE</small>
-                        </ion-badge>
-
-                        <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
-                            <small>ACEPTADO</small>
-                        </ion-badge>
-
-                        <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
-                            <small>RECHAZADO</small>
-                        </ion-badge>
-                    </ion-item>
-                </ion-row>
-
-
-            </ion-card-content>
-
-            <ion-card-content class="center" v-else>
-                <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
-                <h1 class="text-primary text-center font-weight-bolder">
-                    Hmmm
-                </h1>
-                <ion-text class="text-muted text-center">
-                    Parece ser que no se encontraron registros.
-                </ion-text>
-            </ion-card-content>
-        </ion-grid>
-
-
     </ion-content>
 </template>
 
@@ -221,6 +156,7 @@ export default {
                 students: [],
                 acceptedStudents: [],
             },
+            fetching: false,
             checkmark,
             closeCircle,
             list,
@@ -239,7 +175,9 @@ export default {
         this.apiToken = this.getApiToken();
         this.userRol = this.getUserRolId();
         this.userId = this.getUserId();
+
         this.showUnapply = this.showUnapplyProp;
+        console.log("showUnapply", this.showUnapply);
         // const currentDate = new Date();
 
 
@@ -290,6 +228,7 @@ export default {
     },
     methods: {
         async unapplyToProject() {
+            this.fetching = true
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/postDesaplicarProyecto`, {
                 method: "POST",
@@ -308,14 +247,17 @@ export default {
                 this.showSuccessToast('Solicitud enviada exitosamente.');
                 this.$emit('dataUpdated');
                 this.showUnapply = !this.showUnapply;
+                this.closeModal()
             } else {
                 this.showErrorToast('Algo salió mal al enviar la solicitud.');
             }
+
+            this.fetching = false
         },
         async applyToProject() {
-
-            console.log("Apply permission " + this.applyPermission)
-            console.log("Proyecto activo " + this.activeProject)
+            this.fetching = true
+            //console.log("Apply permission " + this.applyPermission)
+            //console.log("Proyecto activo " + this.activeProject)
             if (this.applyPermission && !this.activeProject) {
                 const API_ENDOINT = this.getAPIEndpoint();
                 const request = await fetch(API_ENDOINT + `/postAplicarProyecto`, {
@@ -335,6 +277,7 @@ export default {
                     this.showSuccessToast('Solicitud enviada exitosamente.');
                     this.$emit('dataUpdated');
                     this.showUnapply = !this.showUnapply
+                    this.closeModal()
                     // location.reload();
                 } else {
                     this.showErrorToast('Algo salió mal al enviar la solicitud.');
@@ -343,6 +286,8 @@ export default {
             } else {
                 this.showErrorToast('No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.');
             }
+
+            this.fetching = false
         },
         async updateProject() {
             const validation = await this.$validate();
@@ -456,6 +401,8 @@ export default {
             // eslint-disable-next-line
             this.project.ownerEmail = this.projectData.correo_encargado;
 
+            
+            
             if (this.userRol === 1 && this.projectData.carreras) {
                 const careerIds = [];
                 this.projectData.carreras.forEach(element => {
@@ -464,9 +411,11 @@ export default {
                 this.project.careers = careerIds;
             }
 
-            console.log(this.projectData.estudiantes)
+            //console.log(this.projectData.estudiantes)
+
             if (this.projectData.estudiantes) {
                 this.project.students = this.projectData.estudiantes;
+                this.acepted = this.projectData.estudiantes[0].pivot.estado
 
                 // filter students accepted
                 this.project.acceptedStudents = this.project.students.filter(student => {

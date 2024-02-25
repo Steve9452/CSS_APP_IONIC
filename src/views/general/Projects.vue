@@ -41,11 +41,13 @@
 		<!-- STUDENTS -->
 		<list-available-projects 
 			v-if="view === 'available'"
+			v-on:getPermissions="getApplyPermission"
 			:applyPermission="applyPermission"
 			:activeProject="activeProject"/>
 
 		<list-applied-projects 
 			v-if="view === 'applied'"
+			v-on:getPermissions="getApplyPermission"
 			:applyPermission="applyPermission"/>
 
 	</ion-content>
@@ -91,6 +93,10 @@ export default {
 		this.userRol = this.getUserRolId();
 		this.apiToken = this.getApiToken();
 		this.getApplyPermission();
+		
+		console.log("Permisos apply/active")
+		
+		console.log(this.applyPermission, this.activeProject)
 
 		if(this.userRol === 1) {
 			this.view = 'all';
@@ -107,14 +113,14 @@ export default {
 					'Authorization': 'Bearer ' + this.apiToken
 				}
 			}).then(response => response.json()).then(data => {
-				console.log(data)
+				//console.log(data)
 				this.applyPermission = data.permiso === 1 ? true : false;
 				this.activeProject = data.proyectoActivo === 0 ? false : true;
 
 
 			});
-			console.log("Permisos apply/active")
-			console.log(this.applyPermission, this.activeProject)
+			//console.log("Permisos apply/active")
+			// console.log(this.applyPermission, this.activeProject)
 
 			// Refactorizar condiciones para que sean más legibles
 
