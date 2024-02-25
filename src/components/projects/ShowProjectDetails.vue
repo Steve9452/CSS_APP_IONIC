@@ -483,6 +483,8 @@ export default {
                         nombre: this.project.name,
                         contraparte: this.project.counterpart,
                         cupos: this.project.spaces,
+                        // eslint-disable-next-line
+                        perfil_estudiante: this.project.profile,
                         descripcion: this.project.description,
                         encargado: this.project.owner,
                         // eslint-disable-next-line
@@ -494,6 +496,9 @@ export default {
                         tipo_horas: this.project.hoursType,
                         // eslint-disable-next-line
                         correo_encargado: this.project.ownerEmail,
+                        estado: 1,
+                        // eslint-disable-next-line
+                        estado_proyecto: "En curso",
                         carreraPerfil: selectedCareers
                     }),
                     headers: {
