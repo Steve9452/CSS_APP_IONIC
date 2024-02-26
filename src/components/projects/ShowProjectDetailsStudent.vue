@@ -35,16 +35,16 @@
                     <ion-grid class="gapped-grid-2">
 
                         <ion-row v-if="!showUnapply">
-                            <ion-button color="secondary" @click="applyToProject()"> Aplicar </ion-button>
+                            <ion-button color="secondary" :disabled="applyDisabled" @click="applyToProject()"> Aplicar </ion-button>
                         </ion-row>
-                        <ion-row v-else-if="acepted == 1"> 
-                            <ion-button color="success" > Aceptado </ion-button>
+                        <ion-row v-else-if="acepted == 1">
+                            <ion-button color="success"> Aceptado </ion-button>
                         </ion-row>
-                        <ion-row v-else-if="acepted == 2"> 
-                            <ion-button color="danger" > Rechazado </ion-button>
+                        <ion-row v-else-if="acepted == 2">
+                            <ion-button color="danger"> Rechazado </ion-button>
                         </ion-row>
-                        <ion-row v-else> 
-                            <ion-button color="secondary" @click="unapplyToProject()"> Desaplicar </ion-button>
+                        <ion-row v-else>
+                            <ion-button color="secondary" :disabled="applyDisabled" @click="unapplyToProject()"> Desaplicar </ion-button>
                         </ion-row>
 
                         <ion-row>
@@ -60,9 +60,15 @@
 
                 <ion-item>
                     <ion-grid class="gapped-grid">
-                        <ion-label class="text-muted font-weight-ligth">
-                            <i class="fas fa-envelope-open-text"></i>Correo &nbsp;</ion-label>
                         <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Perfil del estudiante
+                                &nbsp;</ion-label>
+                            <ion-text v-text="project.perfil_estudiante" class=""> </ion-text>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth">
+                                <i class="fas fa-envelope-open-text"></i>Correo encargado &nbsp;</ion-label>
                             <ion-text>
                                 {{ project.ownerEmail }}
                             </ion-text>
@@ -72,14 +78,9 @@
                         <ion-row>
                             <ion-label class="text-muted font-weight-ligth"><i class="fas fa-people-arrows"></i>Horario
                                 &nbsp;</ion-label>
-                            <ion-text v-text="project.schedule" type="text" class="" placeholder="Horario"> </ion-text>
+                            <ion-text v-text="project.schedule" type="text" class=""> </ion-text>
                         </ion-row>
 
-                        <ion-row>
-                            <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Descripción
-                                &nbsp;</ion-label>
-                            <ion-text v-text="project.description" class="" placeholder="Descripcion"> </ion-text>
-                        </ion-row>
 
                         <ion-row>
                             <ion-label class="text-muted font-weight-ligth"><i class="far fa-calendar-alt"></i>Fecha de
@@ -93,13 +94,18 @@
                                 Finalización &nbsp;</ion-label>
                             <ion-text v-text="project.endDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY">
                             </ion-text>
-
+                        </ion-row>
+                        <ion-row v-if="project.description.length > 2">
+                            <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Descripción
+                                adicional
+                                &nbsp;</ion-label>
+                            <ion-text v-text="project.description" class=""> </ion-text>
                         </ion-row>
 
                         <!---ion-row v-if="userRol === 1">
                     <ion-label class="text-muted font-weight-ligth"><i
                             class="fas fa-graduation-cap"></i>&nbsp;Carreras</ion-label>
-                    <ion-select v-text="project.careers" placeholder="Seleccionar" cancel-text="Cancelar" multiple>
+                    <ion-select v-text="project. cancel-text="Cancelar" multiple>
                         <ion-select-option v-for="item in collegeCareers" :key="item.idCarrera" :value="item.idCarrera">
                             {{ item.nombre }}
                         </ion-select-option>
@@ -115,8 +121,6 @@
 </template>
 
 <script>
-import SimpleVueValidator from 'simple-vue-validator';
-const Validator = SimpleVueValidator.Validator;
 import {
     modalController,
 } from "@ionic/vue";
@@ -130,7 +134,6 @@ import {
 } from 'ionicons/icons';
 
 export default {
-    mixins: [SimpleVueValidator.mixin],
     data() {
         return {
             apiToken: '',
@@ -167,17 +170,18 @@ export default {
             meetingPlace: '',
             meetingDescription: '',
             acceptedStudentsEmails: [],
+            applyDisabled: false,
             meetingMailButtonStatus: false,
         };
     },
-    props: ['projectData', 'showUnapplyProp', 'applyPermission', 'activeProject' ],
+    props: ['projectData', 'showUnapplyProp', 'applyPermission', 'activeProject'],
     created() {
         this.apiToken = this.getApiToken();
         this.userRol = this.getUserRolId();
         this.userId = this.getUserId();
 
         this.showUnapply = this.showUnapplyProp;
-        console.log("showUnapply", this.showUnapply);
+        //console.log("showUnapply", this.showUnapply);
         // const currentDate = new Date();
 
 
@@ -185,49 +189,16 @@ export default {
         //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
 
-                              console.log(this.projectData);
+        // console.log(this.projectData);
         if (this.userRol === 1) {
             this.getAllCollegeCareers();
         }
         this.setProjectData();
     },
-    validators: {
-        'project.name': function (value) {
-            return Validator.value(value).required('El nombre es obligatorio.');
-        },
-        'project.counterpart': function (value) {
-            return Validator.value(value).required('El campo contraparte es obligatorio.');
-        },
-        'project.spaces': function (value) {
-            return Validator.value(value).required('El campo cupos es obligatorio.');
-        },
-        'project.description': function (value) {
-            return Validator.value(value).required('El campo descripción es obligatorio.');
-        },
-        'project.owner': function (value) {
-            return Validator.value(value).required('El campo encargado es obligatorio.');
-        },
-        'project.startDate': function (value) {
-            return Validator.value(value).required('El campo fecha de inicio es obligatorio.');
-        },
-        'project.endDate': function (value) {
-            return Validator.value(value).required('El campo fecha de finalización es obligatorio.');
-        },
-        'project.schedule': function (value) {
-            return Validator.value(value).required('El campo horario es obligatorio.');
-        },
-        'project.hoursType': function (value) {
-            return Validator.value(value).required('El campo tipo de horas es obligatorio.');
-        },
-        'project.ownerEmail': function (value) {
-            return Validator
-                .value(value).required('El campo correo del encargado es obligatorio.')
-                .maxLength(100, 'El correo no debe contener más 100 caracteres.')
-                .email('Ingrese un correo valido.');
-        },
-    },
+
     methods: {
         async unapplyToProject() {
+            this.applyDisabled = true;
             this.fetching = true
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/postDesaplicarProyecto`, {
@@ -250,12 +221,14 @@ export default {
                 this.closeModal()
             } else {
                 this.showErrorToast('Algo salió mal al enviar la solicitud.');
+                this.applyDisabled = false;
             }
 
             this.fetching = false
         },
         async applyToProject() {
             this.fetching = true
+            this.applyDisabled = true;
             //console.log("Apply permission " + this.applyPermission)
             //console.log("Proyecto activo " + this.activeProject)
             if (this.applyPermission && !this.activeProject) {
@@ -281,6 +254,7 @@ export default {
                     // location.reload();
                 } else {
                     this.showErrorToast('Algo salió mal al enviar la solicitud.');
+                    this.applyDisabled = false;
                     //location.reload();
                 }
             } else {
@@ -288,87 +262,6 @@ export default {
             }
 
             this.fetching = false
-        },
-        async updateProject() {
-            const validation = await this.$validate();
-            if (validation) {
-                const API_ENDOINT = this.getAPIEndpoint();
-                const selectedCareers = [];
-
-                if (this.userRol === 1) {
-                    this.project.careers.forEach(element => {
-                        const career = [];
-                        career[0] = element;
-                        career[1] = 0;
-                        career[2] = 6;
-                        selectedCareers.push(career);
-                    });
-                }
-
-                const request = await fetch(API_ENDOINT + '/admin/putUpdateProyecto', {
-                    method: "PUT",
-                    // eslint-disable-next-line
-                    body: JSON.stringify({
-                        idProyecto: this.project.id,
-                        nombre: this.project.name,
-                        contraparte: this.project.counterpart,
-                        cupos: this.project.spaces,
-                        descripcion: this.project.description,
-                        encargado: this.project.owner,
-                        // eslint-disable-next-line
-                        fecha_inicio: this.project.startDate,
-                        // eslint-disable-next-line
-                        fecha_fin: this.project.endDate,
-                        horario: this.project.schedule,
-                        // eslint-disable-next-line
-                        tipo_horas: this.project.hoursType,
-                        // eslint-disable-next-line
-                        correo_encargado: this.project.ownerEmail,
-                        carreraPerfil: selectedCareers
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8",
-                        'Authorization': 'Bearer ' + this.apiToken
-                    }
-                })
-
-                if (request.status === 200) {
-                    this.showSuccessToast('Proyecto actualizado exitosamente.');
-                    this.closeModal();
-                    this.$emit('dataUpdated');
-                    location.reload();
-                } else {
-                    this.showErrorToast('Algo salió mal al actualizar el proyecto.');
-                }
-            } else {
-                this.FormValidationFailed();
-            }
-        },
-        async sendApplicationRequest(student, status) {
-            const API_ENDOINT = this.getAPIEndpoint();
-
-            const request = await fetch(API_ENDOINT + '/admin/putAplicarEnProyecto', {
-                method: "PUT",
-                // eslint-disable-next-line
-                body: JSON.stringify({
-                    idProyecto: this.project.id,
-                    idUser: student.idUser,
-                    estado: status === 'accept' ? 1 : 2
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    'Authorization': 'Bearer ' + this.apiToken
-                }
-            })
-
-            if (request.status === 200) {
-                this.showSuccessToast('Estado de alumno en el proyecto Actualizado.');
-                this.closeModal();
-                this.$emit('dataUpdated');
-                // location.reload();
-            } else {
-                this.showErrorToast('Algo salió mal al actualizar el proyecto.');
-            }
         },
         async getAllCollegeCareers() {
             const API_ENDOINT = this.getAPIEndpoint();
@@ -401,8 +294,8 @@ export default {
             // eslint-disable-next-line
             this.project.ownerEmail = this.projectData.correo_encargado;
 
-            
-            
+
+
             if (this.userRol === 1 && this.projectData.carreras) {
                 const careerIds = [];
                 this.projectData.carreras.forEach(element => {
@@ -413,93 +306,15 @@ export default {
 
             //console.log(this.projectData.estudiantes)
 
-            if (this.projectData.estudiantes) {
+            if (this.projectData.estadoPxe) {
                 this.project.students = this.projectData.estudiantes;
-                this.acepted = this.projectData.estudiantes[0].pivot.estado
-
-                // filter students accepted
-                this.project.acceptedStudents = this.project.students.filter(student => {
-                    return student.pivot.estado === 1;
-                });
+                this.acepted = this.projectData.estadoPxe
             }
         },
         async closeModal() {
             await modalController.dismiss();
         },
-        async sendMeetingRequest() {
 
-            // Validate inputs 
-            if (this.meetingScheduleDate === '' || this.meetingScheduleTime === '' || this.meetingPlace === '') {
-                this.showErrorToast('La fecha, hora y lugar son obligatorios.');
-                return;
-            }
-
-            this.meetingMailButtonStatus = true;
-            const API_ENDOINT = this.getAPIEndpoint();
-
-            const emails = [];
-
-            this.project.acceptedStudents.forEach(element => {
-                console.log(element.correo)
-                emails.push(element.correo);
-            });
-
-
-
-            const selectedTime = new Date(this.meetingScheduleTime);
-            const parsedTime = selectedTime.toLocaleTimeString('us-EN', { hour: '2-digit', minute: '2-digit' });
-
-            const selectedDate = new Date(this.meetingScheduleDate);
-            const parsedDate = selectedDate.toLocaleDateString('us-EN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
-            // console.log("Body");
-            // console.log(JSON.stringify({
-            //         estudiantes: emails,
-            //         fecha: parsedDate,
-            //         hora: parsedTime,
-            //         lugar: this.meetingPlace,
-            //         // eslint-disable-next-line
-            //         nombre_proyecto: this.project.name,
-            //         descripcion: this.meetingDescription,
-            //         encargado: this.project.owner,
-            //         // eslint-disable-next-line
-            //         encargado_correo : this.project.ownerEmail,
-            //     }));
-
-
-
-            const request = await fetch(API_ENDOINT + '/admin/sendMeetingMail', {
-                method: "POST",
-                // eslint-disable-next-line
-                body: JSON.stringify({
-                    estudiantes: emails,
-                    fecha: parsedDate,
-                    hora: parsedTime,
-                    lugar: this.meetingPlace,
-                    // eslint-disable-next-line
-                    nombre_proyecto: this.project.name,
-                    descripcion: this.meetingDescription,
-                    encargado: this.project.owner,
-                    // eslint-disable-next-line
-                    encargado_correo: this.project.ownerEmail,
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    'Authorization': 'Bearer ' + this.apiToken
-                }
-            })
-
-            if (request.status === 200) {
-                this.showSuccessToast('Reunion programada exitosamente.');
-                this.closeModal();
-            }
-            else {
-                this.showErrorToast('Algo salió mal al programar la reunion.');
-                this.closeModal();
-            }
-
-
-        }
     },
     computed: {
         disableInput: function () {

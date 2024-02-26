@@ -4,14 +4,21 @@
 		<ion-item color="primary">
 			<ion-label @click="openModal">
 				<ion-card-subtitle style="color:white;">
+					{{ project.counterpart }}
+				</ion-card-subtitle>
+				<ion-card-subtitle style="color:white;">
 					{{ project.name }}
 				</ion-card-subtitle>
+				
 			</ion-label>
 		</ion-item>
 		
 		<ion-card-content @click="openModal">
+			<ion-card-subtitle style="color:white;">
+					{{ project.profile }}
+				</ion-card-subtitle>
 			<p>
-				{{ project.description }}
+				{{  }}
 			</p>
 			<p>
 				<ion-chip v-if="showUnapply && acepted" color="success" class="mr-1 success-border">
@@ -91,6 +98,7 @@ export default {
 			addCircle,
 			trash,
 			chevronDown,
+			fetching: false,
 		};
 	},
 	async created() {
@@ -99,11 +107,11 @@ export default {
 		this.userId = this.getUserId();
 		this.userRol = this.getUserRolId();
 
-		if(this.projectData.estudiantes){
+		if(this.projectData.estadoPxe !== undefined){
 
-			this.acepted = this.projectData.estudiantes[0].pivot.estado == 1
-			this.rejected = this.projectData.estudiantes[0].pivot.estado == 2
-			console.log("Aceptado", this.acepted)
+			this.acepted = this.projectData.estadoPxe == 1
+			this.rejected = this.projectData.estadoPxe == 2
+			//console.log("Aceptado", this.acepted)
 		}
 
 	},
