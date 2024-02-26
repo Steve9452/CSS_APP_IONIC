@@ -35,7 +35,7 @@ export default {
             projects: []
         };
     },
-    props: ['applyPermission'],
+    props: ['applyPermission', 'timeout'],
     async created() {
         this.apiToken = await this.getApiToken();
         this.getMyProjects();

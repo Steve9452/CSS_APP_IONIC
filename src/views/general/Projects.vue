@@ -42,13 +42,15 @@
 		<list-available-projects 
 			v-if="view === 'available'"
 			v-on:getPermissions="getApplyPermission"
-			:applyPermission="applyPermission"
+			:applyPermission="applyPermission && !timeout"
+			:timeout="timeout"
 			:activeProject="activeProject"/>
 
 		<list-applied-projects 
 			v-if="view === 'applied'"
 			v-on:getPermissions="getApplyPermission"
-			:applyPermission="applyPermission"/>
+			:applyPermission="applyPermission"
+			/>
 
 	</ion-content>
 </ion-page>
@@ -77,6 +79,7 @@ export default {
 	data() {
 		return {
 			applyPermission: false,
+			timeout: -1,
 			activeProject: true,
 			apiToken: '',
 			userRol: '',
@@ -98,6 +101,8 @@ export default {
 		
 		console.log(this.applyPermission, this.activeProject)
 
+		//console.log("TimeOut", this.timeout)
+
 		if(this.userRol === 1) {
 			this.view = 'all';
 		} else {
@@ -107,17 +112,26 @@ export default {
 	methods: {
 		async getApplyPermission() {
 			const API_ENDOINT = this.getAPIEndpoint();
-			const request = await fetch(API_ENDOINT + '/getPermisoAplicar', {
+			
+			fetch(API_ENDOINT + '/getPermisoAplicar', {
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
 					'Authorization': 'Bearer ' + this.apiToken
 				}
 			}).then(response => response.json()).then(data => {
 				//console.log(data)
+				
 				this.applyPermission = data.permiso === 1 ? true : false;
 				this.activeProject = data.proyectoActivo === 0 ? false : true;
-
-
+				
+				try{
+					this.timeout = new Date(data.timeout).getTime() > Date.now();
+					console.log(data.timeout)
+				}catch{
+					this.timeout = false
+					console.log(data.timeout)
+				}
+				console.log("TIMED OUT", this.timeout)
 			});
 			//console.log("Permisos apply/active")
 			// console.log(this.applyPermission, this.activeProject)

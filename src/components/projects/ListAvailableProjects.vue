@@ -7,6 +7,9 @@
             <p v-if="!applyPermission" class="alert alert-warning" role="alert">
                 Ha excedido la cantidad de solicitudes diarias. Inténtelo nuevamente mañana.
             </p>
+            <p v-if="timeout" class="alert alert-danger" role="alert">
+                Se le ha bloqueado debido a comportamiento inapropiado en proyectos del Centro de Servicio Social.
+            </p>
 
         </div>
 
@@ -43,7 +46,7 @@
             <ion-list>
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                     :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
-                    v-on:dataUpdated="getAvailableProjects()">
+                    v-on:dataUpdated="resetData()">
                 </show-project>
             </ion-list>
 
@@ -90,7 +93,7 @@ export default {
         IonInfiniteScroll,
         IonInfiniteScrollContent,
     },
-    props: ['applyPermission', 'activeProject'],
+    props: ['applyPermission', 'activeProject', 'timeout'],
     data: function () {
         return {
             apiToken: '',
@@ -116,7 +119,7 @@ export default {
         }
     },
     methods: {
-
+        
         async fetchData() {
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/getAviableProjects?page=${this.page}&nombre=${this.nombreABuscar}&tipo=${this.filtroTipoHoras}`, {
