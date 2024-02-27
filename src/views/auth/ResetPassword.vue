@@ -3,7 +3,12 @@
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
                 <div class="col">
-                    <img src="/assets/img/css.png">
+                    <div class="flex-center">
+
+                        <img src="/assets/img/uca.png" style="width: 5em;">
+                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social </p>
+
+                    </div>
 
                     <div class="form-group">
                         <p class="d-block text-primary text-center">
@@ -13,19 +18,22 @@
 
                     <div class="form-group">
                         <label>Código</label>
-                        <input v-model="code" type="text" class="form-control custom-form" placeholder="Ingrese el código de verificación">
+                        <input v-model="code" type="text" class="form-control custom-form"
+                            placeholder="Ingrese el código de verificación">
                         <div class="text-danger">{{ validation.firstError('code') }}</div>
                     </div>
 
                     <div class="form-group">
                         <label>Contraseña</label>
-                        <input v-model="password" type="password" class="form-control custom-form" placeholder="Ingrese su clave">
+                        <input v-model="password" type="password" class="form-control custom-form"
+                            placeholder="Ingrese su clave">
                         <div class="text-danger">{{ validation.firstError('password') }}</div>
                     </div>
 
                     <div class="form-group">
                         <label>Confirmar Contraseña</label>
-                        <input v-model="repeat" type="password" class="form-control custom-form" placeholder="Confirmar clave">
+                        <input v-model="repeat" type="password" class="form-control custom-form"
+                            placeholder="Confirmar clave">
                         <div class="text-danger font-weight-bold">{{ validation.firstError('repeat') }}</div>
                     </div>
 
@@ -68,7 +76,8 @@ export default {
         'password': function (value) {
             return Validator.value(value)
                 .required('El contraseña es obligatoria.')
-                .minLength(8, 'La contraseña debe contener al menos 8 caracteres.');
+                .minLength(8, 'La contraseña debe contener al menos 8 caracteres.')
+                .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&^#])[A-Za-z0-9@$!%*?&^#]{8,}$/, 'La contraseña debe tener una mayúscula y un simbolo especial')
         },
         'repeat, password': function (repeat, password) {
             return Validator.value(repeat)
@@ -79,22 +88,24 @@ export default {
     methods: {
         async ResetPassword() {
             const validation = await this.$validate();
-            if(validation) {
+            if (validation) {
                 const API_ENDOINT = this.getAPIEndpoint();
                 const request = await fetch(API_ENDOINT + '/cambiar-clave', {
                     method: "POST",
                     body: JSON.stringify({
-                        token: this.code,
-                        clave: this.password,
+                        token: this.code.trim(),
+                        clave: this.password.trim(),
                         // eslint-disable-next-line
-                        confirmar_clave: this.repeat
+                        confirmar_clave: this.repeat.trim()
                     }),
                     headers: { "Content-type": "application/json; charset=UTF-8" }
                 })
 
-                if(request.status === 200) {
+                if (request.status === 200) {
                     window.location = '/login';
-                } else {
+                } else if (request.status === 404) {
+                    this.showErrorToast('Codígo invalido!');
+                }else {
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
             } else {
