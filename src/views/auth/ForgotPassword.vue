@@ -3,11 +3,17 @@
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
                 <div class="col">
-                    <img src="/assets/img/css.png">
+                    <div class="flex-center">
+
+                        <img src="/assets/img/uca.png" style="width: 5em;">
+                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social </p>
+
+                    </div>
 
                     <div class="form-group mt-3">
                         <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
-                        <input v-model="user.carnet" type="text" class="form-control custom-form" placeholder="Ingrese su carnet">
+                        <input v-model="user.carnet" type="text" class="form-control custom-form"
+                            placeholder="Ingrese su carnet">
                         <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
                     </div>
 
@@ -52,10 +58,10 @@ export default {
     methods: {
         async ForgotPassword() {
             const validation = await this.$validate();
-            if(validation) {
+            if (validation) {
                 const API_ENDOINT = this.getAPIEndpoint();
-                let correo = this.user.carnet;
-                if(!correo.includes('@')) {
+                let correo = this.user.carnet.trim();
+                if (!correo.includes('@')) {
                     correo = correo + '@uca.edu.sv';
                 }
                 const request = await fetch(API_ENDOINT + '/olvide-clave', {
@@ -66,9 +72,10 @@ export default {
                     headers: { "Content-type": "application/json; charset=UTF-8" }
                 })
 
-                if(request.status === 200) {
+                if (request.status === 200) {
                     window.location = '/reset-password';
-                } else {
+                } 
+                else {
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
             } else {

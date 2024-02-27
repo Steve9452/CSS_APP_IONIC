@@ -104,7 +104,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .flex-center{
         display: flex;
         flex-direction: column;
