@@ -35,10 +35,12 @@ ion-select, ion-datetime {
 .action-sheet-title {
     color: white;
 }
+
 .action-sheet-button {
-    color: white;
-    --button-color: white;
+    color: black;
+    --button-color: black;
 }
+
 .center{
     display: flex;
     flex-direction: column;
@@ -51,3 +53,12 @@ ion-select, ion-datetime {
     --wheel-highlight-background: rgb(218, 216, 255);
     --wheel-fade-background-rgb: 245, 235, 247;
   }
+
+  @media (prefers-color-scheme: dark) {
+    .action-sheet-button {
+        color: white;
+        --button-color: white;
+    }
+    
+}
+    

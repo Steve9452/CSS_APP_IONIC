@@ -3,10 +3,10 @@
 		
 		<ion-item color="primary">
 			<ion-label @click="openModal">
-				<ion-card-subtitle style="color:white;">
+				<ion-card-subtitle style="color:var(--ion-text-color);">
 					{{ project.counterpart }}
 				</ion-card-subtitle>
-				<ion-card-subtitle style="color:white;">
+				<ion-card-subtitle style="color:var(--ion-text-color);">
 					{{ project.name }}
 				</ion-card-subtitle>
 				
@@ -14,7 +14,7 @@
 		</ion-item>
 		
 		<ion-card-content @click="openModal">
-			<ion-card-subtitle style="color:white;">
+			<ion-card-subtitle style="color:var(--ion-text-color);">
 					{{ project.profile }}
 				</ion-card-subtitle>
 			<p>

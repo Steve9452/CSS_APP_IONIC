@@ -63,7 +63,7 @@
                         <ion-row>
                             <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Perfil del estudiante
                                 &nbsp;</ion-label>
-                            <ion-text v-text="project.perfil_estudiante" class=""> </ion-text>
+                            <ion-text v-text="projectData.perfil_estudiante" class=""> </ion-text>
                         </ion-row>
 
                         <ion-row>
