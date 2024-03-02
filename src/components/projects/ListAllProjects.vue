@@ -41,7 +41,7 @@
             <ion-list>
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                     :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
-                    v-on:dataUpdated="resetData()">    
+                    :historyProject="false" v-on:dataUpdated="resetData()">    
                 </show-project>
             </ion-list>
 

@@ -6,6 +6,7 @@
             :key="project.idProyecto"
             :project-data="project"
             :show-unapply="false"
+            :historyProject="true"
             v-on:dataUpdated="getProjectsHistory()">
         </show-project>
     </div>
