@@ -27,6 +27,9 @@
 				<ion-chip v-if="showUnapply && rejected" color="danger" class="mr-1 danger-border">
 					<small>Rechazado</small>
 				</ion-chip>
+				<ion-chip v-if="showUnapply && finished" color="warning" class="mr-1">
+					<small>Proyecto finalizado</small>
+				</ion-chip>
 				<ion-chip color="primary" class="mr-1">
 					<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
 				</ion-chip>
@@ -111,6 +114,7 @@ export default {
 
 			this.acepted = this.projectData.estadoPxe == 1
 			this.rejected = this.projectData.estadoPxe == 2
+			this.finished = this.projectData.estadoPxe == 3
 			//console.log("Aceptado", this.acepted)
 		}
 

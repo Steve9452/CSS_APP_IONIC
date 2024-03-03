@@ -322,8 +322,8 @@
                             class="fas fa-people-arrows"></i>&nbsp;Estado
                         del proyecto</label>
                     <ion-select placeholder="Seleccionar" v-model="project.projectStatus" cancel-text="Cancelar">
-                        <ion-select-option value="Finalizado">Finalizado</ion-select-option>
-                        <ion-select-option value="Cancelado">Cancelado</ion-select-option>
+                        <ion-select-option value="2">Finalizado</ion-select-option>
+                        <ion-select-option value="1">Cancelado</ion-select-option>
                     </ion-select>
                     <!--<div class="text-danger">{{ validation.firstError('project.hoursType') }}</div>-->
                 </div>
@@ -529,14 +529,12 @@ export default {
             this.fetching = true
 
             const estadoProyecto = this.project.projectStatus;
-            const estado = (estadoProyecto === 'En curso') ? 1 : 0;
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
-                method: "PUT",
+            const request = await fetch(API_ENDOINT + `/admin/postProyecto${estadoProyecto == '2' ? 'Finalizar' : 'Cancelar' }`, {
+            // const request = await fetch(API_ENDOINT + `postProyectoCancelarcancelar`, {}
+                method: "POST",
                 body: JSON.stringify({
-                    idProyecto: this.project.id,
-                    estado: estado,
-                    estadoProyecto: estadoProyecto
+                    idProyecto: this.project.id
                 }),
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
@@ -547,6 +545,7 @@ export default {
             if (request.status === 200) {
                 this.showSuccessToast('Proyecto actualizado exitosamente.');
                 this.$emit('dataUpdated');
+                this.closeModal()
                 // location.reload();
             } else {
                 this.showErrorToast('Algo salió mal al actualizar el proyecto.');
