@@ -8,7 +8,7 @@
                 Ha excedido la cantidad de solicitudes diarias. Inténtelo nuevamente mañana.
             </p>
             <p v-if="timeout" class="alert alert-danger" role="alert">
-                Se le ha bloqueado debido a comportamiento inapropiado en proyectos del Centro de Servicio Social.
+                Penalización: Por el momento no puede aplicar a nuevos proyectos.
             </p>
 
         </div>
