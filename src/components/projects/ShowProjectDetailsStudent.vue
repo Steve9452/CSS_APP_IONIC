@@ -43,6 +43,9 @@
                         <ion-row v-else-if="acepted == 2">
                             <ion-button color="danger"> Rechazado </ion-button>
                         </ion-row>
+                        <ion-row v-else-if="acepted == 3">
+                            <ion-button color="warning"> Proyecto finalizado </ion-button>
+                        </ion-row>
                         <ion-row v-else>
                             <ion-button color="secondary" :disabled="applyDisabled" @click="unapplyToProject()"> Desaplicar </ion-button>
                         </ion-row>

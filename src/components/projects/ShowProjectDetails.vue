@@ -31,7 +31,7 @@
                 </ion-label>
             </ion-segment-button>
 
-            <ion-segment-button value="change-status" @click="view = 'change-status';" :hidden="disableInput">
+            <ion-segment-button value="change-status" @click="view = 'change-status';" :hidden="disableStatus">
                 <ion-label>
                     <small>Cambiar estado</small>
                 </ion-label>
@@ -309,7 +309,7 @@
             </ion-card-content>
         </ion-card>
 
-        <ion-card class="my-3" v-if="view === 'change-status'" :hidden="disableInput">
+        <ion-card class="my-3" v-if="view === 'change-status'" :hidden="disableStatus">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -322,22 +322,28 @@
                             class="fas fa-people-arrows"></i>&nbsp;Estado
                         del proyecto</label>
                     <ion-select placeholder="Seleccionar" v-model="project.projectStatus" cancel-text="Cancelar">
-                        <ion-select-option value="En curso">En curso</ion-select-option>
-                        <ion-select-option value="Finalizado">Finalizado</ion-select-option>
-                        <ion-select-option value="Cancelado">Cancelado</ion-select-option>
+                        <ion-select-option value="2">Finalizado</ion-select-option>
+                        <ion-select-option value="1">Cancelado</ion-select-option>
                     </ion-select>
                     <!--<div class="text-danger">{{ validation.firstError('project.hoursType') }}</div>-->
                 </div>
 
                 <div class="form-group mt-4" v-if="!disableInput">
                     <ion-button expand="block" color="primary" @click="changeProjectStatus()">
-                        ACTUALIZAR
+                        Confirmar cambio de estado
                     </ion-button>
                 </div>
-                <div class="form-group">
-                    <ion-button expand="block" color="dark" @click="closeModal()">
-                        REGRESAR
-                    </ion-button>
+                <div>
+                    <ion-text>
+                        <h3>
+                            Al seleccionar <b>Cancelar</b>, el proyecto sera eliminado del registro.
+                        </h3>
+                    </ion-text>
+                    <ion-text>
+                        <h3>
+                            Al seleccionar <b>Finalizar</b>, el proyecto sera enviado al Historial.
+                        </h3>
+                    </ion-text>
                 </div>
             </ion-card-content>
         </ion-card>
@@ -402,7 +408,7 @@ export default {
             fetching: false,
         };
     },
-    props: ['projectData'],
+    props: ['projectData', 'disableStatus'],
     created() {
         this.apiToken = this.getApiToken();
         this.userRol = this.getUserRolId();
@@ -523,14 +529,12 @@ export default {
             this.fetching = true
 
             const estadoProyecto = this.project.projectStatus;
-            const estado = (estadoProyecto === 'En curso') ? 1 : 0;
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
-                method: "PUT",
+            const request = await fetch(API_ENDOINT + `/admin/postProyecto${estadoProyecto == '2' ? 'Finalizar' : 'Cancelar' }`, {
+            // const request = await fetch(API_ENDOINT + `postProyectoCancelarcancelar`, {}
+                method: "POST",
                 body: JSON.stringify({
-                    idProyecto: this.project.id,
-                    estado: estado,
-                    estadoProyecto: estadoProyecto
+                    idProyecto: this.project.id
                 }),
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
@@ -541,6 +545,7 @@ export default {
             if (request.status === 200) {
                 this.showSuccessToast('Proyecto actualizado exitosamente.');
                 this.$emit('dataUpdated');
+                this.closeModal()
                 // location.reload();
             } else {
                 this.showErrorToast('Algo salió mal al actualizar el proyecto.');

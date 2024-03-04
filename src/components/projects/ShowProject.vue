@@ -27,6 +27,9 @@
 				<ion-chip v-if="showUnapply && rejected" color="danger" class="mr-1 danger-border">
 					<small>Rechazado</small>
 				</ion-chip>
+				<ion-chip v-if="showUnapply && finished" color="warning" class="mr-1">
+					<small>Proyecto finalizado</small>
+				</ion-chip>
 				<ion-chip color="primary" class="mr-1">
 					<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
 				</ion-chip>
@@ -64,7 +67,7 @@ export default {
 	components: {
 		IonChip
 	},
-	props: ['projectData', 'applyPermission', 'showUnapply', 'activeProject'],
+	props: ['projectData', 'applyPermission', 'showUnapply', 'activeProject', 'historyProject'],
 	data: function () {
 		return {
 			userId: '',
@@ -111,6 +114,7 @@ export default {
 
 			this.acepted = this.projectData.estadoPxe == 1
 			this.rejected = this.projectData.estadoPxe == 2
+			this.finished = this.projectData.estadoPxe == 3
 			//console.log("Aceptado", this.acepted)
 		}
 
@@ -135,189 +139,7 @@ export default {
 			this.project.ownerEmail = this.projectData.correo_encargado;
 
 		},
-		async presentActionSheet() {
-
-			if (this.userRol === 1) {
-				this.projectOptions = [{
-					text: 'Editar proyecto',
-					icon: create,
-					role: 'details',
-				},
-				{
-					text: 'Agregar Alumno',
-					icon: addCircle,
-					role: 'addStudent',
-				},
-				{
-					text: 'Cancelar',
-					icon: close,
-					role: 'cancel'
-				},
-				];
-			} else {
-
-				if (this.showUnapply) {
-					this.projectOptions = [{
-						text: 'Desaplicar',
-						icon: personRemove,
-						role: 'unapply',
-					},
-					{
-						text: 'Ver Detalles',
-						icon: create,
-						role: 'details',
-					},
-					{
-						text: 'Cancelar',
-						icon: close,
-						role: 'cancel'
-					},
-					];
-				} else {
-					this.projectOptions = [{
-						text: 'Aplicar',
-						icon: personAdd,
-						role: 'apply'
-					},
-					{
-						text: 'Ver Detalles',
-						icon: create,
-						role: 'details',
-					},
-					{
-						text: 'Cancelar',
-						icon: close,
-						role: 'cancel'
-					},
-					];
-				}
-
-			}
-
-			const actionSheet = await actionSheetController
-				.create({
-					header: 'Opciones de Proyecto',
-					buttons: this.projectOptions,
-				});
-			await actionSheet.present();
-
-			const {
-				role
-			} = await actionSheet.onDidDismiss();
-
-			switch (role) {
-				case 'details':
-					this.openModal();
-					break;
-
-				case 'addStudent':
-					this.addStudent();
-					break;
-
-				case 'apply':
-					this.applyToProject();
-					break;
-
-				case 'unapply':
-					this.unapplyToProject();
-					break;
-			}
-		},
-		async addStudent() {
-			const action = await alertController
-				.create({
-					header: 'Agregar alumno',
-					inputs: [{ name: 'carnet', type: 'number', placeholder: 'Ingrese carnet del alumno' }],
-					buttons: [
-						{ text: 'Cancelar', role: 'cancel', cssClass: 'secondary' },
-						{
-							text: 'Ok',
-							role: 'add',
-							handler: (data) => {
-								this.addStudentToProject(data.carnet);
-							},
-						},
-					],
-				});
-			return action.present();
-		},
-		async addStudentToProject(carnet) {
-			const API_ENDOINT = this.getAPIEndpoint();
-			const request = await fetch(API_ENDOINT + `/admin/postApplyStudent`, {
-				method: "POST",
-				body: JSON.stringify({
-					idProyecto: this.project.id,
-					carnet: carnet,
-					estado: 1
-				}),
-				headers: {
-					"Content-type": "application/json; charset=UTF-8",
-					'Authorization': 'Bearer ' + this.apiToken
-				}
-			})
-
-			if (request.status === 200) {
-				this.showSuccessToast('Alumno agregado exitosamente.');
-				this.$emit('dataUpdated');
-				location.reload();
-			} else {
-				this.showErrorToast('Algo salió mal al agregar el alumno.');
-			}
-		},
-		async applyToProject() {
-
-			console.log("Apply permission " + this.applyPermission)
-			console.log("Proyecto activo " + this.activeProject)
-			if (this.applyPermission && !this.activeProject) {
-				const API_ENDOINT = this.getAPIEndpoint();
-				const request = await fetch(API_ENDOINT + `/postAplicarProyecto`, {
-					method: "POST",
-					body: JSON.stringify({
-						idProyecto: this.project.id,
-						idUser: this.userId,
-						estado: 0
-					}),
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-						'Authorization': 'Bearer ' + this.apiToken
-					}
-				})
-
-				if (request.status === 200) {
-					this.showSuccessToast('Solicitud enviada exitosamente.');
-					this.$emit('dataUpdated');
-					location.reload();
-				} else {
-					this.showErrorToast('Algo salió mal al enviar la solicitud.');
-					location.reload();
-				}
-			} else {
-				this.showErrorToast('No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.');
-			}
-		},
-		async unapplyToProject() {
-			const API_ENDOINT = this.getAPIEndpoint();
-			const request = await fetch(API_ENDOINT + `/postDesaplicarProyecto`, {
-				method: "POST",
-				body: JSON.stringify({
-					idProyecto: this.project.id,
-					idUser: this.userId,
-					estado: 0
-				}),
-				headers: {
-					"Content-type": "application/json; charset=UTF-8",
-					'Authorization': 'Bearer ' + this.apiToken
-				}
-			})
-
-			if (request.status === 200) {
-				this.showSuccessToast('Solicitud enviada exitosamente.');
-				this.$emit('dataUpdated');
-				location.reload();
-			} else {
-				this.showErrorToast('Algo salió mal al enviar la solicitud.');
-			}
-		},
+		
 		async openModal() {
 			const modal = await modalController
 				.create({
@@ -326,7 +148,8 @@ export default {
 						projectData: this.projectData,
 						showUnapplyProp: this.showUnapply,
 						applyPermission: this.applyPermission,
-						activeProject: this.activeProject
+						activeProject: this.activeProject,
+						disableStatus: this.historyProject
 					},
 				});
 			modal.onDidDismiss().then(() => {
