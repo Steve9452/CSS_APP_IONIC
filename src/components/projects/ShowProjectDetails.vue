@@ -491,9 +491,9 @@ export default {
                         descripcion: this.project.description,
                         encargado: this.project.owner,
                         // eslint-disable-next-line
-                        fecha_inicio: this.project.startDate,
+                        fecha_inicio: this.project.startDate.substring(0, 10),
                         // eslint-disable-next-line
-                        fecha_fin: this.project.endDate,
+                        fecha_fin: this.project.endDate.substring(0, 10),
                         horario: this.project.schedule,
                         // eslint-disable-next-line
                         tipo_horas: this.project.hoursType,

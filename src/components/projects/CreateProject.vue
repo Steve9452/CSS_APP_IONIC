@@ -194,15 +194,17 @@ export default {
                         encargado: this.project.owner,
                         estado: 1,
                         // eslint-disable-next-line
-                        fecha_inicio: this.project.startDate,
+                        fecha_inicio: this.project.startDate.substring(0, 10),
                         // eslint-disable-next-line
-                        fecha_fin: this.project.endDate,
+                        fecha_fin: this.project.endDate.substring(0, 10),
                         horario: this.project.schedule,
                         // eslint-disable-next-line
                         tipo_horas: this.project.hoursType,
                         // eslint-disable-next-line
                         correo_encargado: this.project.ownerEmail,
                         carreraPerfil: selectedCareers,
+                        // eslint-disable-next-line
+                        perfil_estudiante: this.project.profile,
                         // eslint-disable-next-line
                         estado_proyecto: 'En curso'
                     }),
