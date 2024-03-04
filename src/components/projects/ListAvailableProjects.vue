@@ -19,8 +19,8 @@
         </div>
 
         <ion-grid>
-            <ion-col size="6">
-                <ion-chip class="large-chip" size="large" :outline="true">
+            <ion-col class="large-chip">
+                <ion-chip class="large-chip" :outline="true">
                     <ion-icon :icon="searchOutline" color="secundary"></ion-icon>
                     <ion-input @ionInput="inputHandler" placeholder="Buscar"></ion-input>
                 </ion-chip>
@@ -32,6 +32,17 @@
                 </ion-chip>
             </ion-col>
         </ion-grid>
+
+        <div class="center-row" style=" font-size: 12px; padding: 0px 10px 0px 10px ">
+          
+            <ion-chip style="padding: 0px 1.5em 0px 1.5em;" color="primary" size="small">
+                   <span> {{ userCarrera}} </span>
+                </ion-chip>
+            <ion-chip style="padding: 0px 1.5em 0px 1.5em;" color="primary" size="small">
+                   <span> {{ userPerfil }} </span>
+                </ion-chip>
+        </div>          
+        
 
         <div v-if="projects.length > 0">
             <!-- <ion-list lines="full">
@@ -75,6 +86,8 @@
                 </div>
             </div>
         </div>
+
+        
     </div>
 </template>
 
@@ -82,7 +95,6 @@
 import ShowProject from './ShowProject.vue'
 
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
-import { ref } from 'vue';
 import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
 export default {
     components: {
@@ -104,13 +116,17 @@ export default {
             nombreABuscar: "",
             filtroTipoHoras: "todas",
             filterButtonCallbackHandler: "todas",
+            userCarrera: "",
+            userPerfil: "",
             page: 1,
         };
     },
     async created() {
         this.apiToken = await this.getApiToken();
+        this.userData = await this.getAuthenticatedUser();
         this.loadData();
-        console.log(this.filterButtonCallbackHandler)
+        this.userCarrera = this.userData.user.carrera.nombre
+        this.userPerfil = this.userData.user.perfil.descripcion
     },
     watch: {
         filterButtonCallbackHandler: function (v) {
@@ -223,4 +239,28 @@ export default {
 }
 </script>
 
+<style scoped>
+    ion-grid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    .center-row{
+        display: flex;
+        justify-content: center;
+    }
+
+    .large-chip {
+        width: 100%;
+    }
+    
+    .large-row {
+        width: auto;
+    }
+
+    .flex-space-around{
+        display: flex;
+        justify-content: space-around;
+    }
+</style>

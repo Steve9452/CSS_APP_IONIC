@@ -46,8 +46,6 @@
 import ShowProjectDetails from './ShowProjectDetails.vue';
 import ShowProjectDetailsStudent from './ShowProjectDetailsStudent.vue';
 import {
-	actionSheetController,
-	alertController,
 	modalController,
 	IonChip,
 } from '@ionic/vue';
