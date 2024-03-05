@@ -6,7 +6,8 @@
                     <div class="flex-center">
 
                         <img src="/assets/img/uca.png" style="width: 5em;">
-                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social </p>
+                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social
+                        </p>
 
                     </div>
 
@@ -50,7 +51,8 @@
                     <div class="form-group">
                         <label class="text-muted"><i class="fas fa-university"></i>&nbsp;Facultad</label>
                         <ion-select v-model="user.faculty" placeholder="Seleccionar" cancel-text="Cancelar">
-                            <ion-select-option v-for="item in faculties" :key="item.idFacultad" :value="item.idFacultad">
+                            <ion-select-option v-for="item in faculties" :key="item.idFacultad"
+                                :value="item.idFacultad">
                                 {{ item.nombre }}
                             </ion-select-option>
                         </ion-select>
@@ -61,7 +63,8 @@
                         <label class="text-muted"><i class="fas fa-graduation-cap"></i>&nbsp;Carrera</label>
                         <ion-select placeholder="Seleccionar" v-model="user.collegeCareer"
                             :disabled="isCollegeCareersDisabled" cancel-text="Cancelar">
-                            <ion-select-option v-for="item in collegeCareers" :key="item.idCarrera" :value="item.idCarrera">
+                            <ion-select-option v-for="item in collegeCareers" :key="item.idCarrera"
+                                :value="item.idCarrera">
                                 {{ item.nombre }}
                             </ion-select-option>
                         </ion-select>
@@ -69,7 +72,7 @@
                     </div>
 
                     <div class="form-group mt-4">
-                        <ion-button expand="block" @click="Register()">
+                        <ion-button expand="block" :disabled="fetching" @click="Register()">
                             CREAR CUENTA
                         </ion-button>
                         <br>
@@ -99,6 +102,8 @@
 
 <script>
 import SimpleVueValidator from 'simple-vue-validator';
+import { loadingController } from '@ionic/vue';
+
 const Validator = SimpleVueValidator.Validator;
 
 export default {
@@ -114,6 +119,7 @@ export default {
                 faculty: '',
                 collegeCareer: '',
             },
+            fetching: false,
             faculties: [],
             collegeCareers: []
         };
@@ -149,32 +155,40 @@ export default {
         async Register() {
             const validation = await this.$validate();
             if (validation) {
+                this.fetching = true;
                 let correo = this.user.carnet;
                 if (!correo.includes('@')) {
                     correo = correo + '@uca.edu.sv';
                 }
-
-                const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + '/registro', {
-                    method: "POST",
-                    body: JSON.stringify({
-                        correo: correo,
-                        nombres: this.user.fname,
-                        apellidos: this.user.lname,
-                        genero: this.user.gender,
-                        carrera: this.user.collegeCareer,
-                    }),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                })
-                if (request.status === 200) {
-                    this.processCompleted = true;
-                } else {
-                    localStorage.removeItem('user');
-                    this.showErrorToast('Ups! Algo salió mal.');
+                try {
+                    const API_ENDOINT = this.getAPIEndpoint();
+                    const request = await fetch(API_ENDOINT + '/', {
+                        method: "POST",
+                        body: JSON.stringify({
+                            correo: correo,
+                            nombres: this.user.fname,
+                            apellidos: this.user.lname,
+                            genero: this.user.gender,
+                            carrera: this.user.collegeCareer,
+                        }),
+                        headers: { "Content-type": "application/json; charset=UTF-8" }
+                    })
+                    if (request.status === 200) {
+                        this.processCompleted = true;
+                    } else {
+                        localStorage.removeItem('user');
+                        this.showErrorToast('Ups! Algo salió mal.');
+                    }
+                    this.fetching = false;
+                } catch (e) {
+                    this.showErrorToast('Revisa tu conexión e intenta despues.');
+                    this.fetching = false;
                 }
+
             } else {
                 this.FormValidationFailed();
             }
+
         },
         async getAllFaculties() {
             const API_ENDOINT = this.getAPIEndpoint();
@@ -186,7 +200,9 @@ export default {
             } else {
                 this.showErrorToast('Algo salio mal al cargar las facultades.');
             }
-        }
+        },
+
+
     },
     computed: {
         isCollegeCareersDisabled: function () {
