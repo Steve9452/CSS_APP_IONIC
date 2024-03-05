@@ -6,7 +6,8 @@
                     <div class="flex-center">
 
                         <img src="/assets/img/uca.png" style="width: 5em;">
-                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social </p>
+                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social
+                        </p>
 
                     </div>
 
@@ -59,24 +60,35 @@ export default {
         async ForgotPassword() {
             const validation = await this.$validate();
             if (validation) {
-                const API_ENDOINT = this.getAPIEndpoint();
-                let correo = this.user.carnet.trim();
-                if (!correo.includes('@')) {
-                    correo = correo + '@uca.edu.sv';
-                }
-                const request = await fetch(API_ENDOINT + '/olvide-clave', {
-                    method: "POST",
-                    body: JSON.stringify({
-                        correo: correo
-                    }),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                })
+                this.fetching = true;
+                try {
 
-                if (request.status === 200) {
-                    window.location = '/reset-password';
-                } 
-                else {
-                    this.showErrorToast('Ups! Algo salió mal.');
+                    const API_ENDOINT = this.getAPIEndpoint();
+                    let correo = this.user.carnet.trim();
+                    if (!correo.includes('@')) {
+                        correo = correo + '@uca.edu.sv';
+                    }
+                    const request = await fetch(API_ENDOINT + '/olvide-clave', {
+                        method: "POST",
+                        body: JSON.stringify({
+                            correo: correo
+                        }),
+                        headers: { "Content-type": "application/json; charset=UTF-8" }
+                    })
+
+                    if (request.status === 200) {
+                        window.location = '/reset-password';
+                    }else if(request.status === 400){
+                        
+                        this.showErrorToast('Carnet no registrado.');
+                    }
+                    else {
+                        this.showErrorToast('Ups! Algo salió mal.');
+                    }
+                    this.fetching = false;
+                } catch (e) {
+                    this.showErrorToast('Revisa tu conexión a internet e intenta despues');
+                    this.fetching = false;
                 }
             } else {
                 this.FormValidationFailed();

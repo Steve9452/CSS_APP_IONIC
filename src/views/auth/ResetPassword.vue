@@ -6,7 +6,8 @@
                     <div class="flex-center">
 
                         <img src="/assets/img/uca.png" style="width: 5em;">
-                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social </p>
+                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social
+                        </p>
 
                     </div>
 
@@ -38,7 +39,7 @@
                     </div>
 
                     <div class="form-group mt-3">
-                        <ion-button expand="block" @click="ResetPassword()">
+                        <ion-button expand="block" :disabled="fetching" @click="ResetPassword()">
                             CAMBIAR CLAVE
                         </ion-button>
                     </div>
@@ -62,6 +63,7 @@ export default {
     mixins: [SimpleVueValidator.mixin],
     data: function () {
         return {
+            fetching: true,
             code: '',
             password: '',
             repeat: '',
@@ -89,25 +91,34 @@ export default {
         async ResetPassword() {
             const validation = await this.$validate();
             if (validation) {
+                this.fetching = true;
                 const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + '/cambiar-clave', {
-                    method: "POST",
-                    body: JSON.stringify({
-                        token: this.code.trim(),
-                        clave: this.password.trim(),
-                        // eslint-disable-next-line
-                        confirmar_clave: this.repeat.trim()
-                    }),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                })
+                try {
 
-                if (request.status === 200) {
-                    window.location = '/login';
-                } else if (request.status === 404) {
-                    this.showErrorToast('Codígo invalido!');
-                }else {
-                    this.showErrorToast('Ups! Algo salió mal.');
+                    const request = await fetch(API_ENDOINT + '/cambiar-clave', {
+                        method: "POST",
+                        body: JSON.stringify({
+                            token: this.code.trim(),
+                            clave: this.password.trim(),
+                            // eslint-disable-next-line
+                            confirmar_clave: this.repeat.trim()
+                        }),
+                        headers: { "Content-type": "application/json; charset=UTF-8" }
+                    })
+
+                    if (request.status === 200) {
+                        window.location = '/login';
+                    } else if (request.status === 404) {
+                        this.showErrorToast('Codígo invalido!');
+                    } else {
+                        this.showErrorToast('Ups! Algo salió mal.');
+                    }
+                } catch (e) {
+
+                    this.showErrorToast('Revisa tu conexión a internet e intenta despues');
+                    this.fetching = false;
                 }
+                this.fetching = false;
             } else {
                 this.FormValidationFailed();
             }
