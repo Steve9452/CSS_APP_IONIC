@@ -8,17 +8,17 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content class="justify-content-center align-content-center">
         <ion-grid v-if="view === 'general'">
-            <ion-card-content>
-                <ion-item>
+            
+                <ion-item >
                     <ion-grid>
-                        <ion-row>
-                            <ion-text class="modal-title" v-text="project.name"> </ion-text>
+                        <ion-row >
+                            <ion-label class="modal-title font-weight-bold" style="font-size: 2rem; white-space: normal;"  v-text="project.name"> </ion-label>
                         </ion-row>
                         <ion-row>
                             <ion-text>
-                                <ion-label class="text-muted font-weight-ligth">
+                                <ion-label class="text-muted font-weight-ligth" style="white-space: normal;">
 
                                     {{ project.counterpart }}
                                 </ion-label>
@@ -118,7 +118,7 @@
                     </ion-grid>
                 </ion-item>
 
-            </ion-card-content>
+            
         </ion-grid>
     </ion-content>
 </template>
@@ -340,7 +340,7 @@ ion-grid.gapped-grid>ion-row {
 }
 
 ion-grid {
-
+    max-width: 100%;
     --ion-grid-row-padding: 30px;
 }
 
