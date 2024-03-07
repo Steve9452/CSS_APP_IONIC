@@ -82,7 +82,7 @@
 				</ion-item>						
 						
 
-				<ion-button class="mt-2" v-if="!showModal" expand="block" full color="success" @click="setShowModal(true)" fill="outline">
+				<ion-button class="mt-2" v-if="user.rol === 2 && !showModal" expand="block" full color="success" @click="setShowModal(true)" fill="outline">
 					<ion-icon name="create-outline"></ion-icon>EDITAR PERFIL
 				</ion-button>
 				<ion-button v-if="showModal" class="mt-2" expand="block" full color="success" @click="updateProfile()" :disabled="loading">

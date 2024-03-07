@@ -43,6 +43,7 @@
                 </ion-chip>
         </div>          
         
+        
 
         <div v-if="projects.length > 0">
             <!-- <ion-list lines="full">
@@ -53,6 +54,10 @@
             </show-project>
                 </ion-item>
             </ion-list> -->
+
+            <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+              </ion-refresher>
 
             <ion-list>
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
@@ -95,7 +100,7 @@
 import ShowProject from './ShowProject.vue'
 
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
-import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
+import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher } from '@ionic/vue';
 export default {
     components: {
         ShowProject,
@@ -104,6 +109,7 @@ export default {
         // IonItem,
         IonInfiniteScroll,
         IonInfiniteScrollContent,
+        IonRefresher,
     },
     props: ['applyPermission', 'activeProject', 'timeout'],
     data: function () {
@@ -136,7 +142,8 @@ export default {
     },
     methods: {
         
-        async fetchData() {
+        async fetchData(resetPage) {
+            this.page = resetPage ? 1 : this.page;
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/getAviableProjects?page=${this.page}&nombre=${this.nombreABuscar}&tipo=${this.filtroTipoHoras}`, {
 
@@ -177,15 +184,25 @@ export default {
 
 
         },
-        async loadData() {
+        async loadData(refreshPage) {
             try {
-                const data = await this.fetchData();
+                const data = await this.fetchData(refreshPage);
 
                 this.projects = data.proyectos.data;
+                console.log(this.projects )
             }
             catch (error) {
                 console.log("Error: " + error);
             }
+        },
+        async handleRefresh(event) {
+            this.loadData(true).finally( async () => {
+                event.target.complete();
+                this.userData = await this.getAuthenticatedUser();
+                this.userCarrera = this.userData.user.carrera.nombre
+        this.userPerfil = this.userData.user.perfil.descripcion
+            });
+            // event.target.complete();
         },
         resetData() {
             this.page = 1
@@ -232,9 +249,14 @@ export default {
 
             await actionSheet.present();
 
-        }
+        },
+        
+
+
 
     },
+
+
 
 }
 </script>

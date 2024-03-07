@@ -1,7 +1,10 @@
 <template>
     <div id="main-content">
         <ion-grid>
-
+            <!-- <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
+              <ion-refresher-content></ion-refresher-content>
+            </ion-refresher> -->
+            
             <ion-row>
                 <!--ion-col size="auto">
                     <ion-searchbar class="custom" placeholder="Nombre" show-clear-button="focus"></ion-searchbar>
@@ -33,6 +36,10 @@
             </ion-row>
 
         </ion-grid>
+        
+        <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
         <div v-if="projects.length > 0">
             <!-- <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                 :show-unapply="false" v-on:dataUpdated="getAllProjects()">
@@ -81,6 +88,7 @@ import {
     IonActionSheet, IonChip, actionSheetController, IonList,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    IonRefresher
 } from '@ionic/vue';
 
 export default {
@@ -89,6 +97,7 @@ export default {
         // IonItem,
         IonInfiniteScroll,
         IonInfiniteScrollContent,
+        IonRefresher
     },
     data: function () {
         return {
@@ -136,7 +145,8 @@ export default {
             return data;
         },
 
-        async fetchData() {
+        async fetchData(resetPage = false) {
+            this.page = resetPage ? 1 : this.page;
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
 
@@ -176,10 +186,10 @@ export default {
                 console.log("Error: " + error);
             }
         },
-        async loadData() {
+        async loadData(resetPage) {
             // const API_ENDOINT = this.getAPIEndpoint();
             try {
-                const data = await this.fetchData();
+                const data = await this.fetchData(resetPage);
                 // console.log(">>>>>>>>>>data:")
                 // console.log(data);
                 this.projects = data.proyectos.data;
@@ -188,11 +198,18 @@ export default {
                 // } else {
                 //     this.showErrorToast('Ups! Algo salió mal.');
                 // }
-
+               
             }
             catch (error) {
                 console.log("Error: " + error);
             }
+        },
+        async handleRefresh(event) {
+            this.loadData(true).finally(() => {
+                event.target.complete();
+            }
+            );
+            // event.target.complete();
         },
         resetData() {
             this.page = 1
