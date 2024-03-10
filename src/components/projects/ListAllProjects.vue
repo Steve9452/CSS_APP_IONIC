@@ -88,7 +88,9 @@ import {
     IonActionSheet, IonChip, actionSheetController, IonList,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    IonRefresher
+    IonRefresher,
+    IonInput,
+    IonRefresherContent
 } from '@ionic/vue';
 
 export default {
@@ -97,7 +99,9 @@ export default {
         // IonItem,
         IonInfiniteScroll,
         IonInfiniteScrollContent,
-        IonRefresher
+        IonRefresher,
+        IonInput,
+        IonRefresherContent
     },
     data: function () {
         return {
@@ -114,6 +118,9 @@ export default {
             orderBy: "recientes",
             page: 1,
             carrersAndFaculties: {},
+            applyPermission: null,
+            activeProject: null,
+            actionSheetButtons: null
         };
     },
     async created() {
@@ -148,7 +155,7 @@ export default {
         async fetchData(resetPage = false) {
             this.page = resetPage ? 1 : this.page;
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + `/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
+            const request = await fetch(API_ENDOINT + `/admin/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
 
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
