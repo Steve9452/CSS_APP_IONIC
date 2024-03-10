@@ -90,6 +90,38 @@
     </div>
 
     <div class="form-group">
+        <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-clock"></i>&nbsp;Desde</label>
+        <ion-select
+            placeholder="Seleccionar"
+            v-model="project.desde"
+            cancel-text="Cancelar">
+                <ion-select-option value="1">Primer año</ion-select-option>
+                <ion-select-option value="2">Segundo año</ion-select-option>
+                <ion-select-option value="3">Tercer año</ion-select-option>
+                <ion-select-option value="4">Cuarto año</ion-select-option>
+                <ion-select-option value="5">Quinto año</ion-select-option>
+                <ion-select-option value="6">Egresado</ion-select-option>
+
+            </ion-select>
+        <div class="text-danger">{{ validation.firstError('project.desde') }}</div>
+    </div>
+    <div class="form-group">
+        <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-clock"></i>&nbsp;Hasta</label>
+        <ion-select
+            placeholder="Seleccionar"
+            v-model="project.hasta"
+            cancel-text="Cancelar">
+                <ion-select-option value="1">Primer año</ion-select-option>
+                <ion-select-option value="2">Segundo año</ion-select-option>
+                <ion-select-option value="3">Tercer año</ion-select-option>
+                <ion-select-option value="4">Cuarto año</ion-select-option>
+                <ion-select-option value="5">Quinto año</ion-select-option>
+                <ion-select-option value="6">Egresado</ion-select-option>
+
+            </ion-select>
+        <div class="text-danger">{{ validation.firstError('project.hasta') }}</div>
+    </div>
+    <div class="form-group">
         <ion-button expand="block" color="primary" @click="StoreProject()">
             GUARDAR
         </ion-button>
@@ -120,6 +152,9 @@ export default {
                 hoursType: '',
                 ownerEmail: '',
                 careers: [],
+                desde: '',
+                hasta: '',
+                profile: ''
             }
         };
     },
@@ -139,9 +174,6 @@ export default {
         },
         'project.description': function (value) {
             return Validator.value(value).required('El campo descripción es obligatorio.');
-        },
-        'project.profile': function (value) {
-            return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
         },
         'project.owner': function (value) {
             return Validator.value(value).required('El campo encargado es obligatorio.');
@@ -163,6 +195,15 @@ export default {
                 .value(value).required('El campo correo del encargado es obligatorio.')
                 .maxLength(100, 'El correo no debe contener más 100 caracteres.')
                 .email('Ingrese un correo valido.');
+        },
+        'project.desde': function (value) {
+            return Validator.value(value).required('El campo desde es obligatorio.');
+        },
+        'project.hasta': function (value) {
+            return Validator.value(value).required('El campo hasta es obligatorio.');
+        },
+        'project.profile': function (value) {
+            return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
         }
     },
     methods: {
@@ -175,8 +216,8 @@ export default {
                 this.project.careers.forEach((element) => {
                     const career = [];
                         career[0] = element;
-                        career[1] = 0;
-                        career[2] = 6;
+                        career[1] = parseInt(this.project.desde) ? parseInt(this.project.desde) : 0;
+                        career[2] = parseInt(this.project.hasta) ? parseInt(this.project.hasta) : 0;
                     selectedCareers.push(career);
                 });
 
