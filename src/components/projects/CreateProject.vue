@@ -1,9 +1,21 @@
 <template>
 <div class="ion-padding">
     <div class="form-group">
-        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Nombre</label>
+        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Contraparte</label>
+        <input v-model="project.counterpart" type="text" class="form-control custom-form" placeholder="Contraparte">
+        <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
+    </div>
+
+    <div class="form-group">
+        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Proyecto</label>
         <input v-model="project.name" type="text" class="form-control custom-form" placeholder="Nombre del Proyecto">
         <div class="text-danger">{{ validation.firstError('project.name') }}</div>
+    </div>
+
+    <div class="form-group">
+        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Perfil del estudiante</label>
+        <textarea v-model="project.profile" class="form-control custom-form" placeholder="Perfil del estudiante"></textarea>
+        <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
     </div>
 
     <div class="form-group">
@@ -43,23 +55,10 @@
     </div>
 
     <div class="form-group">
-        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Descripción</label>
+        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Descripción Adicional</label>
         <textarea v-model="project.description" class="form-control custom-form" placeholder="Descripcion"></textarea>
         <div class="text-danger">{{ validation.firstError('project.description') }}</div>
     </div>
-
-    <div class="form-group">
-        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Perfil del estudiante</label>
-        <textarea v-model="project.profile" class="form-control custom-form" placeholder="Perfil del estudiante"></textarea>
-        <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
-    </div>
-
-    <div class="form-group">
-        <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-align-center"></i>&nbsp;Contraparte</label>
-        <input v-model="project.counterpart" type="text" class="form-control custom-form" placeholder="Contraparte">
-        <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
-    </div>
-
 
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha de Inicio</label>
@@ -138,7 +137,7 @@ export default {
             return Validator.value(value).required('El campo cupos es obligatorio.');
         },
         'project.description': function (value) {
-            return Validator.value(value).required('El campo descripción es obligatorio.');
+            return Validator.value(value);
         },
         'project.profile': function (value) {
             return Validator.value(value).required('El campo perfil del estudiante es obligatorio.');
