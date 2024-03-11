@@ -138,7 +138,7 @@ export default {
 
         async fetchData() {
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + `/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
+            const request = await fetch(API_ENDOINT + `/admin/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
 
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",

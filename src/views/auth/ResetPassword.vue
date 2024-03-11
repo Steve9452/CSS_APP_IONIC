@@ -63,7 +63,7 @@ export default {
     mixins: [SimpleVueValidator.mixin],
     data: function () {
         return {
-            fetching: true,
+            fetching: false,
             code: '',
             password: '',
             repeat: '',
