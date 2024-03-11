@@ -81,7 +81,9 @@ import {
   IonBadge,
   IonSegmentButton,
 
-  IonMenuButton
+  IonMenuButton, 
+
+  IonProgressBar
   
 } from '@ionic/vue';
 
@@ -128,5 +130,8 @@ app.component('ion-menu-toogle', IonMenuToggle);
 app.component('ion-list', IonList);
 app.component('ion-menu', IonMenu);
 app.component('ion-chip', IonChip);
+
+app.component('ion-progress-bar', IonProgressBar);
+
 
 

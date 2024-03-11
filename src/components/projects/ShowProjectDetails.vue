@@ -329,7 +329,7 @@
                 </div>
 
                 <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" color="primary" @click="changeProjectStatus()">
+                    <ion-button expand="block" :disabled="project.projectStatus === 'En curso'" color="primary" @click="changeProjectStatus()">
                         Confirmar cambio de estado
                     </ion-button>
                 </div>
@@ -408,7 +408,7 @@ export default {
             fetching: false,
         };
     },
-    props: ['projectData', 'disableStatus'],
+    props: ['projectData', 'disableStatus', "showUnapplyProp", "applyPermission", "activeProject",],
     created() {
         this.apiToken = this.getApiToken();
         this.userRol = this.getUserRolId();

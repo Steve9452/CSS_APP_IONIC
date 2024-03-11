@@ -1,14 +1,22 @@
+<!-- eslint-disable @typescript-eslint/camelcase -->
 <template>
 <div>
     <div v-if="projects.length > 0">
-        <show-project 
-            v-for="project in projects"
-            :key="project.idProyecto"
-            :project-data="project"
-            :show-unapply="false"
-            :historyProject="true"
-            v-on:dataUpdated="getProjectsHistory()">
-        </show-project>
+        <ion-list>
+
+            <show-project 
+                v-for="project in projects"
+                :key="project.idProyecto"
+                :project-data="project"
+                :show-unapply="false"
+                :historyProject="true"
+                v-on:dataUpdated="getProjectsHistory()">
+            </show-project>
+        </ion-list>
+        <ion-infinite-scroll threshold="100px" @ionInfinite="getProjectsHistory($event)">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más proyectos...">
+                </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
     </div>
 
     <div class="container" v-else>
@@ -29,15 +37,21 @@
 
 <script>
     import ShowProject from './ShowProject.vue'
+    import { IonInfiniteScroll,
+        IonInfiniteScrollContent,
+    } from '@ionic/vue';
 
 	export default {
 		components: {
-			ShowProject
+			ShowProject,
+            IonInfiniteScroll,
+            IonInfiniteScrollContent,
 		},
         data: function () {
             return {
                 apiToken: '',
-                projects: []
+                projects: [],
+                page: 1,
             };
         },
         async created() {
@@ -45,9 +59,32 @@
             this.getProjectsHistory();
         },
         methods: {
-            async getProjectsHistory() {
+            async getProjectsHistory(ev = null) {
+                
+                try {
+                    // const request = await fetch(API_ENDOINT + '/getProyectosDisponibles', {
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                    const {data, last_page} = await this.fetchData();
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    if (this.page === last_page) {
+                        console.log("No hay más proyectos")
+                    }
+                    this.projects = this.projects.concat(data);
+
+                    // console.log(">>>>>>>>>>data: ")
+                    // console.log(data);
+
+                    if (ev) {
+                        ev.target.complete();
+                    }
+                }
+                catch (error) {
+                    console.log("Error: " + error);
+                }
+            },
+            async fetchData() {
                 const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + '/admin/getHistorialDeProyectos', {
+                const request = await fetch(API_ENDOINT + `/admin/getHistorialDeProyectos?page=${this.page}`, {
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
                         'Authorization': 'Bearer ' + this.apiToken
@@ -57,10 +94,12 @@
                 const data = await request.json();
 
                 if(request.status === 200) {
-                    this.projects = data;
+                    this.page++;
                 } else {
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
+                console.log(data)
+                return data;
             }
         },
 	}
