@@ -25,8 +25,6 @@
                         <ion-icon :icon="swapVerticalOutline" color="secundary"></ion-icon>
                         <ion-label>Orden</ion-label>
                     </ion-chip>
-                    <ion-action-sheet trigger="open-action-sheet" header="Actions"
-                        :buttons="actionSheetButtons"></ion-action-sheet>
                 </ion-col>
 
 
@@ -40,7 +38,7 @@
 
             <ion-list>
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
-                    :apply-permission="applyPermission" :active-project="activeProject" :show-unapply="false"
+                    :apply-permission="false" :active-project="false" :show-unapply="false"
                     :historyProject="false" v-on:dataUpdated="resetData()">    
                 </show-project>
             </ion-list>
@@ -78,15 +76,15 @@ import ShowProject from './ShowProject.vue'
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
 
 import {
-    IonActionSheet, IonChip, actionSheetController, IonList,
+    IonInput, IonChip, actionSheetController, IonList,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
 } from '@ionic/vue';
 
 export default {
     components: {
-        ShowProject, IonActionSheet, IonChip, IonList,
-        // IonItem,
+        ShowProject, IonChip, IonList, IonInput,
+        // IonItem, 
         IonInfiniteScroll,
         IonInfiniteScrollContent,
     },
