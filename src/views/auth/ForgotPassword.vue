@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="form-group mt-3">
-                        <ion-button expand="block" @click="ForgotPassword()">
+                        <ion-button expand="block" :disabled="fetching" @click="ForgotPassword()">
                             RESTAURAR CLAVE
                         </ion-button>
                     </div>
@@ -44,6 +44,7 @@ export default {
     mixins: [SimpleVueValidator.mixin],
     data: function () {
         return {
+            fetching: false,
             user: {
                 carnet: null
             }
