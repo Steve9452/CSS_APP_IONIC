@@ -75,6 +75,7 @@
     <div class="form-group">
         <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-graduation-cap"></i>&nbsp;Carreras</label>
         <ion-select
+            class="custom-options"
             placeholder="Seleccionar"
             v-model="project.careers"
             cancel-text="Cancelar"
@@ -82,7 +83,11 @@
                 <ion-select-option
                     v-for="item in collegeCareers"
                     :key="item.idCarrera"
-                    :value="item.idCarrera">
+                    :value="item.idCarrera"
+                    
+                    selectInterfaceOptions="popover"
+                    
+                    >
                         {{ item.nombre }}
                 </ion-select-option>
         </ion-select>
@@ -160,6 +165,18 @@ export default {
     async created() {
         this.apiToken = await this.getApiToken();
         this.getAllCollegeCareers();
+
+
+//  Alternativa para cambiar el estilo de los selects, actualmente se encuentra en el archivo global styles.scss
+
+
+    //     const selects = document.querySelectorAll('.custom-options');
+
+    //     for (let i = 0; i < selects.length; i++) {
+    //     selects[i].interfaceOptions = {
+    //         cssClass: 'my-custom-interface',
+    //     };
+    // }
     },
     validators: {
         'project.name': function (value) {
@@ -280,3 +297,10 @@ export default {
     }
 }
 </script>
+<style>
+
+.my-custom-interface .select-interface-option .alert-checkbox-label {
+  white-space: pre-line ;
+}
+
+</style>

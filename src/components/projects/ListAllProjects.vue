@@ -83,7 +83,7 @@ import ShowProject from './ShowProject.vue'
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
 
 import {
-    IonInput, IonChip, actionSheetController, IonList,
+    IonChip, actionSheetController, IonList,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonRefresher,
@@ -93,7 +93,7 @@ import {
 
 export default {
     components: {
-        ShowProject, IonChip, IonList, IonInput,
+        ShowProject, IonChip, IonList,
         // IonItem, 
         IonInfiniteScroll,
         IonInfiniteScrollContent,
