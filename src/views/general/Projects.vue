@@ -101,7 +101,6 @@ export default {
 		
 		console.log(this.applyPermission, this.activeProject)
 
-		//console.log("TimeOut", this.timeout)
 
 		if(this.userRol === 1) {
 			this.view = 'all';
@@ -131,28 +130,9 @@ export default {
 					this.timeout = false
 					console.log(data.timeout)
 				}
-				console.log("TIMED OUT", this.timeout)
+				// console.log("TIMED OUT", this.timeout)
 			});
-			//console.log("Permisos apply/active")
-			// console.log(this.applyPermission, this.activeProject)
 
-			// Refactorizar condiciones para que sean más legibles
-
-			// proyecto activo = 0 si no tiene proyecto activo
-			// permiso = 1 si no ha inscrito un proyecto ese dia
-
-
-			
-			// if(request.permiso === 1 && request.proyectoActivo === 0) {
-			// 	this.applyPermission = true;
-			// 	this.activeProject = false;
-			// } else {
-			// 	this.activeProject = request.proyectoActivo !== 0;
-			// 	this.showErrorToast(
-			// 		`${request.proyectoActivo !== 0 ? "Ya se encuentra inscrito en un proyecto actualmente. " : ""}` 
-			// 		+ `${request.permiso !== 1 ? "Ha excedido el numero máximo de solicitudes diarias. Inténtelo mañana nuevamente" : ""}`
-			// 		);
-			// }
 		},
 	},
 }

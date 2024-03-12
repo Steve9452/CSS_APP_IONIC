@@ -100,7 +100,7 @@
 import ShowProject from './ShowProject.vue'
 
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
-import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher } from '@ionic/vue';
+import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, IonInput } from '@ionic/vue';
 export default {
     components: {
         ShowProject,
@@ -110,6 +110,8 @@ export default {
         IonInfiniteScroll,
         IonInfiniteScrollContent,
         IonRefresher,
+        IonRefresherContent,
+        IonInput
     },
     props: ['applyPermission', 'activeProject', 'timeout'],
     data: function () {
@@ -137,7 +139,7 @@ export default {
     watch: {
         filterButtonCallbackHandler: function (v) {
             this.resetData();
-            console.log(v)
+            // console.log(v)
         }
     },
     methods: {
@@ -189,7 +191,6 @@ export default {
                 const data = await this.fetchData(refreshPage);
 
                 this.projects = data.proyectos.data;
-                console.log(this.projects )
             }
             catch (error) {
                 console.log("Error: " + error);
