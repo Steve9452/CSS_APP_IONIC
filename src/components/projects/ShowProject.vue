@@ -30,6 +30,9 @@
 				<ion-chip v-if="showUnapply && finished" color="warning" class="mr-1">
 					<small>Proyecto finalizado</small>
 				</ion-chip>
+				<ion-chip v-if="showUnapply && inProcess" color="warning" class="mr-1">
+					<small>Solicitud enviada</small>
+				</ion-chip>
 				<ion-chip color="primary" class="mr-1">
 					<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
 				</ion-chip>
@@ -100,6 +103,7 @@ export default {
 			trash,
 			chevronDown,
 			fetching: false,
+			inProcess: null,
 		};
 	},
 	async created() {
@@ -113,6 +117,7 @@ export default {
 			this.acepted = this.projectData.estadoPxe == 1
 			this.rejected = this.projectData.estadoPxe == 2
 			this.finished = this.projectData.estadoPxe == 3
+			this.inProcess = this.projectData.estadoPxe == 0
 			//console.log("Aceptado", this.acepted)
 		}
 
