@@ -44,7 +44,10 @@
 			v-on:getPermissions="getApplyPermission"
 			:applyPermission="applyPermission && !timeout"
 			:timeout="timeout"
-			:activeProject="activeProject"/>
+			:activeProject="activeProject"
+			:error="error"
+			:loading="loading"
+			/>
 
 		<list-applied-projects 
 			v-if="view === 'applied'"
@@ -89,7 +92,9 @@ export default {
 			logOut,
 			timer,
 			addCircleOutline,
-			add
+			add,
+			error: false,
+			loading: true,
 		}
 	},
 	created() {
@@ -112,12 +117,20 @@ export default {
 		async getApplyPermission() {
 			const API_ENDOINT = this.getAPIEndpoint();
 			
+			this.loading = true;
 			fetch(API_ENDOINT + '/getPermisoAplicar', {
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
 					'Authorization': 'Bearer ' + this.apiToken
 				}
-			}).then(response => response.json()).then(data => {
+			}).then(response => {
+				// console.log(response)
+				if (!response.ok) {
+					this.error = true;
+					throw new Error('La solicitud no pudo ser completada');
+				}
+				return response.json();
+			}).then(data => {
 				//console.log(data)
 				
 				this.applyPermission = data.permiso === 1 ? true : false;
@@ -130,7 +143,12 @@ export default {
 					this.timeout = false
 					console.log(data.timeout)
 				}
+				
 				// console.log("TIMED OUT", this.timeout)
+			}).finally(() => {
+				this.loading = false;
+			}).catch(error => {
+				console.error('Error:', error);
 			});
 
 		},

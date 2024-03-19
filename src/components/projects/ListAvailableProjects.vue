@@ -1,22 +1,34 @@
 <template>
     <div>
         <div>
-            <p v-if="!applyPermission" class="alert alert-warning" role="alert">
+            <div v-if="loading"  class="flex-center my-4">
+                <ion-spinner  name="crescent" color="primary"></ion-spinner>
+            </div>
+            <div v-else>
+            <p v-if="error" class="alert alert-danger" role="alert">
+                Ha ocurrido un error al cargar los proyectos. Inténtelo nuevamente.
+            </p>
+
+
+            <p v-if="!applyPermission && !error" class="alert alert-warning" role="alert">
                 No es posible aplicar a un nuevo proyecto.
             </p>
-            <p v-if="!applyPermission" class="alert alert-warning" role="alert">
+            <p v-if="!applyPermission && !error" class="alert alert-warning" role="alert">
                 Ha excedido la cantidad de solicitudes diarias. Inténtelo nuevamente mañana.
             </p>
-            <p v-if="timeout" class="alert alert-danger" role="alert">
+            <p v-if="timeout && !error" class="alert alert-danger" role="alert">
                 Penalización: Por el momento no puede aplicar a nuevos proyectos.
             </p>
-
-        </div>
-
-        <div v-if="activeProject" class="alert alert-warning" role="alert">
+            <div v-if="activeProject && !error" class="alert alert-warning" role="alert">
             Ya se encuentra inscrito en un proyecto activo. Le invitamos a revisar el estado de la solicitud en proyectos
             aplicados.
+            </div>
+            </div>
+
+
         </div>
+
+        
 
         <ion-grid>
             <ion-col class="large-chip">
@@ -100,7 +112,7 @@
 import ShowProject from './ShowProject.vue'
 
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
-import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, IonInput } from '@ionic/vue';
+import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, IonInput, IonSpinner } from '@ionic/vue';
 export default {
     components: {
         ShowProject,
@@ -111,9 +123,10 @@ export default {
         IonInfiniteScrollContent,
         IonRefresher,
         IonRefresherContent,
-        IonInput
+        IonInput,
+        IonSpinner
     },
-    props: ['applyPermission', 'activeProject', 'timeout'],
+    props: ['applyPermission', 'activeProject', 'timeout', 'error', 'loading'],
     data: function () {
         return {
             apiToken: '',
@@ -137,7 +150,7 @@ export default {
         this.userPerfil = this.userData.user.perfil.descripcion
     },
     watch: {
-        filterButtonCallbackHandler: function (v) {
+        filterButtonCallbackHandler: function () {
             this.resetData();
             // console.log(v)
         }
