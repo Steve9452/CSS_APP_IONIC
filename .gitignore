@@ -24,7 +24,7 @@ npm-debug.log*
 /.versions
 /.vscode
 /coverage
-/android
+# /android
 /dist
 /node_modules
 /platforms
