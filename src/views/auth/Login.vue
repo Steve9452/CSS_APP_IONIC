@@ -2,19 +2,13 @@
     <ion-content :fullscreen="true">
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-                <div class="col flex-col">
-                    <div class="flex-center">
-
-                        <img src="/assets/img/uca.png" style="width: 5em;">
-                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social
-                        </p>
-
+                <div class="col align-items-center flex-column">
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 1em;">
+                        <div class="flex-center" style="width:100%; height:auto">
+                            <logotype></logotype>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <ion-router-link class="d-block text-center" href="/register" color="medium">
-                            ¿Aún no tengo una cuenta?
-                        </ion-router-link>
-                    </div>
+
 
                     <div class="form-group">
                         <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
@@ -30,13 +24,27 @@
                         <div class="text-danger">{{ validation.firstError('user.password') }}</div>
                     </div>
 
-                    <div class="form-group mt-4">
-                        <ion-button @click="Login()" :disabled="fetching" expand="block">
-                            INICIAR SESIÓN
+                    <div style="gap: 0.5em" class="form-group d-flex flex-column gap-1 justify-content-between mt-4">
+                        <ion-button @click="Login()" :disabled="logingIn || googleIn" mode="ios" expand="block">
+                            <span v-if="!logingIn"> Iniciar sesion </span> 
+                            <pulse-loader v-else :loading="true" :color="'var(--ion-color, white)'" :size="'0.5em'" />
                         </ion-button>
+                        <div class="form-group">
+                        <p class="d-block text-center">
+                            
+                            ¿Aún no tienes una cuenta?
+                            <ion-router-link class="d-block text-center" href="/register">
+                                Registrate aquí
+                            </ion-router-link>
+                        </p>
+                        <p class="d-block text-center">
+                             o
+                        </p>
+                        </div>
+                        <google-auth-button v-on:doingAuth="doingGoogleAuth"></google-auth-button>
                         <br>
                         <ion-router-link class="d-block text-center" href="/forgot-password" color="medium">
-                            ¿Olvidé mi contraseña?
+                            ¿Olvidaste tu contraseña?
                         </ion-router-link>
                     </div>
                 </div>
@@ -47,17 +55,23 @@
 
 <script>
 import SimpleVueValidator from 'simple-vue-validator';
+import GoogleAuthButton from '../../components/auth/GoogleAuthButton.vue' 
 const Validator = SimpleVueValidator.Validator;
 
 export default {
     mixins: [SimpleVueValidator.mixin],
+    components: {
+        GoogleAuthButton,
+    },
     data: function () {
         return {
-            fetching: false,
+            logingIn: false,
+            googleIn: false,
             user: {
                 carnet: null,
                 password: null,
-            }
+            },
+            
         };
     },
     validators: {
@@ -76,7 +90,7 @@ export default {
         async Login() {
             const validation = await this.$validate();
             if (validation) {
-                this.fetching = true
+                this.logingIn = true
                 let correo = this.user.carnet;
                 if (!correo.includes('@')) {
                     correo = correo + '@uca.edu.sv';
@@ -96,20 +110,27 @@ export default {
                     const data = await request.json();
 
                     if (request.status === 200) {
-                        localStorage.setItem('user', JSON.stringify(data));
+                        //localStorage.setItem('user', JSON.stringify(data));
+                        await this.setAuthenticatedUser(data.user);
+
                         this.$router.push('/home');
                     } else {
-                        localStorage.removeItem('user');
+                        //localStorage.removeItem('user');
+                        await this.signout();
                         this.showErrorToast('Correo o contraseña incorrecta.');
                     }
-                    this.fetching = false
+                    this.logingIn = false
                 } catch (e) {
                     this.showErrorToast('Revisa tu conexion a internet e intenta despues.');
-                    this.fetching = false
+                    this.logingIn = false
                 }
             } else {
                 this.FormValidationFailed();
             }
+
+        },
+        doingGoogleAuth(){
+            this.googleIn = !this.googleIn
 
         }
     },
