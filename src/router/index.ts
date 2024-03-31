@@ -23,16 +23,6 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'login',
 		meta: { module: 'auth' },
 		component: Login,
-		children: [
-			{
-				path: '',
-				component: Login
-			},
-			{
-				path: '/oauth2callback',
-				component: GoogleRegister
-			},
-		]
 	},
 	{
 		path: '/register',
