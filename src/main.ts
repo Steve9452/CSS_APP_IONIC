@@ -87,6 +87,9 @@ import {
   
 } from '@ionic/vue';
 
+import Logo from '@/components/auth/helper/logotype.vue'
+import PulseLoader from '@/components/auth/helper/PulseLoader.vue'
+
 app.component('ion-app', IonApp);
 app.component('ion-page', IonPage);
 app.component('ion-content', IonContent);
@@ -132,6 +135,8 @@ app.component('ion-menu', IonMenu);
 app.component('ion-chip', IonChip);
 
 app.component('ion-progress-bar', IonProgressBar);
+app.component('logotype', Logo);
+app.component('pulse-loader', PulseLoader);
 
 
 

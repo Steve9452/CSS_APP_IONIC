@@ -6,7 +6,7 @@
             </show-project>
         </div>
 
-        <div class="container" v-else>
+        <div class="container" v-else-if="loaded">
             <div class="row justify-content-center align-items-center">
                 <div class="col">
                     <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
@@ -32,7 +32,8 @@ export default {
     data: function () {
         return {
             apiToken: '',
-            projects: []
+            projects: [],
+            loaded: false
         };
     },
     props: ['applyPermission', 'timeout'],
@@ -42,6 +43,7 @@ export default {
     },
     methods: {
         async getMyProjects() {
+            this.loaded = false
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + '/getMisProyectos', {
                 headers: {
@@ -51,13 +53,13 @@ export default {
             });
 
             const data = await request.json();
-
             if (request.status === 200) {
                 this.$emit("getPermissions")
                 this.projects = data;
             } else {
                 this.showErrorToast('Ups! Algo salió mal.');
             }
+            this.loaded = true
         }
     },
     
