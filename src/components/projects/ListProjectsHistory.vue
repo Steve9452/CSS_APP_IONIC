@@ -2,8 +2,12 @@
 <template>
 <div>
     <div v-if="projects.length > 0">
+        
+        <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+        
         <ion-list>
-
             <show-project 
                 v-for="project in projects"
                 :key="project.idProyecto"
@@ -19,7 +23,7 @@
         </ion-infinite-scroll>
     </div>
 
-    <div class="container" v-else>
+    <div class="container" v-else-if="loaded">
         <div class="row justify-content-center align-items-center">
             <div class="col">
                 <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
@@ -39,6 +43,8 @@
     import ShowProject from './ShowProject.vue'
     import { IonInfiniteScroll,
         IonInfiniteScrollContent,
+        IonRefresher,
+        IonRefresherContent,
     } from '@ionic/vue';
 
 	export default {
@@ -46,12 +52,15 @@
 			ShowProject,
             IonInfiniteScroll,
             IonInfiniteScrollContent,
+            IonRefresher,
+            IonRefresherContent,
 		},
         data: function () {
             return {
                 apiToken: '',
                 projects: [],
                 page: 1,
+                loaded: false,
             };
         },
         async created() {
@@ -83,6 +92,7 @@
                 }
             },
             async fetchData() {
+                this.loaded = false
                 const API_ENDOINT = this.getAPIEndpoint();
                 const request = await fetch(API_ENDOINT + `/admin/getHistorialDeProyectos?page=${this.page}`, {
                     headers: {
@@ -99,6 +109,7 @@
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
                 console.log(data)
+                this.loaded = false
                 return data;
             }
         },

@@ -45,12 +45,12 @@
             </ion-col>
         </ion-grid>
 
-        <div class="center-row" style=" font-size: 12px; padding: 0px 10px 0px 10px ">
+        <div class="center-row" style=" font-size: auto; padding: 0px 10px 0px 10px ">
           
-            <ion-chip style="padding: 0px 1.5em 0px 1.5em;" color="primary" size="small">
+            <ion-chip style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
                    <span> {{ userCarrera}} </span>
                 </ion-chip>
-            <ion-chip style="padding: 0px 1.5em 0px 1.5em;" color="primary" size="small">
+            <ion-chip style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
                    <span> {{ userPerfil }} </span>
                 </ion-chip>
         </div>          
@@ -90,7 +90,7 @@
 
         </div>
 
-        <div class="container" v-else>
+        <div class="container" v-else-if="loaded">
             <div class="row justify-content-center align-items-center">
                 <div class="col">
                     <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
@@ -140,14 +140,15 @@ export default {
             userCarrera: "",
             userPerfil: "",
             page: 1,
+            loaded: false
         };
     },
     async created() {
         this.apiToken = await this.getApiToken();
         this.userData = await this.getAuthenticatedUser();
         this.loadData();
-        this.userCarrera = this.userData.user.carrera.nombre
-        this.userPerfil = this.userData.user.perfil.descripcion
+        this.userCarrera = this.userData.carrera.nombre
+        this.userPerfil = this.userData.perfil.descripcion
     },
     watch: {
         filterButtonCallbackHandler: function () {
@@ -156,9 +157,9 @@ export default {
         }
     },
     methods: {
-        
         async fetchData(resetPage) {
             this.page = resetPage ? 1 : this.page;
+            this.loaded = false
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/getAviableProjects?page=${this.page}&nombre=${this.nombreABuscar}&tipo=${this.filtroTipoHoras}`, {
 
@@ -170,6 +171,7 @@ export default {
             const data = await request.json();
             if (request.status === 200) {
                 this.page++;
+                this.loaded = true
             } else {
                 this.showErrorToast('Ups! Algo salió mal.');
             }
