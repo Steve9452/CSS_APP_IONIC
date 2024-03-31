@@ -1,5 +1,5 @@
 <template>
-    <ion-header translucent>
+    <ion-header class="ion-no-border" translucent>
         <ion-toolbar color="primary">
             <ion-title><small>PERFIL DE ALUMNO</small></ion-title>
             <ion-buttons slot="end">
@@ -136,7 +136,7 @@ export default {
         },
     },
     async created() {
-        this.apiToken = this.getApiToken();
+        this.apiToken = await this.getApiToken();
         await this.getAllFaculties();
         await this.getProfiles();
         this.setStudentData();

@@ -18,8 +18,8 @@ export default {
 			userRol: ''
 		}
 	},
-	created() {
-		this.userRol = this.getUserRolId();
+	async created() {
+		this.userRol = await this.getUserRolId();
 	}
 }
 </script>

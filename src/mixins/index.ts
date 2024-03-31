@@ -1,43 +1,44 @@
 import { toastController } from '@ionic/vue';
+import { Storage } from '@capacitor/storage';
 
 const mixin = {
     methods: {
         getAPIEndpoint() {
-            return 'http://172.203.229.152/public/api';
-            //return 'http://uca-css.test/css-proyecto/public/api'
+            // return 'http://172.203.229.152/public/api';
+            // return 'http://uca-css.test/css-proyecto/public/api'
+            return 'http://192.168.31.220/api'  
+            //return 'http://127.0.0.1/api'
             // return 'https://uca.edu.sv/servicio-social/dev-proyectos/public/api'
             // return 'https://uca.edu.sv/servicio-social/dev-proyectos/public/api'
         },
-        getAuthenticatedUser() {
-            const storedUser = localStorage.getItem('user');
+        async setAuthenticatedUser(userData: any) {
+            await Storage.set({
+                key: 'user',
+                value: JSON.stringify(userData),
+              });
+        },
+        async getAuthenticatedUser() {
+            const { value: storedUser } = await Storage.get({ key: 'user' });
             return storedUser ? JSON.parse(storedUser) : '';
         },
-        getApiToken() {
-            const storedUser = localStorage.getItem('user');
-            const user = storedUser ? JSON.parse(storedUser).user : '';
-
+        async getApiToken() {
+            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const user = storedUser ? JSON.parse(storedUser) : '';
             return user ? user.api_token : '';
         },
-        getUserId() {
-            const storedUser = localStorage.getItem('user');
-            const user = storedUser ? JSON.parse(storedUser).user : '';
-
+        async getUserId() {
+            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const user = storedUser ? JSON.parse(storedUser) : '';
             return user ? user.idUser : '';
         },
-        getUserRolId() {
-            const storedUser = localStorage.getItem('user');
-            const user = storedUser ? JSON.parse(storedUser).user : '';
-
+        async getUserRolId() {
+            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const user = storedUser ? JSON.parse(storedUser) : '';
             return user ? user.idRol : '';
         },
-        signout() {
-            localStorage.removeItem('user');
-            location.reload();
+        async signout() {
+            await Storage.remove({ key: 'user' });
         },
-
-
-
-
         async showSuccessToast(message: string) {
             const toast = await toastController
                 .create({

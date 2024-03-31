@@ -1,5 +1,5 @@
 <template>
-    <ion-header translucent>
+    <ion-header class="ion-no-border" translucent>
         <ion-toolbar>
             <ion-buttons>
                 <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline"></ion-icon> </ion-button>
@@ -35,7 +35,7 @@
                     <ion-grid class="gapped-grid-2">
 
                         <ion-row v-if="!showUnapply">
-                            <ion-button color="secondary" :disabled="applyDisabled" @click="applyToProject()"> Aplicar </ion-button>
+                            <ion-button color="primary" :disabled="applyDisabled" @click="applyToProject()"> Aplicar </ion-button>
                         </ion-row>
                         <ion-row v-else-if="acepted == 1">
                             <ion-button color="success"> Aceptado </ion-button>
@@ -167,6 +167,7 @@ export default {
             closeCircle,
             list,
             people,
+            showUnapply: false, 
             arrowBackOutline,
             meetingScheduleDate: '',
             meetingScheduleTime: '',
@@ -178,13 +179,12 @@ export default {
         };
     },
     props: ['projectData', 'showUnapplyProp', 'applyPermission', 'activeProject'],
-    created() {
-        this.apiToken = this.getApiToken();
-        this.userRol = this.getUserRolId();
-        this.userId = this.getUserId();
+    async created() {
+        this.apiToken = await this.getApiToken();
+        this.userRol = await this.getUserRolId();
+        this.userId = await this.getUserId();
 
         this.showUnapply = this.showUnapplyProp;
-        //console.log("showUnapply", this.showUnapply);
         // const currentDate = new Date();
 
 
@@ -312,6 +312,7 @@ export default {
             if (this.projectData.estadoPxe) {
                 this.project.students = this.projectData.estudiantes;
                 this.acepted = this.projectData.estadoPxe
+                console.log(this.acepted)
             }
         },
         async closeModal() {

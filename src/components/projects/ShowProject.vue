@@ -108,9 +108,9 @@ export default {
 	},
 	async created() {
 		this.setProjectData();
-		this.apiToken = this.getApiToken();
-		this.userId = this.getUserId();
-		this.userRol = this.getUserRolId();
+		this.apiToken = await this.getApiToken();
+		this.userId = await this.getUserId();
+		this.userRol = await this.getUserRolId();
 
 		if(this.projectData.estadoPxe !== undefined){
 

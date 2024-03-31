@@ -1,10 +1,14 @@
 <template>
-    <ion-header translucent>
-        <ion-toolbar color="primary">
-            <ion-title><small>PROYECTO</small></ion-title>
-            <ion-buttons slot="end">
-                <ion-button @click="closeModal()">CERRAR&nbsp;<i class="fas fa-chevron-down"></i></ion-button>
+    <ion-header class="ion-no-border" translucent>
+        <ion-toolbar>
+            <ion-buttons slot="start">
+                <ion-button @click="closeModal()"><ion-icon color="light" :icon="arrowBackOutline"></ion-icon></ion-button>
             </ion-buttons>
+            <ion-title>
+                <ion-text color="light">
+                        Editar proyecto 
+                </ion-text>
+            </ion-title>
             <ion-progress-bar v-if="fetching" type="indeterminate"></ion-progress-bar>
 
 
@@ -158,9 +162,6 @@
                     </ion-button>
                 </div>
                 <div class="form-group">
-                    <ion-button expand="block" color="dark" @click="closeModal()">
-                        REGRESAR
-                    </ion-button>
                 </div>
             </ion-card-content>
         </ion-card>
@@ -209,9 +210,6 @@
                     </ion-item>
                 </div>
 
-                <ion-button class="mt-3" expand="block" color="dark" @click="closeModal()">
-                    REGRESAR
-                </ion-button>
             </ion-card-content>
 
             <ion-card-content v-else>
@@ -363,6 +361,7 @@ import {
     list,
     people,
     calendar,
+    arrowBackOutline,
     sync,
 } from 'ionicons/icons';
 
@@ -406,12 +405,13 @@ export default {
             acceptedStudentsEmails: [],
             meetingMailButtonStatus: false,
             fetching: false,
+            arrowBackOutline
         };
     },
     props: ['projectData', 'disableStatus', "showUnapplyProp", "applyPermission", "activeProject",],
-    created() {
-        this.apiToken = this.getApiToken();
-        this.userRol = this.getUserRolId();
+    async created() {
+        this.apiToken = await this.getApiToken();
+        this.userRol = await this.getUserRolId();
         // const currentDate = new Date();
 
 

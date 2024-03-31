@@ -1,11 +1,12 @@
 <template>
 <ion-page>
-	<ion-header translucent>
+	<ion-header class="ion-no-border" translucent>
 		<ion-toolbar class="py-1">
-			<img src="/assets/img/uca.png" style="margin-top: 5px; margin-left: 20px;max-height:35px;text-align:center;" />
-			<p style="margin-left: 20px; margin-bottom: 10px;  font-size: 0.6em; max-width: 140px;">  Centro de Servicio Social </p>
+			<div style="width: 30vw;">
+				<Logotype style="margin-top: 5px; margin-left: 20px;max-height:50px;text-align:center;" />
+			</div>
 			<ion-buttons slot="end">
-				<ion-button @click="signout()">
+				<ion-button @click="signMeOut()">
 					<ion-icon color="primary" :icon="logOut"/>
 				</ion-button>
 			</ion-buttons>
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+	import Logotype from '@/components/auth/helper/logotype.vue';
 	import {
 		ellipsisHorizontal,
 		rocket,
@@ -54,6 +56,9 @@
 
 	export default {
 		name: 'Tabs',
+		components: {
+			Logotype
+		},
 		data() {
 			return {
 				userRol: '',
@@ -65,8 +70,14 @@
 				logOut
 			}
 		},
-		created() {
-			this.userRol = this.getUserRolId();
+		async created() {
+			this.userRol = await this.getUserRolId();
 		},
+		methods: {
+			async signMeOut(){
+				await this.signout()
+				location.reload()
+			}
+		}
 	}
 </script>

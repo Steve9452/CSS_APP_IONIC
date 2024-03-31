@@ -81,9 +81,9 @@ export default {
 	},
 	data() {
 		return {
-			applyPermission: false,
-			timeout: -1,
-			activeProject: true,
+			applyPermission: null,
+			timeout: null,
+			activeProject: null,
 			apiToken: '',
 			userRol: '',
 			view: '',
@@ -97,9 +97,9 @@ export default {
 			loading: true,
 		}
 	},
-	created() {
-		this.userRol = this.getUserRolId();
-		this.apiToken = this.getApiToken();
+	async created() {
+		this.userRol = await this.getUserRolId();
+		this.apiToken = await this.getApiToken();
 		this.getApplyPermission();
 		
 		console.log("Permisos apply/active")
@@ -138,10 +138,10 @@ export default {
 				
 				try{
 					this.timeout = new Date(data.timeout).getTime() > Date.now();
-					console.log(data.timeout)
+					console.log("timeout", data.timeout)
 				}catch{
 					this.timeout = false
-					console.log(data.timeout)
+					console.log("timeout", data.timeout)
 				}
 				
 				// console.log("TIMED OUT", this.timeout)
