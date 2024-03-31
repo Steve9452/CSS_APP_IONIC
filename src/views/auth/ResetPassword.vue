@@ -2,13 +2,11 @@
     <ion-content :fullscreen="true">
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-                <div class="col">
-                    <div class="flex-center">
-
-                        <img src="/assets/img/uca.png" style="width: 5em;">
-                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social
-                        </p>
-
+                <div class="col align-items-center flex-column">
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 1em;">
+                        <div class="flex-center" style="width:100%; height:auto">
+                            <logotype></logotype>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -39,14 +37,14 @@
                     </div>
 
                     <div class="form-group mt-3">
-                        <ion-button expand="block" :disabled="fetching" @click="ResetPassword()">
-                            CAMBIAR CLAVE
+                        <ion-button mode="ios" expand="block" :disabled="fetching" @click="ResetPassword()">
+                            Cambiar clave
                         </ion-button>
                     </div>
 
                     <div class="form-group mt-3">
-                        <ion-button color="dark" expand="block" href="/login">
-                            REGRESAR
+                        <ion-button mode="ios" color="dark" expand="block" href="/login">
+                            Regresar
                         </ion-button>
                     </div>
                 </div>

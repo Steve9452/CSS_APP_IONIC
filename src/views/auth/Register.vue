@@ -3,17 +3,15 @@
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
                 <div class="col-md-12 my-5" v-if="!processCompleted">
-                    <div class="flex-center">
-
-                        <img src="/assets/img/uca.png" style="width: 5em;">
-                        <p style="margin-left: 20px; margin-bottom: 10px;  font-size: 2em; "> Centro de Servicio Social
-                        </p>
-
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 1em;">
+                        <div class="flex-center" style="width:100%; height:auto">
+                            <logotype></logotype>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <ion-router-link class="d-block text-center" href="/login" color="medium">
-                            ¿Ya tengo una cuenta?
+                            ¿Ya tienes un cuenta?
                         </ion-router-link>
                     </div>
 
@@ -71,13 +69,45 @@
                         <div class="text-danger">{{ validation.firstError('user.collegeCareer') }}</div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-graduation-cap"></i>&nbsp;Año de carrera</label>
+                        <ion-select placeholder="Seleccionar" v-model="user.profile"
+                            :disabled="isCollegeCareersDisabled" cancel-text="Cancelar">
+                            <ion-select-option :key="1"
+                                :value="1">
+                                Primer Año
+                            </ion-select-option>
+                            <ion-select-option :key="2"
+                                :value="2">
+                                Segundo Año
+                            </ion-select-option>
+                            <ion-select-option :key="3"
+                                :value="3">
+                                Tercer Año
+                            </ion-select-option>
+                            <ion-select-option :key="4"
+                                :value="4">
+                                Cuarto Año
+                            </ion-select-option>
+                            <ion-select-option :key="5"
+                                :value="5">
+                                Quinto Año
+                            </ion-select-option>
+                            <ion-select-option :key="6"
+                                :value="6">
+                                Egresado Año
+                            </ion-select-option>
+                        </ion-select>
+                        <div class="text-danger">{{ validation.firstError('user.profile') }}</div>
+                    </div>
+
                     <div class="form-group mt-4">
-                        <ion-button expand="block" :disabled="fetching" @click="Register()">
-                            CREAR CUENTA
+                        <ion-button mode="ios" expand="block" :disabled="fetching" @click="Register()">
+                            Crear cuenta
                         </ion-button>
                         <br>
                         <ion-router-link class="d-block text-center" href="/forgot-password" color="medium">
-                            ¿Olvidé mi contraseña?
+                            ¿Olvidaste tu contraseña?
                         </ion-router-link>
                     </div>
                 </div>
@@ -91,7 +121,7 @@
                         registro ahī.
                     </p>
                     <ion-button expand="block" href="/login">
-                        REGRESAR
+                        Regresar
                     </ion-button>
                 </div>
             </div>
@@ -102,7 +132,6 @@
 
 <script>
 import SimpleVueValidator from 'simple-vue-validator';
-import { loadingController } from '@ionic/vue';
 
 const Validator = SimpleVueValidator.Validator;
 
@@ -118,13 +147,14 @@ export default {
                 gender: '',
                 faculty: '',
                 collegeCareer: '',
+                profile: '',
             },
             fetching: false,
             faculties: [],
             collegeCareers: []
         };
     },
-    created() {
+    async created() {
         this.getAllFaculties();
     },
     validators: {
@@ -150,6 +180,9 @@ export default {
         'user.collegeCareer': function (value) {
             return Validator.value(value).required('El carrera es obligatoria.');
         },
+        'user.profile': function (value) {
+            return Validator.value(value).required('El año de carrera es obligatorio.');
+        },
     },
     methods: {
         async Register() {
@@ -170,6 +203,7 @@ export default {
                             apellidos: this.user.lname,
                             genero: this.user.gender,
                             carrera: this.user.collegeCareer,
+                            perfil: this.user.profile,
                         }),
                         headers: { "Content-type": "application/json; charset=UTF-8" }
                     })
