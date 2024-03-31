@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import { Storage } from '@capacitor/storage';
 
 // AUTH PAGE COMPONENTS
 import Login from '../views/auth/Login.vue'
@@ -9,6 +10,7 @@ import ResetPassword from '../views/auth/ResetPassword.vue'
 
 // HOME PAGE
 import Home from '../views/Home.vue'
+import GoogleRegister from '@/views/auth/GoogleRegister.vue';
 
 const routes: Array<RouteRecordRaw> = [
 
@@ -20,13 +22,29 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/login',
 		name: 'login',
 		meta: { module: 'auth' },
-		component: Login
+		component: Login,
+		children: [
+			{
+				path: '',
+				component: Login
+			},
+			{
+				path: '/oauth2callback',
+				component: GoogleRegister
+			},
+		]
 	},
 	{
 		path: '/register',
 		name: 'register',
 		meta: { module: 'auth' },
 		component: Register
+	},
+	{
+		path: '/register-google',
+		name: 'googleRegister',
+		meta: { module: 'auth' },
+		component: GoogleRegister
 	},
 	{
 		path: '/forgot-password',
@@ -79,8 +97,8 @@ const router = createRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-	const storageUser = localStorage.getItem('user');
+router.beforeEach(async (to, from, next) => {
+	const { value: storageUser } = await Storage.get({ key: 'user' });
 	const user = storageUser ? JSON.parse(storageUser) : '';
 	const module = to.meta.module;
 	const userIsAuthenticated = user != '' ? true : false;
