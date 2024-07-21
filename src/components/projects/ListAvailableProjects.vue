@@ -77,7 +77,7 @@
         
         
 
-        <div v-if="projects.length > 0">
+        <div class="mt-2" v-if="projects.length > 0">
 
             <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>

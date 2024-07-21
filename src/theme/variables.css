@@ -28,7 +28,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-secondary-tint: #50c8ff;
 
   /** tertiary **/
-  --ion-color-tertiary: #0e61ab;
+  --ion-color-tertiary: #0b5799;
   --ion-color-tertiary-rgb: 82, 96, 255;
   --ion-color-tertiary-contrast: #FEFBFF;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
@@ -87,12 +87,15 @@ http://ionicframework.com/docs/theming/ */
   --ion-text-color: var(--color, #1f1f1f);
   --ion-color: var(--color, #1f1f1f);
   --ion-separator: #efeeee;
+  --accent-color: #f7b16b7d;
+
 
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     
+    --accent-color: #f7b16b;
     --color: #D4E3FF;
     --ion-background-color: #191C20;
     --ion-text-color: var(--color, #ffffff);

@@ -42,14 +42,14 @@
         <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
           </ion-refresher>
-        <div v-if="projects.length > 0">
+        <div class="mt-3" v-if="projects.length > 0">
             <!-- <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                 :show-unapply="false" v-on:dataUpdated="getAllProjects()">
             </show-project> -->
 
             <!--TODO: ANIMATION FOR LOADING-->
             
-            <ion-list>
+            <ion-list class="mt-3">
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                     :apply-permission="false" :active-project="false" :show-unapply="false"
                     :historyProject="false" v-on:dataUpdated="resetData()">    
