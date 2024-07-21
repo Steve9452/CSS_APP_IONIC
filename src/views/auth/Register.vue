@@ -195,7 +195,7 @@ export default {
                 }
                 try {
                     const API_ENDOINT = this.getAPIEndpoint();
-                    const request = await fetch(API_ENDOINT + '/register', {
+                    const request = await fetch(API_ENDOINT + '/registro', {
                         method: "POST",
                         body: JSON.stringify({
                             correo: correo,
