@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="projects.length > 0">
+        <div class="mt-3" v-if="projects.length > 0">
             <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                 :apply-permission="applyPermission" :show-unapply="true" v-on:dataUpdated="getMyProjects()">
             </show-project>
@@ -10,11 +10,9 @@
             <div class="row justify-content-center align-items-center">
                 <div class="col">
                     <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
-                    <h1 class="text-primary text-center font-weight-bolder">
-                        Hmmm
-                    </h1>
+
                     <p class="text-muted text-center">
-                        Parece ser que no se encontraron registros.
+                        Parece ser que no se encontraron projectos.
                     </p>
                 </div>
             </div>

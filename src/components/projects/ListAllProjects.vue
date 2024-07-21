@@ -1,5 +1,9 @@
 <template>
+    
     <div id="main-content">
+        <div v-if="loading"  class="flex-center my-4">
+                <ion-spinner  name="crescent" color="primary"></ion-spinner>
+            </div>
         <ion-grid>
             <!-- <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
               <ion-refresher-content></ion-refresher-content>
@@ -43,6 +47,8 @@
                 :show-unapply="false" v-on:dataUpdated="getAllProjects()">
             </show-project> -->
 
+            <!--TODO: ANIMATION FOR LOADING-->
+            
             <ion-list>
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
                     :apply-permission="false" :active-project="false" :show-unapply="false"
@@ -62,15 +68,13 @@
 
         </div>
 
-        <div class="container" v-else>
+        <div class="container" v-if="!loading && projects.length == 0">
             <div class="row justify-content-center align-items-center">
                 <div class="col">
                     <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
-                    <h1 class="text-primary text-center font-weight-bolder">
-                        Hmmm
-                    </h1>
+
                     <p class="text-muted text-center">
-                        Parece ser que no se encontraron registros.
+                        Parece ser que no se encontraron projectos.
                     </p>
                 </div>
             </div>
@@ -88,6 +92,7 @@ import {
     IonInfiniteScrollContent,
     IonRefresher,
     IonInput,
+    IonSpinner,
     IonRefresherContent
 } from '@ionic/vue';
 
@@ -99,12 +104,14 @@ export default {
         IonInfiniteScrollContent,
         IonRefresher,
         IonInput,
+        IonSpinner,
         IonRefresherContent
     },
     data: function () {
         return {
             apiToken: '',
             searchOutline,
+            loading: true,
             filterOutline,
             swapVerticalOutline,
             projects: [],
@@ -152,6 +159,7 @@ export default {
 
         async fetchData(resetPage = false) {
             this.page = resetPage ? 1 : this.page;
+            this.loading = true;
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/admin/getAllProjects?page=${this.page}&nombre=${this.nombreABuscar}&orden=${this.orderBy}&filtro=${this.filtrarPor}&id=${this.filtroId}`, {
 
@@ -166,6 +174,8 @@ export default {
             } else {
                 this.showErrorToast('Ups! Algo salió mal.');
             }
+
+            this.loading = false
             return data;
         },
         async getAllProjects(ev = null) {
@@ -316,11 +326,11 @@ export default {
             await actionSheet.present();
         },
 
-        presentActionSheetFilterCarreras: async (carrers, handleFilterId) => {
+        presentActionSheetFilterCarreras: async (careers, handleFilterId) => {
 
             const actionSheet = await actionSheetController.create({
                 header: 'Carrera: ',
-                buttons: carrers.map(c => {
+                buttons: careers.map(c => {
                     return {
                         text: c.nombre,
                         role: 'destructive',

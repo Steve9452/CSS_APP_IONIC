@@ -37,7 +37,7 @@ const mixin = {
             return user ? user.idRol : '';
         },
         async signout() {
-            await Storage.remove({ key: 'user' });
+            await Storage.remove({ key: 'user' });        
         },
         async showSuccessToast(message: string) {
             const toast = await toastController

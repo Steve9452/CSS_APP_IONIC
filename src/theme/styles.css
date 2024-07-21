@@ -13,11 +13,15 @@
 
 
 
-   .alert-tappable.sc-ion-alert-md {
-    height: initial !important;
-    contain: initial !important;
-  }
+.alert-tappable.sc-ion-alert-md {
+height: initial !important;
+contain: initial !important;
+}
 
+ion-button{
+    text-transform: none;
+    box-shadow: none;
+}
 
 ion-select, ion-datetime {
     height: calc(1.5em + 0.75rem + 2px);
@@ -68,18 +72,23 @@ ion-select, ion-datetime {
     align-items: center;
     justify-content: center;
 }
-  ion-datetime {
-    --background: rgb(245, 235, 247);
-    --background-rgb: 245, 235, 247;
-    --wheel-highlight-background: rgb(218, 216, 255);
-    --wheel-fade-background-rgb: 245, 235, 247;
-  }
 
-  @media (prefers-color-scheme: dark) {
-    .action-sheet-button {
-        color: white;
-        --button-color: white;
-    }
+ion-datetime {
+--background: rgb(245, 235, 247);
+--background-rgb: 245, 235, 247;
+--wheel-highlight-background: rgb(218, 216, 255);
+--wheel-fade-background-rgb: 245, 235, 247;
+}
+
+@media (prefers-color-scheme: dark) {
+.action-sheet-button {
+    color: white;
+    --button-color: white;
+}
     
+}
+
+.action-sheet-wrapper{
+    max-height: 75vh;
 }
     

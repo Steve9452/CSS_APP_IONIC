@@ -1,12 +1,12 @@
 <template>
     <ion-header class="ion-no-border" translucent>
-        <ion-toolbar>
+        <ion-toolbar class="pt-0">
             <ion-buttons slot="start">
-                <ion-button @click="closeModal()"><ion-icon color="light" :icon="arrowBackOutline"></ion-icon></ion-button>
+                <ion-button @click="closeModal()"><ion-icon :icon="arrowBackOutline"></ion-icon></ion-button>
             </ion-buttons>
             <ion-title>
-                <ion-text color="light">
-                        Editar proyecto 
+                <ion-text>
+                    Editar proyecto
                 </ion-text>
             </ion-title>
             <ion-progress-bar v-if="fetching" type="indeterminate"></ion-progress-bar>
@@ -44,7 +44,7 @@
     </ion-toolbar>
 
     <ion-content>
-        <ion-card class="my-3" color="" v-if="view === 'general'">
+        <div class="my-3" color="" v-if="view === 'general'">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -58,7 +58,7 @@
                         placeholder="Contraparte" :disabled="disableInput">
                     <div class="text-danger">{{ validation.firstError('project.counterpart') }}</div>
                 </div>
-               <div class="form-group">
+                <div class="form-group">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-align-center"></i>&nbsp;Nombre</label>
                     <input v-model="project.name" type="text" class="form-control custom-form"
@@ -69,8 +69,8 @@
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-align-center"></i>&nbsp;Perfil
                         del estudiante</label>
-                    <textarea v-model="project.profile" class="form-control custom-form" placeholder="Perfil del estudiante"
-                        :disabled="disableInput"></textarea>
+                    <textarea v-model="project.profile" class="form-control custom-form"
+                        placeholder="Perfil del estudiante" :disabled="disableInput"></textarea>
                     <div class="text-danger">{{ validation.firstError('project.profile') }}</div>
                 </div>
                 <div class="form-group">
@@ -98,7 +98,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-people-arrows"></i>&nbsp;Tipo
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="fas fa-people-arrows"></i>&nbsp;Tipo
                         de
                         Horas</label>
                     <ion-select placeholder="Seleccionar" v-model="project.hoursType" cancel-text="Cancelar">
@@ -123,11 +124,12 @@
                         :disabled="disableInput"></textarea>
                 </div>
 
-                
+
 
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="far fa-calendar-alt"></i>&nbsp;Fecha
                         de
                         Inicio</label>
                     <ion-datetime v-model="project.startDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY"
@@ -136,7 +138,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Fecha
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="far fa-calendar-alt"></i>&nbsp;Fecha
                         de
                         Finalización</label>
                     <ion-datetime v-model="project.endDate" display-format="YYYY/MM/DD" picker-format="DD/MM/YYYY"
@@ -145,7 +148,7 @@
                     <div class="text-danger">{{ validation.firstError('project.endDate') }}</div>
                 </div>
 
-                <div class="form-group" v-if="userRol === 1">
+                <!-- <div class="form-group" v-if="userRol === 1">
                     <label class="text-muted font-weight-bold text-uppercase"><i
                             class="fas fa-graduation-cap"></i>&nbsp;Carreras</label>
                     <ion-select v-model="project.careers" placeholder="Seleccionar" cancel-text="Cancelar" multiple>
@@ -154,20 +157,156 @@
                         </ion-select-option>
                     </ion-select>
                     <div class="text-danger">{{ validation.firstError('project.careers') }}</div>
+                </div> -->
+
+                <label class="text-muted font-weight-bold text-uppercase">
+                    Carrera/Rango
+                </label>
+
+                <!-- Seleecionar las carreras -->
+                <div v-if="editCarreras" class="form-group mb-4">
+                    <div v-if="!editSelectAllCarrers">
+
+                        <ion-button size="small" mode="ios" class="pl-0" xpand="block" color="medium"
+                            @click="editSelectAllCarrers = true; selectedAllCarrers = false">
+                            Seleccionar de forma individual
+                        </ion-button>
+                        <p class="pt-3">
+                            Seleccionando todas las carreras excepto Ing.Civil y Lic. Psicologia desde/hasta
+                        </p>
+                        <div class="form-group">
+                            <div class="d-flex" style="gap: 0.5rem">
+                                <ion-select class="form-control custom-form" placeholder="Desde" v-model="allFrom">
+                                    <ion-select-option v-for="perfil in arrayPerfiles" :value="perfil.idPerfil"
+                                        :key="perfil.idPerfil">
+                                        {{ perfil.perfil }}
+                                    </ion-select-option>
+                                </ion-select>
+                                <ion-select class="form-control custom-form" placeholder="Desde" v-model="allTo">
+                                    <ion-select-option v-for="perfil in arrayPerfiles" :value="perfil.idPerfil"
+                                        :key="perfil.idPerfil">
+                                        {{ perfil.perfil }}
+                                    </ion-select-option>
+                                </ion-select>
+
+                            </div>
+                            <div v-if="errorInProjectsRange" class="text-danger"> Debes escoger un rango valido </div>
+                        </div>
+
+                        <ion-button size="small" mode="ios" id="agregarACP" type="button"
+                            @click="toogleEditProjects(all = true)" color="success">
+                            Guardar seleccion
+                        </ion-button>
+                    </div>
+
+                    <div v-if="editSelectAllCarrers">
+                        <ion-button size="small" mode="ios" class="pl-0 mb-3" xpand="block" color="medium"
+                            @click="editSelectAllCarrers = false">
+                            Seleccionar todas las carreras
+                        </ion-button>
+
+                        <div class="form-group " v-for="(acp, key) in this.project.careers" :key="acp.id">
+                            <div class="d-flex flex-column" style="gap: 0.5rem">
+                                <div>
+                                    <ion-select placeholder="Carrera" v-model="acp[0]">
+                                        <ion-select-option v-for="carrera in collegeCareers" :value="carrera.idCarrera"
+                                            :key="carrera.idCarrera">
+                                            {{ carrera.nombre }}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+
+                                <div class="d-flex" style="gap: 1rem">
+                                    <ion-select class="form-control custom-form" placeholder="Desde" v-model="acp[1]">
+                                        <ion-select-option v-for="perfil in arrayPerfiles" :value="perfil.idPerfil"
+                                            :key="perfil.idPerfil">
+                                            {{ perfil.perfil }}
+                                        </ion-select-option>
+                                    </ion-select>
+
+                                    <ion-select class="form-control custom-form" placeholder="Hasta" v-model="acp[2]">
+                                        <ion-select-option v-for="perfil in arrayPerfiles" :value="perfil.idPerfil"
+                                            :key="perfil.idPerfil">
+                                            {{ perfil.perfil }}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <ion-button size="small" fill="clear" mode="ios" id="borrarACP" type="button"
+                                    @click="borrarACP(key)" color="danger">
+                                    Borrar
+                                </ion-button>
+                            </div>
+                        </div>
+                        <!-- :disabled="disabledBotonAgregarCarrera()" -->
+                        <ion-button size="small" mode="ios" id="agregarACP" type="button" @click="agregarACP()"
+                            color="primary">
+                            Agregar carrera
+                        </ion-button>
+                        <ion-button size="small" mode="ios" id="agregarACP" type="button"
+                            @click="toogleEditProjects(all = false)" color="success">
+                            Guardar carreras
+                        </ion-button>
+                    </div>
+
+                    <div v-if="errorInProjectsEmpty" class="text-danger"> Debes escoger una carrera </div>
+                    <div v-if="errorInProjectsRange" class="text-danger"> Debes escoger un rango valido </div>
+                    <div v-if="errorInProjectsRepeted" class="text-danger"> Hay carreras repetidas </div>
+
                 </div>
 
-                <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" color="primary" @click="updateProject()">
-                        ACTUALIZAR
+                <!-- Mostrar las carreras  -->
+                <div v-else class="form-group">
+
+                    <ion-list v-if="selectedAllCarrers">
+                        <p class="pt-2">
+                            Seleccionando todas las carreras excepto Ing.Civil y Lic. Psicologia desde <b> {{
+                    arrayPerfiles[allFrom - 1].perfil }} </b> hasta <b> {{ arrayPerfiles[allTo - 1].perfil
+                                }}
+                            </b>
+                        </p>
+                    </ion-list>
+
+                    <ion-list v-else>
+                        <ion-item class="form-group" v-for="acp in this.project.careers" :key="acp.id">
+                            <div>
+                                <div class="d-flex flex-column">
+
+                                    <p class="mb-0 font-weight-bold">
+                                        {{ collegeCareers[acp[0] - 1].nombre }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="mb-3">
+                                        {{ `${arrayPerfiles[acp[1] - 1].perfil} - ${arrayPerfiles[acp[2] - 1].perfil}`
+                                        }}
+                                    </p>
+                                </div>
+                            </div>
+                        </ion-item>
+                    </ion-list>
+                    <ion-button size="small" mode="ios" class="col-5 pl-0" xpand="block" color="warning"
+                        @click="toogleEditProjects()">
+                        Editar carreras
                     </ion-button>
+
+
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-4">
+                    <ion-button :disabled="editCarreras" expand="block" mode="ios" @click="updateProject()">
+                        Actualizar
+                    </ion-button>
+                    <div v-if="editCarreras" class="text-danger"> Primero debes guardar las carreras </div>
+
                 </div>
+
             </ion-card-content>
-        </ion-card>
+        </div>
 
 
-        <ion-card class="my-3" v-if="view === 'students'">
+        <div class="my-3" v-if="view === 'students'">
             <ion-card-content v-if="project.students.length > 0">
                 <div class="form-group py-2 border-top border-bottom">
                     <h6 class="text-center text-muted font-weight-bold">
@@ -188,10 +327,10 @@
                         </ion-label>
 
                         <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
-                            <ion-button color="success" @click="sendApplicationRequest(student, 'accept')">
+                            <ion-button mode="ios" color="success" @click="sendApplicationRequest(student, 'accept')">
                                 <ion-icon :icon="checkmark"></ion-icon>
                             </ion-button>
-                            <ion-button color="danger" @click="sendApplicationRequest(student, 'deny')">
+                            <ion-button mode="ios" color="danger" @click="sendApplicationRequest(student, 'deny')">
                                 <ion-icon :icon="closeCircle"></ion-icon>
                             </ion-button>
                         </ion-buttons>
@@ -214,17 +353,15 @@
 
             <ion-card-content v-else>
                 <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
-                <h1 class="text-primary text-center font-weight-bolder">
-                    Hmmm
-                </h1>
+
                 <p class="text-muted text-center">
-                    Parece ser que no se encontraron registros.
+                    Parece ser que no se encontraron estudiantes.
                 </p>
             </ion-card-content>
-        </ion-card>
+        </div>
 
         <!-- Pestana Programar Reunion  -->
-        <ion-card class="my-3" v-if="view === 'reunion'">
+        <div class="my-3" v-if="view === 'reunion'">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -266,7 +403,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="text-muted font-weight-bold text-uppercase"><i class="far fa-calendar-alt"></i>&nbsp;Hora
+                    <label class="text-muted font-weight-bold text-uppercase"><i
+                            class="far fa-calendar-alt"></i>&nbsp;Hora
                         (24h)</label>
                     <ion-datetime v-model="meetingScheduleTime" display-format="HH:mm" picker-format="HH:mm">
                     </ion-datetime>
@@ -298,16 +436,16 @@
                 </div>
 
                 <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" color="secondary" :disabled=this.meetingMailButtonStatus
+                    <ion-button expand="block" mode="ios" :disabled=this.meetingMailButtonStatus
                         @click="sendMeetingRequest()">
-                        PROGRAMAR REUNION
+                        Programar reunion
                     </ion-button>
                 </div>
 
             </ion-card-content>
-        </ion-card>
+        </div>
 
-        <ion-card class="my-3" v-if="view === 'change-status'" :hidden="disableStatus">
+        <div class="my-3" v-if="view === 'change-status'" :hidden="disableStatus">
             <ion-card-content>
                 <div class="form-group py-3 border-top border-bottom">
                     <h2 class="text-center text-muted font-weight-bold">
@@ -327,7 +465,8 @@
                 </div>
 
                 <div class="form-group mt-4" v-if="!disableInput">
-                    <ion-button expand="block" :disabled="project.projectStatus === 'En curso'" color="primary" @click="changeProjectStatus()">
+                    <ion-button expand="block" mode="ios" :disabled="project.projectStatus === 'En curso'"
+                        color="primary" @click="changeProjectStatus()">
                         Confirmar cambio de estado
                     </ion-button>
                 </div>
@@ -344,7 +483,7 @@
                     </ion-text>
                 </div>
             </ion-card-content>
-        </ion-card>
+        </div>
 
     </ion-content>
 </template>
@@ -373,6 +512,7 @@ export default {
             userRol: '',
             view: 'general',
             collegeCareers: [],
+            arrayPerfiles: [],
             project: {
                 id: '',
                 name: '',
@@ -405,24 +545,25 @@ export default {
             acceptedStudentsEmails: [],
             meetingMailButtonStatus: false,
             fetching: false,
-            arrowBackOutline
+            arrowBackOutline,
+            allFrom: 1,
+            allTo: 6,
+            errorInProjectsEmpty: false,
+            errorInProjectsRepeted: false,
+            errorInProjectsRange: false,
+            editCarreras: false,
+            editSelectAllCarrers: true,
+            selectedAllCarrers: false,
         };
     },
     props: ['projectData', 'disableStatus', "showUnapplyProp", "applyPermission", "activeProject",],
     async created() {
         this.apiToken = await this.getApiToken();
         this.userRol = await this.getUserRolId();
-        // const currentDate = new Date();
+        this.arrayPerfiles = this.setPerfiles();
 
+        await this.getAllCollegeCareers();
 
-        // this.meetingScheduleDate = currentDate.toLocaleDateString('es-ES', { day: '2-digit',month: '2-digit', year: 'numeric'});
-        //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-
-
-
-        if (this.userRol === 1) {
-            this.getAllCollegeCareers();
-        }
         this.setProjectData();
     },
     validators: {
@@ -461,22 +602,127 @@ export default {
         },
     },
     methods: {
+        setPerfiles() {
+            return [
+                {
+                    idPerfil: 1,
+                    perfil: "Primer Año"
+                },
+                {
+                    idPerfil: 2,
+                    perfil: "Segundo Año"
+                },
+                {
+                    idPerfil: 3,
+                    perfil: "Tercer Año"
+                },
+                {
+                    idPerfil: 4,
+                    perfil: "Cuarto Año"
+                },
+                {
+                    idPerfil: 5,
+                    perfil: "Quinto Año"
+                },
+                {
+                    idPerfil: 6,
+                    perfil: "Egresado"
+                },
+            ]
+        },
+        agregarACP() {
+
+            const len = this.project.careers.length
+            const lastC = this.project.careers[len - 1]
+
+
+            if (lastC[0] != null) {
+                this.errorInProjectsEmpty = false;
+                this.project.careers.push([null, 1, 6])
+            } else {
+                this.errorInProjectsEmpty = true;
+            }
+
+
+            // Validar carreras
+
+        },
+        borrarACP(key) {
+            if (this.project.careers.length > 1) {
+                this.project.careers.splice(key, 1)
+            }
+        },
+        toogleEditProjects(all = null) {
+
+            if (all == null) {
+                this.editCarreras = !this.editCarreras
+                return
+            }
+
+            if (all) {
+                if (this.allFrom < this.allTo) {
+                    this.editSelectAllCarrers = false;
+                    this.errorInProjectsRange = false;
+                    this.selectedAllCarrers = true;
+                } else {
+                    this.errorInProjectsRange = true;
+                }
+            } else {
+
+                const selectedCareers = new Set()
+                this.errorInProjectsEmpty = false;
+                this.errorInProjectsRange = false;
+
+                this.project.careers.forEach(el => {
+                    if (el[0] == null) {
+                        this.errorInProjectsEmpty = true;
+                    }
+
+                    if (selectedCareers.has(el[0])) {
+                        this.errorInProjectsRepeted = true;
+                    } else {
+                        selectedCareers.add(el[0])
+
+                    }
+
+                    if (el[1] >= el[2]) {
+                        this.errorInProjectsRange = true;
+                    }
+
+                    if (selectedCareers.size == this.project.careers.length) {
+                        this.errorInProjectsRepeted = false
+                    }
+
+
+
+                });
+
+            }
+
+
+            if (!this.errorInProjectsRange && !this.errorInProjectsEmpty && !this.errorInProjectsRepeted) {
+
+                this.editCarreras = !this.editCarreras
+            }
+
+
+        },
         async updateProject() {
             this.fetching = true
             const validation = await this.$validate();
             if (validation) {
                 const API_ENDOINT = this.getAPIEndpoint();
-                const selectedCareers = [];
+                // const selectedCareers = [];
 
-                if (this.userRol === 1) {
-                    this.project.careers.forEach(element => {
-                        const career = [];
-                        career[0] = element;
-                        career[1] = 0;
-                        career[2] = 6;
-                        selectedCareers.push(career);
-                    });
-                }
+                // if (this.userRol === 1) {
+                //     this.project.careers.forEach(element => {
+                //         const career = [];
+                //         career[0] = element;
+                //         career[1] = 0;
+                //         career[2] = 6;
+                //         selectedCareers.push(career);
+                //     });
+                // }
 
                 const request = await fetch(API_ENDOINT + '/admin/putUpdateProyecto', {
                     method: "PUT",
@@ -502,7 +748,12 @@ export default {
                         estado: 1,
                         // eslint-disable-next-line
                         estado_proyecto: "En curso",
-                        carreraPerfil: selectedCareers
+                        carreraPerfil: this.project.careers,
+                        aplicarTodasCarreras: this.selectedAllCarrers,
+                        // eslint-disable-next-line
+                        p_lim_inf: this.allFrom,
+                        // eslint-disable-next-line
+                        p_lim_sup: this.allTo,
                     }),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
@@ -518,7 +769,7 @@ export default {
                 } else {
                     this.showErrorToast('Algo salió mal al actualizar el proyecto.');
                 }
-                
+
             } else {
                 this.FormValidationFailed();
             }
@@ -530,8 +781,8 @@ export default {
 
             const estadoProyecto = this.project.projectStatus;
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + `/admin/postProyecto${estadoProyecto == '2' ? 'Finalizar' : 'Cancelar' }`, {
-            // const request = await fetch(API_ENDOINT + `postProyectoCancelarcancelar`, {}
+            const request = await fetch(API_ENDOINT + `/admin/postProyecto${estadoProyecto == '2' ? 'Finalizar' : 'Cancelar'}`, {
+                // const request = await fetch(API_ENDOINT + `postProyectoCancelarcancelar`, {}
                 method: "POST",
                 body: JSON.stringify({
                     idProyecto: this.project.id
@@ -615,12 +866,18 @@ export default {
             this.project.ownerEmail = this.projectData.correo_encargado;
 
             if (this.userRol === 1 && this.projectData.carreras) {
-                const careerIds = [];
                 this.projectData.carreras.forEach(element => {
-                    careerIds.push(element.idCarrera);
+                    this.project.careers.push([element.idCarrera, element.pivot.limite_inf, element.pivot.limite_sup]);
                 });
-                this.project.careers = careerIds;
             }
+
+            // if (this.userRol === 1 && this.projectData.carreras) {
+            //     const careerIds = [];
+            //     this.projectData.carreras.forEach(element => {
+            //         careerIds.push(element.idCarrera);
+            //     });
+            //     this.project.careers = careerIds;
+            // }
 
             if (this.projectData.estudiantes) {
                 this.project.students = this.projectData.estudiantes;
@@ -719,6 +976,8 @@ export default {
 }
 </script>
 
-<style scoped>ion-icon {
+<style scoped>
+ion-icon {
     font-size: 1.5em;
-}</style>
+}
+</style>

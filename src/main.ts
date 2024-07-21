@@ -44,7 +44,9 @@ const app = createApp(App)
 
 router.isReady().then(() => {
   app.mount('#app');
+  
 });
+
 
 // -------------------------------------------------IMPORT IONIC COMPONENTS GLOBALLY-------------------------------------------------
 
@@ -80,6 +82,8 @@ import {
   IonItem,
   IonBadge,
   IonSegmentButton,
+
+  IonText, 
 
   IonMenuButton, 
 
@@ -133,6 +137,8 @@ app.component('ion-menu-toogle', IonMenuToggle);
 app.component('ion-list', IonList);
 app.component('ion-menu', IonMenu);
 app.component('ion-chip', IonChip);
+
+app.component('ion-text', IonText);
 
 app.component('ion-progress-bar', IonProgressBar);
 app.component('logotype', Logo);

@@ -1,6 +1,6 @@
 <template>
     <ion-header class="ion-no-border" translucent>
-        <ion-toolbar>
+        <ion-toolbar class="pt-0">
             <ion-buttons>
                 <ion-button @click="closeModal()"> <ion-icon :icon="arrowBackOutline"></ion-icon> </ion-button>
             </ion-buttons>
@@ -14,7 +14,7 @@
                 <ion-item >
                     <ion-grid>
                         <ion-row >
-                            <ion-label class="modal-title font-weight-bold" style="font-size: 2rem; white-space: normal;"  v-text="project.name"> </ion-label>
+                            <ion-label class="modal-title font-weight-bold" style="font-size: 1.4rem; white-space: normal;"  v-text="project.name"> </ion-label>
                         </ion-row>
                         <ion-row>
                             <ion-text>
@@ -24,10 +24,7 @@
                                 </ion-label>
                             </ion-text>
                         </ion-row>
-                        <ion-row>
-                            <ion-label class="text-muted font-weight-ligth"><i class="far fa-user"></i>{{ `
-                                ${project.owner}` }} &nbsp;</ion-label>
-                        </ion-row>
+
                     </ion-grid>
                 </ion-item>
 
@@ -47,7 +44,7 @@
                             <ion-button color="warning"> Proyecto finalizado </ion-button>
                         </ion-row>
                         <ion-row v-else>
-                            <ion-button color="secondary" :disabled="applyDisabled" @click="unapplyToProject()"> Desaplicar </ion-button>
+                            <ion-button :disabled="applyDisabled" @click="unapplyToProject()"> Desaplicar </ion-button>
                         </ion-row>
 
                         <ion-row>
@@ -63,10 +60,17 @@
 
                 <ion-item>
                     <ion-grid class="gapped-grid">
+
                         <ion-row>
                             <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Perfil del estudiante
                                 &nbsp;</ion-label>
                             <ion-text v-text="projectData.perfil_estudiante" class=""> </ion-text>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-label class="text-muted font-weight-ligth"><i class="fas fa-align-center"></i>Encargado
+                                &nbsp;</ion-label>
+                            <ion-text v-text="projectData.encargado" class=""> </ion-text>
                         </ion-row>
 
                         <ion-row>

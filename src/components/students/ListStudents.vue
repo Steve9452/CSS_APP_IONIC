@@ -13,11 +13,9 @@
                 <div class="col">
                     <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
 
-                    <h1 class="text-primary text-center font-weight-bolder">
-                        Hmmm
-                    </h1>
+
                     <p class="text-muted text-center">
-                        Parece ser que no se encontraron registros.
+                        Parece ser que no se encontraron estudiantes.
                     </p>
                 </div>
             </div>

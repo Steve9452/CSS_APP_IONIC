@@ -67,7 +67,7 @@ export default {
                     if (!correo.includes('@')) {
                         correo = correo + '@uca.edu.sv';
                     }
-                    const request = await fetch(API_ENDOINT + '/olvide-clave', {
+                    const request = await fetch(API_ENDOINT + '/forgottenPassword', {
                         method: "POST",
                         body: JSON.stringify({
                             correo: correo

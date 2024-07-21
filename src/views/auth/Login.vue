@@ -32,8 +32,8 @@
                         <div class="form-group">
                         <p class="d-block text-center">
                             
-                            ¿Aún no tienes una cuenta?
-                            <ion-router-link class="d-block text-center" href="/register">
+                            <span color="medium"> ¿Aún no tienes una cuenta? </span>
+                            <ion-router-link style="color: var(--ion-color-primary-contrast)" class="d-block text-center" href="/register">
                                 Registrate aquí
                             </ion-router-link>
                         </p>
@@ -114,6 +114,7 @@ export default {
                         await this.setAuthenticatedUser(data.user);
 
                         this.$router.push('/home');
+                        location.reload();
                     } else {
                         //localStorage.removeItem('user');
                         await this.signout();
@@ -129,7 +130,7 @@ export default {
             }
 
         },
-        doingGoogleAuth(){
+        doingGoogleAuth(){  
             this.googleIn = !this.googleIn
 
         }

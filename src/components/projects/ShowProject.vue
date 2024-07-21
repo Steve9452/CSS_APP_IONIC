@@ -1,12 +1,59 @@
 <template>
-	<ion-card class="my-3">
+	<div style="border-bottom: 3px solid var(--ion-separator);" class="px-3 mb-3">
+
+		<!-- <ion-item color="primary"> -->
+		<div>
+			<div @click="openModal">
+				<div class="project_name_container">
+					<!-- <ion-text style="color: var(--ion-color-primary-contrast)"> -->
+					<ion-text>
+						{{ project.name }}
+					</ion-text>
+				</div>
+				<ion-text style="font-size: 14px; margin-top: 0.3rem;">
+					{{ project.counterpart }}.
+				</ion-text>
+				<!-- <ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
+					{{ project.counterpart }}
+				</ion-card-subtitle>
+				<ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
+					{{ project.name }}
+				</ion-card-subtitle> -->
+				<p style="margin-top: 0.3rem;">
+					<ion-chip v-if="showUnapply && acepted" color="success" class="mr-1 success-border">
+						<small>Aceptado</small>
+					</ion-chip>
+					<ion-chip v-if="showUnapply && rejected" color="danger" class="mr-1 danger-border">
+						<small>Rechazado</small>
+					</ion-chip>
+					<ion-chip v-if="showUnapply && finished" color="warning" class="mr-1">
+						<small>Proyecto finalizado</small>
+					</ion-chip>
+					<ion-chip v-if="showUnapply && inProcess" color="warning" class="mr-1">
+						<small>Solicitud enviada</small>
+					</ion-chip>
+					<ion-chip color="primary" class="mr-1">
+						<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
+					</ion-chip>
+					<ion-chip class="mr-1">
+						<small>{{ project.hoursType }}</small>
+					</ion-chip>
+				</p>
+			</div>
+		</div>
+
+		<!-- <ion-card-content @click="openModal"> -->
+		<!-- <ion-card-subtitle style="color:var(--ion-text-color);">
+					{{ project.profile }}
+				</ion-card-subtitle> -->
+		<!-- <ion-card class="my-3">
 		
 		<ion-item color="primary">
 			<ion-label @click="openModal">
-				<ion-card-subtitle style="color:var(--ion-text-color);">
+				<ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
 					{{ project.counterpart }}
 				</ion-card-subtitle>
-				<ion-card-subtitle style="color:var(--ion-text-color);">
+				<ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
 					{{ project.name }}
 				</ion-card-subtitle>
 				
@@ -16,11 +63,8 @@
 		<ion-card-content @click="openModal">
 			<ion-card-subtitle style="color:var(--ion-text-color);">
 					{{ project.profile }}
-				</ion-card-subtitle>
-			<p>
-				{{  }}
-			</p>
-			<p>
+				</ion-card-subtitle> -->
+		<!-- <p>
 				<ion-chip v-if="showUnapply && acepted" color="success" class="mr-1 success-border">
 					<small>Aceptado</small>
 				</ion-chip>
@@ -39,10 +83,12 @@
 				<ion-chip :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
 					<small>{{ project.hoursType }}</small>
 				</ion-chip>
-			</p>
+			</p> -->
 
-		</ion-card-content>
-	</ion-card>
+		<!-- </ion-card-content>
+	</ion-card> -->
+		<!-- </ion-card-content> -->
+	</div>
 </template>
 
 <script>
@@ -112,7 +158,7 @@ export default {
 		this.userId = await this.getUserId();
 		this.userRol = await this.getUserRolId();
 
-		if(this.projectData.estadoPxe !== undefined){
+		if (this.projectData.estadoPxe !== undefined) {
 
 			this.acepted = this.projectData.estadoPxe == 1
 			this.rejected = this.projectData.estadoPxe == 2
@@ -142,7 +188,7 @@ export default {
 			this.project.ownerEmail = this.projectData.correo_encargado;
 
 		},
-		
+
 		async openModal() {
 			const modal = await modalController
 				.create({
@@ -164,10 +210,22 @@ export default {
 }
 </script>
 <style>
-	.success-border {
-		border: 2px solid var(--ion-color-success-shade)
-	}
-	.danger-border {
-		border: 2px solid var(--ion-color-danger-shade)
-	}
+.success-border {
+	border: 2px solid var(--ion-color-success-shade)
+}
+
+.danger-border {
+	border: 2px solid var(--ion-color-danger-shade)
+}
+
+.project_name_container{
+	/* color: var(--ion-color-primary);
+	font-weight: 500; */
+	color: var(--ion-color-primary-contrast);
+	padding: 1rem;
+	background-color: var(--ion-color-primary);
+	border-radius: 1rem;
+	margin-bottom: 0.3rem;
+}
+
 </style>

@@ -93,7 +93,7 @@ export default {
                 const API_ENDOINT = this.getAPIEndpoint();
                 try {
 
-                    const request = await fetch(API_ENDOINT + '/cambiar-clave', {
+                    const request = await fetch(API_ENDOINT + '/changePassword', {
                         method: "POST",
                         body: JSON.stringify({
                             token: this.code.trim(),

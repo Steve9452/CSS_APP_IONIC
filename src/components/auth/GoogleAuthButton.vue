@@ -31,7 +31,7 @@ export default {
         })
 
         const data = await request.json();
-        console.log(data)
+        // console.log(data)
 
         if (request.status === 200) {
           await this.setAuthenticatedUser(data.user);

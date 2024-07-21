@@ -76,6 +76,7 @@
 		methods: {
 			async signMeOut(){
 				await this.signout()
+				// this.$router.push("/login")
 				location.reload()
 			}
 		}

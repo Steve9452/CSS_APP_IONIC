@@ -148,7 +148,9 @@ export default {
 			}).finally(() => {
 				this.loading = false;
 			}).catch(error => {
-				console.error('Error:', error);
+				console.error('Error:', "Error getting data");
+				this.error = true;
+
 			});
 
 		},
