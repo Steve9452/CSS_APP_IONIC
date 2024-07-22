@@ -307,26 +307,26 @@
 
 
         <div class="my-3" v-if="view === 'students'">
-            <ion-card-content v-if="project.students.length > 0">
+            <ion-card-content v-if="students.length > 0">
                 <div class="form-group py-2 border-top border-bottom">
                     <h6 class="text-center text-muted font-weight-bold">
                         Solicitudes de Estudiantes
                     </h6>
                 </div>
 
-                <div v-for="student in project.students" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                <div v-for="student in students" :key="student.idUser">
+                    <ion-item v-if="student.estado === 1 || userRol === 1">
                         <ion-label>
                             <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
                             <small>
                                 {{ student.correo }}
                                 <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
+                                <small class="text-muted">{{ student.n_carrera }} -
+                                    {{ student.n_facultad }}</small>
                             </small>
                         </ion-label>
 
-                        <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
+                        <ion-buttons v-if="userRol === 1 && student.estado === 0">
                             <ion-button mode="ios" color="success" @click="sendApplicationRequest(student, 'accept')">
                                 <ion-icon :icon="checkmark"></ion-icon>
                             </ion-button>
@@ -335,15 +335,15 @@
                             </ion-button>
                         </ion-buttons>
 
-                        <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
+                        <ion-badge v-else-if="student.estado === 0" color="medium">
                             <small>PENDIENTE</small>
                         </ion-badge>
 
-                        <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
+                        <ion-badge v-else-if="student.estado === 1" color="primary">
                             <small>ACEPTADO</small>
                         </ion-badge>
 
-                        <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
+                        <ion-badge v-else-if="student.estado === 2" color="dark">
                             <small>RECHAZADO</small>
                         </ion-badge>
                     </ion-item>
@@ -414,20 +414,20 @@
                 <label class="text-muted font-weight-bold text-uppercase"><i
                         class="fas fa-envelope-open-text"></i>&nbsp;Miembros</label>
                 <div v-for="student in project.acceptedStudents" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                    <ion-item v-if="student.estado === 1 || userRol === 1">
                         <ion-label>
                             <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
                             <small>
                                 {{ student.correo }}
                                 <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
+                                <small class="text-muted">{{ student.n_carrera}} -
+                                    {{ student.n_facultad }}</small>
                             </small>
                         </ion-label>
 
 
 
-                        <ion-badge v-if="student.pivot.estado === 1" color="primary">
+                        <ion-badge v-if="student.estado === 1" color="primary">
                             <small>ACEPTADO</small>
                         </ion-badge>
 
@@ -532,6 +532,7 @@ export default {
                 students: [],
                 acceptedStudents: [],
             },
+            students: [],
             checkmark,
             closeCircle,
             list,
@@ -564,7 +565,7 @@ export default {
 
         await this.getAllCollegeCareers();
 
-        this.setProjectData();
+        await this.setProjectData();
     },
     validators: {
         'project.name': function (value) {
@@ -844,7 +845,7 @@ export default {
                 this.showErrorToast('Algo salió mal al obtener las carreras.');
             }
         },
-        setProjectData() {
+        async setProjectData() {
             this.project.id = this.projectData.idProyecto;
             this.project.name = this.projectData.nombre;
             this.project.status = this.projectData.estado;
@@ -879,14 +880,27 @@ export default {
             //     this.project.careers = careerIds;
             // }
 
-            if (this.projectData.estudiantes) {
-                this.project.students = this.projectData.estudiantes;
 
-                // filter students accepted
-                this.project.acceptedStudents = this.project.students.filter(student => {
-                    return student.pivot.estado === 1;
-                });
+            const API_ENDPOINT = this.getAPIEndpoint();
+
+            const request = await fetch(API_ENDPOINT+'/admin/proyecto/estudiantes'+'?idProyecto='+this.project.id, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            })
+
+            const data = await request.json();
+
+            if(request.status === 200){
+                this.students = data;
+            }else{
+                this.showErrorToast('Algo salió mal al obtener los estudiantes.');
             }
+
+
+
         },
         async closeModal() {
             await modalController.dismiss();
