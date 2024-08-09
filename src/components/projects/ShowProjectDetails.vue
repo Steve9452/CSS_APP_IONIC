@@ -315,18 +315,18 @@
                 </div>
 
                 <div v-for="student in project.students" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                    <ion-item v-if="student.estado === 1 || userRol === 1">
                         <ion-label>
                             <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
                             <small>
                                 {{ student.correo }}
                                 <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
+                                <small class="text-muted">{{ student.n_carrera }} -
+                                    {{ student.n_facultad }}</small>
                             </small>
                         </ion-label>
 
-                        <ion-buttons v-if="userRol === 1 && student.pivot.estado === 0">
+                        <ion-buttons v-if="userRol === 1 && student.estado === 0">
                             <ion-button mode="ios" color="success" @click="sendApplicationRequest(student, 'accept')">
                                 <ion-icon :icon="checkmark"></ion-icon>
                             </ion-button>
@@ -335,15 +335,15 @@
                             </ion-button>
                         </ion-buttons>
 
-                        <ion-badge v-else-if="student.pivot.estado === 0" color="medium">
+                        <ion-badge v-else-if="student.estado === 0" color="medium">
                             <small>PENDIENTE</small>
                         </ion-badge>
 
-                        <ion-badge v-else-if="student.pivot.estado === 1" color="primary">
+                        <ion-badge v-else-if="student.estado === 1" color="primary">
                             <small>ACEPTADO</small>
                         </ion-badge>
 
-                        <ion-badge v-else-if="student.pivot.estado === 2" color="dark">
+                        <ion-badge v-else-if="student.estado === 2" color="dark">
                             <small>RECHAZADO</small>
                         </ion-badge>
                     </ion-item>
@@ -414,20 +414,20 @@
                 <label class="text-muted font-weight-bold text-uppercase"><i
                         class="fas fa-envelope-open-text"></i>&nbsp;Miembros</label>
                 <div v-for="student in project.acceptedStudents" :key="student.idUser">
-                    <ion-item v-if="student.pivot.estado === 1 || userRol === 1">
+                    <ion-item v-if="student.estado === 1 || userRol === 1">
                         <ion-label>
                             <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
                             <small>
                                 {{ student.correo }}
                                 <br>
-                                <small class="text-muted">{{ student.carrera.nombre }} -
-                                    {{ student.carrera.facultad.nombre }}</small>
+                                <small class="text-muted">{{ student.n_carrera }} -
+                                    {{ student.n_facultad }}</small>
                             </small>
                         </ion-label>
 
 
 
-                        <ion-badge v-if="student.pivot.estado === 1" color="primary">
+                        <ion-badge v-if="student.estado === 1" color="primary">
                             <small>ACEPTADO</small>
                         </ion-badge>
 
@@ -564,7 +564,7 @@ export default {
 
         await this.getAllCollegeCareers();
 
-        this.setProjectData();
+        await this.setProjectData();
     },
     validators: {
         'project.name': function (value) {
@@ -844,7 +844,25 @@ export default {
                 this.showErrorToast('Algo salió mal al obtener las carreras.');
             }
         },
-        setProjectData() {
+        async getStudents(idProyecto) {
+            const API_ENDOINT = this.getAPIEndpoint();
+            const request = await fetch(API_ENDOINT + `/admin/getEstudiantesDeProyecto?idProyecto=${idProyecto}`, {
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            });
+
+            const data = await request.json();
+
+            if (request.status === 200) {
+                return data;
+            } else {
+                this.showErrorToast('Algo salió mal al obtener los estudiantes.');
+                return [];
+            }
+        },
+        async setProjectData() {
             this.project.id = this.projectData.idProyecto;
             this.project.name = this.projectData.nombre;
             this.project.status = this.projectData.estado;
@@ -871,20 +889,14 @@ export default {
                 });
             }
 
-            // if (this.userRol === 1 && this.projectData.carreras) {
-            //     const careerIds = [];
-            //     this.projectData.carreras.forEach(element => {
-            //         careerIds.push(element.idCarrera);
-            //     });
-            //     this.project.careers = careerIds;
-            // }
+            const estudiantes = await this.getStudents(this.projectData.idProyecto)
 
-            if (this.projectData.estudiantes) {
-                this.project.students = this.projectData.estudiantes;
+            if (estudiantes) {
+                this.project.students = estudiantes;
 
                 // filter students accepted
                 this.project.acceptedStudents = this.project.students.filter(student => {
-                    return student.pivot.estado === 1;
+                    return student.estado === 1;
                 });
             }
         },
@@ -906,7 +918,7 @@ export default {
             const emails = [];
 
             this.project.acceptedStudents.forEach(element => {
-                console.log(element.correo)
+                // console.log(element.correo)
                 emails.push(element.correo);
             });
 
@@ -918,8 +930,8 @@ export default {
             const selectedDate = new Date(this.meetingScheduleDate);
             const parsedDate = selectedDate.toLocaleDateString('us-EN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-            // console.log("Body");
-            // console.log(JSON.stringify({
+            // // console.log("Body");
+            // // console.log(JSON.stringify({
             //         estudiantes: emails,
             //         fecha: parsedDate,
             //         hora: parsedTime,
