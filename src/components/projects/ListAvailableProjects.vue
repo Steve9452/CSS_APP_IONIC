@@ -1,33 +1,31 @@
 <template>
     <div>
         <div>
-            <div v-if="loading"  class="flex-center my-4">
-                <ion-spinner  name="crescent" color="primary"></ion-spinner>
+            <div v-if="loading" class="flex-center my-4">
+                <ion-spinner name="crescent" color="primary"></ion-spinner>
             </div>
             <div v-else>
-            <p v-if="error" class="alert alert-danger" role="alert">
-                Ha ocurrido un error al cargar los proyectos. Espere e Inténtelo nuevamente más tarde.
-            </p>
+                <p v-if="error" class="alert alert-danger" role="alert">
+                    Ha ocurrido un error al cargar los proyectos. Espere e Inténtelo nuevamente más tarde.
+                </p>
 
-            <p v-if="!applyPermission && !error" class="alert alert-warning" role="alert">
-                No es posible aplicar a un nuevo proyecto.
-            </p>
-            <p v-if="!applyPermission && !error" class="alert alert-warning" role="alert">
-                Ha excedido la cantidad de solicitudes diarias. Inténtelo nuevamente mañana.
-            </p>
-            <p v-if="timeout && !error" class="alert alert-danger" role="alert">
-                Penalización: Por el momento no puede aplicar a nuevos proyectos.
-            </p>
-            <div v-if="activeProject && !error" class="alert alert-warning" role="alert">
-            Ya se encuentra inscrito en un proyecto activo. Le invitamos a revisar el estado de la solicitud en proyectos
-            aplicados.
-            </div>
+                <p v-if="!applyPermission && !error" class="alert alert-warning" role="alert">
+                    No es posible aplicar a un nuevo proyecto.
+                </p>
+                <p v-if="!applyPermission && error" class="alert alert-warning" role="alert">
+                    Ha excedido la cantidad de solicitudes diarias. Inténtelo nuevamente mañana.
+                </p>
+                <div v-if="activeProject && !error" class="alert alert-warning" role="alert">
+                    Ya se encuentra inscrito en un proyecto activo. Le invitamos a revisar el estado de la solicitud en
+                    proyectos
+                    aplicados.
+                </div>
             </div>
 
 
         </div>
 
-        
+
 
         <ion-grid>
             <ion-col class="large-chip">
@@ -37,7 +35,8 @@
                 </ion-chip>
             </ion-col>
             <ion-col size="3">
-                <ion-chip @click="presentActionSheetFilter(careers, handleFilterTipo, handleFilterCarrera, handleFilterAno)">
+                <ion-chip
+                    @click="presentActionSheetFilter(careers, handleFilterTipo, handleFilterCarrera, handleFilterAno)">
                     <ion-icon :icon="filterOutline" color="secundary"></ion-icon>
                     <ion-label>Filtro</ion-label>
                 </ion-chip>
@@ -49,39 +48,46 @@
 
         <div class="" style="overflow-x: scroll; scrollbar-width: none; width: 100vw; max-width: 100vw">
 
-            <div class="" style="white-space: nowrap; margin-left: auto; margin-right: auto; width: fit-content; max-width: 200vw; font-size: auto; padding: 0px 16px 0px 10px ">
-                
-                <ion-chip v-if="!defaultTipo" @click="handleFilterTipo('', 'todas', true)" style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
-                   <span> {{ filtroTipoHorasLabel}} </span>
-                   <ion-icon style="fill: var(--ion-color-tertiary)"  :icon="closeCircle"></ion-icon>
-            </ion-chip>
-        
-        <ion-chip v-if="!defaultCarrera" @click="handleFilterCarrera(userCarrera, userCarreraId, true)" style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
-                   <span> {{ filtroCarreraLabel}} </span>
-                <ion-icon style="fill: var(--ion-color-tertiary)"  :icon="closeCircle"></ion-icon>
-            </ion-chip>
-        <ion-chip v-else @click="presentActionSheetFilterCarrera(careers, handleFilterCarrera)" style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
-            <span> {{ filtroCarreraLabel}} </span>
-            </ion-chip>
+            <div class=""
+                style="white-space: nowrap; margin-left: auto; margin-right: auto; width: fit-content; max-width: 200vw; font-size: auto; padding: 0px 16px 0px 10px ">
 
-        <ion-chip v-if="!defaultAno" @click="handleFilterAno(userPerfil, userPerfilId, true)" style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
-            <span> {{ filtroPerfilLabel }} </span>
-                   <ion-icon style="fill: var(--ion-color-tertiary)" :icon="closeCircle"></ion-icon>
-            </ion-chip>
-            <ion-chip v-else @click="presentActionSheetFilterAno(handleFilterAno)" style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
-                   <span> {{ filtroPerfilLabel }} </span>
-            </ion-chip>
+                <ion-chip v-if="!defaultTipo" @click="handleFilterTipo('', 'todas', true)"
+                    style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
+                    <span> {{ filtroTipoHorasLabel }} </span>
+                    <ion-icon style="fill: var(--ion-color-tertiary)" :icon="closeCircle"></ion-icon>
+                </ion-chip>
 
-        </div>          
+                <ion-chip v-if="!defaultCarrera" @click="handleFilterCarrera(userCarrera, userCarreraId, true)"
+                    style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
+                    <span> {{ filtroCarreraLabel }} </span>
+                    <ion-icon style="fill: var(--ion-color-tertiary)" :icon="closeCircle"></ion-icon>
+                </ion-chip>
+                <ion-chip v-else @click="presentActionSheetFilterCarrera(careers, handleFilterCarrera)"
+                    style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
+                    <span> {{ filtroCarreraLabel }} </span>
+                </ion-chip>
+
+                <ion-chip v-if="!defaultAno" @click="handleFilterAno(userPerfil, userPerfilId, true)"
+                    style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
+                    <span> {{ filtroPerfilLabel }} </span>
+                    <ion-icon style="fill: var(--ion-color-tertiary)" :icon="closeCircle"></ion-icon>
+                </ion-chip>
+                <ion-chip v-else @click="presentActionSheetFilterAno(handleFilterAno)"
+                    style="padding: 5px 1.5em 5px 1.5em;" color="primary" size="small">
+                    <span> {{ filtroPerfilLabel }} </span>
+                </ion-chip>
+
+            </div>
         </div>
-        
-        
+
+
 
         <div class="mt-2" v-if="projects.length > 0">
 
-            <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
+            <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200"
+                @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
-              </ion-refresher>
+            </ion-refresher>
 
             <ion-list>
                 <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
@@ -109,7 +115,7 @@
             </div>
         </div>
 
-        
+
     </div>
 </template>
 
@@ -166,28 +172,28 @@ export default {
 
     async created() {
         this.apiToken = await this.getApiToken();
-        
+
         this.userData = await this.getAuthenticatedUser();
-        
+
         this.userCarrera = this.userData.carrera.nombre
         this.userCarreraId = this.userData.carrera.idCarrera
 
         this.userPerfil = this.userData.perfil.descripcion
         this.userPerfilId = this.userData.perfil.idPerfil
-        
-        this.filtroCarrera =  this.userData.carrera.idCarrera
+
+        this.filtroCarrera = this.userData.carrera.idCarrera
         this.filtroCarreraLabel = this.userData.carrera.nombre
 
-        this.filtroPerfil = this.userData.perfil.idPerfil 
-        this.filtroPerfilLabel= this.userData.perfil.descripcion
+        this.filtroPerfil = this.userData.perfil.idPerfil
+        this.filtroPerfilLabel = this.userData.perfil.descripcion
 
         this.loadData();
-        
+
     },
     watch: {
         filterButtonCallbackHandler: function () {
             this.resetData();
-            // console.log(v)
+            // // console.log(v)
         }
     },
     methods: {
@@ -221,37 +227,36 @@ export default {
             });
             const data = await request.json();
             if (request.status === 200) {
-                this.careers = data; 
+                this.careers = data;
             } else {
                 this.showErrorToast('Ups! Algo salió mal.');
             }
         },
-        async setTotalProjects(total){
-            if(this.defaultAno && this.defaultCarrera && this.defaultTipo){
-                await Storage.set({key: "TOTAL_PROJECTS", value: JSON.stringify(total)})
+        async setTotalProjects(total) {
+            if (this.defaultAno && this.defaultCarrera && this.defaultTipo) {
+                await Storage.set({ key: "TOTAL_PROJECTS", value: JSON.stringify(total) })
             }
-            console.log("TOTAL DE PROJECTOS GUARDADOS", total);
         },
         async getAvailableProjects(ev = null) {
-            // console.log(ev)
+            // // console.log(ev)
             try {
                 const data = await this.fetchData();
                 if (this.page === data.pagination.lastPage) {
-                    console.log("No hay más proyectos")
+                    // console.log("No hay más proyectos")
                     return;
                 }
                 this.projects = this.projects.concat(data.proyectos.data)
 
-                //console.log(">>>>>>>>>>data: ")
+                //// console.log(">>>>>>>>>>data: ")
                 this.$emit("getPermissions")
-                // console.log(data);
+                // // console.log(data);
 
                 if (ev) {
                     ev.target.complete();
                 }
             }
             catch (error) {
-                console.log("Error: " + error);
+                // console.log("Error: " + error);
             }
 
 
@@ -264,11 +269,11 @@ export default {
                 this.projects = data.proyectos.data;
             }
             catch (error) {
-                console.log("Error: " + error);
+                // console.log("Error: " + error);
             }
         },
         async handleRefresh(event) {
-            this.loadData(true).finally( async () => {
+            this.loadData(true).finally(async () => {
                 event.target.complete();
                 this.userData = await this.getAuthenticatedUser();
                 this.userCarrera = this.userData.user.carrera.nombre
@@ -284,19 +289,20 @@ export default {
             this.nombreABuscar = ev.target.value;
             this.resetData()
         },
-        handleFilterTipo(label, filter, defaultv=false){
+        handleFilterTipo(label, filter, defaultv = false) {
             this.filtroTipoHoras = filter
             this.filtroTipoHorasLabel = label
             this.defaultTipo = defaultv
             this.resetData()
         },
-        handleFilterCarrera(label, filter, defaultv=false){
+        handleFilterCarrera(label, filter, defaultv = false) {
             this.filtroCarrera = filter
             this.filtroCarreraLabel = label
             this.defaultCarrera = defaultv
             this.resetData()
         },
-        handleFilterAno(label, filter, defaultv=false){
+        handleFilterAno(label, filter, defaultv = false) {
+            // console.log("Filter", label, filter)
             this.filtroPerfil = filter
             this.filtroPerfilLabel = label
             this.defaultAno = defaultv
@@ -340,14 +346,14 @@ export default {
                         text: 'Quito Año',
                         role: 'destructive',
                         handler: () => {
-                            handleFilterAno('Quito Año', 5 )
+                            handleFilterAno('Quito Año', 5)
                         },
                     },
                     {
                         text: 'Egresado',
                         role: 'destructive',
                         handler: () => {
-                            handleFilterAno('Egresado', 6 )
+                            handleFilterAno('Egresado', 6)
                         },
                     },
 
@@ -363,7 +369,8 @@ export default {
                         handler: () => {
                             handleFilterCarrera(c.nombre, c.idCarrera)
                         },
-                    }})
+                    }
+                })
             });
 
             // await actionSheet.present();
@@ -473,7 +480,8 @@ export default {
                         handler: () => {
                             handleFilter(c.nombre, c.idCarrera)
                         },
-                    }})
+                    }
+                })
             });
 
             await actionSheet.present();
@@ -489,42 +497,42 @@ export default {
                         text: 'Primer Año',
                         role: 'destructive',
                         handler: () => {
-                            handleFilter('Primer Año',)
+                            handleFilter('Primer Año', 1)
                         },
                     },
                     {
                         text: 'Segundo Año',
                         role: 'destructive',
                         handler: () => {
-                            handleFilter('Segundo Año',)
+                            handleFilter('Segundo Año', 2)
                         },
                     },
                     {
                         text: 'Tercer Año',
                         role: 'destructive',
                         handler: () => {
-                            handleFilter('Tercer Año',)
+                            handleFilter('Tercer Año', 3)
                         },
                     },
                     {
                         text: 'Cuarto Año',
                         role: 'destructive',
                         handler: () => {
-                            handleFilter('Cuarto Año',)
+                            handleFilter('Cuarto Año', 4)
                         },
                     },
                     {
                         text: 'Quito Año',
                         role: 'destructive',
                         handler: () => {
-                            handleFilter('Quito Año',)
+                            handleFilter('Quito Año', 5)
                         },
                     },
                     {
                         text: 'Egresado',
                         role: 'destructive',
                         handler: () => {
-                            handleFilter('Egresado')
+                            handleFilter('Egresado', 6)
                         },
                     },
 
@@ -534,7 +542,7 @@ export default {
             await actionSheet.present();
 
         },
-        
+
 
 
 
@@ -546,27 +554,27 @@ export default {
 </script>
 
 <style scoped>
-    ion-grid {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+ion-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .center-row{
-        display: flex;
-        justify-content: center;
-    }
+.center-row {
+    display: flex;
+    justify-content: center;
+}
 
-    .large-chip {
-        width: 100%;
-    }
-    
-    .large-row {
-        width: auto;
-    }
+.large-chip {
+    width: 100%;
+}
 
-    .flex-space-around{
-        display: flex;
-        justify-content: space-around;
-    }
+.large-row {
+    width: auto;
+}
+
+.flex-space-around {
+    display: flex;
+    justify-content: space-around;
+}
 </style>
