@@ -179,34 +179,34 @@ export default {
             return data;
         },
         async getAllProjects(ev = null) {
-            // console.log(ev)
+            // // console.log(ev)
 
             try {
                 // const request = await fetch(API_ENDOINT + '/getProyectosDisponibles', {
                 const data = await this.fetchData();
                 if (this.page === data.pagination.lastPage) {
-                    console.log("No hay más proyectos")
+                    // console.log("No hay más proyectos")
                     return;
                 }
                 this.projects = this.projects.concat(data.proyectos.data);
 
-                // console.log(">>>>>>>>>>data: ")
-                // console.log(data);
+                // // console.log(">>>>>>>>>>data: ")
+                // // console.log(data);
 
                 if (ev) {
                     ev.target.complete();
                 }
             }
             catch (error) {
-                console.log("Error: " + error);
+                // console.log("Error: " + error);
             }
         },
         async loadData(resetPage) {
             // const API_ENDOINT = this.getAPIEndpoint();
             try {
                 const data = await this.fetchData(resetPage);
-                // console.log(">>>>>>>>>>data:")
-                // console.log(data);
+                // // console.log(">>>>>>>>>>data:")
+                // // console.log(data);
                 this.projects = data.proyectos.data;
                 // if (request.status === 200) {
                 //     this.page++;
@@ -216,7 +216,7 @@ export default {
                
             }
             catch (error) {
-                console.log("Error: " + error);
+                // console.log("Error: " + error);
             }
         },
         async handleRefresh(event) {

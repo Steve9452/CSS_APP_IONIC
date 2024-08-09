@@ -74,19 +74,19 @@
                     const {data, last_page} = await this.fetchData();
                     // eslint-disable-next-line @typescript-eslint/camelcase
                     if (this.page === last_page) {
-                        console.log("No hay más proyectos")
+                        // console.log("No hay más proyectos")
                     }
                     this.projects = this.projects.concat(data);
 
-                    // console.log(">>>>>>>>>>data: ")
-                    // console.log(data);
+                    // // console.log(">>>>>>>>>>data: ")
+                    // // console.log(data);
 
                     if (ev) {
                         ev.target.complete();
                     }
                 }
                 catch (error) {
-                    console.log("Error: " + error);
+                    // console.log("Error: " + error);
                 }
             },
             async fetchData() {
@@ -106,7 +106,7 @@
                 } else {
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
-                console.log(data)
+                // console.log(data)
                 this.loaded = false
                 return data;
             }

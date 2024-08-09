@@ -1,4 +1,7 @@
 <template>
+    <div v-if="!loaded" class="flex-center my-4">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
     <div>
         <div class="mt-3" v-if="projects.length > 0">
             <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
@@ -60,6 +63,6 @@ export default {
             this.loaded = true
         }
     },
-    
+
 }
 </script>

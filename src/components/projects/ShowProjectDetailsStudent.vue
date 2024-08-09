@@ -196,7 +196,7 @@ export default {
         //this.meetingScheduleTime = currentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
 
-        // console.log(this.projectData);
+        // // console.log(this.projectData);
         if (this.userRol === 1) {
             this.getAllCollegeCareers();
         }
@@ -236,8 +236,8 @@ export default {
         async applyToProject() {
             this.fetching = true
             this.applyDisabled = true;
-            //console.log("Apply permission " + this.applyPermission)
-            //console.log("Proyecto activo " + this.activeProject)
+            //// console.log("Apply permission " + this.applyPermission)
+            //// console.log("Proyecto activo " + this.activeProject)
             if (this.applyPermission && !this.activeProject) {
                 const API_ENDOINT = this.getAPIEndpoint();
                 const request = await fetch(API_ENDOINT + `/postAplicarProyecto`, {
@@ -311,12 +311,12 @@ export default {
                 this.project.careers = careerIds;
             }
 
-            //console.log(this.projectData.estudiantes)
+            //// console.log(this.projectData.estudiantes)
 
             if (this.projectData.estadoPxe) {
                 this.project.students = this.projectData.estudiantes;
                 this.acepted = this.projectData.estadoPxe
-                console.log(this.acepted)
+                // console.log(this.acepted)
             }
         },
         async closeModal() {

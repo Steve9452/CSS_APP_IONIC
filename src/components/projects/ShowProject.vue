@@ -164,7 +164,7 @@ export default {
 			this.rejected = this.projectData.estadoPxe == 2
 			this.finished = this.projectData.estadoPxe == 3
 			this.inProcess = this.projectData.estadoPxe == 0
-			//console.log("Aceptado", this.acepted)
+			//// console.log("Aceptado", this.acepted)
 		}
 
 	},
