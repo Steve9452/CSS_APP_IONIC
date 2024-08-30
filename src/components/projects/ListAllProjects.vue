@@ -3,7 +3,7 @@
     <div id="main-content">
         <div v-if="loading"  class="flex-center my-4">
                 <ion-spinner  name="crescent" color="primary"></ion-spinner>
-            </div>
+        </div>
         <ion-grid>
             <!-- <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
               <ion-refresher-content></ion-refresher-content>

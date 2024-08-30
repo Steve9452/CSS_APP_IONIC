@@ -1,12 +1,14 @@
 <!-- eslint-disable @typescript-eslint/camelcase -->
 <template>
 <div>
+    <div v-if="!loaded"  class="flex-center my-4">
+                <ion-spinner  name="crescent" color="primary"></ion-spinner>
+        </div>
+    
     <div v-if="projects.length > 0">
-        
         <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-        
         <ion-list>
             <show-project 
                 v-for="project in projects"
@@ -107,7 +109,7 @@
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
                 // console.log(data)
-                this.loaded = false
+                this.loaded = true
                 return data;
             }
         },

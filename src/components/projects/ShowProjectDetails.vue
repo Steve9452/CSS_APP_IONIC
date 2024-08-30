@@ -846,7 +846,7 @@ export default {
         },
         async getStudents(idProyecto) {
             const API_ENDOINT = this.getAPIEndpoint();
-            const request = await fetch(API_ENDOINT + `/admin/getEstudiantesDeProyecto?idProyecto=${idProyecto}`, {
+            const request = await fetch(API_ENDOINT + `/admin/proyecto/estudiantes?idProyecto=${idProyecto}`, {
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
                     'Authorization': 'Bearer ' + this.apiToken
