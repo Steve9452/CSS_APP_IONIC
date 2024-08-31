@@ -170,8 +170,8 @@ export default {
 		},
 		async setUser() {
 			this.data = await this.getAuthenticatedUser();
-			// console.log("data from local storage")
-			// console.log(this.data)
+			// // console.log("data from local storage")
+			// // console.log(this.data)
 			if (this.data) {
 				this.user.fname = this.data.nombres;
 				this.user.lname = this.data.apellidos;
@@ -219,9 +219,9 @@ export default {
 				this.showModal = false;
 				this.data.carrera = response.carrera;
 				// this.data.perfil = response.perfil;
-				// console.log("data local storage")
-				// console.log(this.data)
-				// console.log(response)
+				// // console.log("data local storage")
+				// // console.log(this.data)
+				// // console.log(response)
 				// localStorage.setItem('user', JSON.stringify(this.data));
 				await Storage.set({
 					key: 'user',
@@ -259,9 +259,9 @@ export default {
 				this.showModal = false;
 				this.data.idPerfil = parseInt(response.idPerfil) ? parseInt(response.idPerfil) : 1;
 				this.data.perfil = response.perfil;
-				// console.log("data local storage")
-				// console.log(this.data)
-				// console.log(response)
+				// // console.log("data local storage")
+				// // console.log(this.data)
+				// // console.log(response)
 				// localStorage.setItem('user', JSON.stringify(this.data));
 				await Storage.set({
 					key: 'user',

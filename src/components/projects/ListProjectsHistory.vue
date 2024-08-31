@@ -1,12 +1,14 @@
 <!-- eslint-disable @typescript-eslint/camelcase -->
 <template>
 <div>
+    <div v-if="!loaded"  class="flex-center my-4">
+                <ion-spinner  name="crescent" color="primary"></ion-spinner>
+        </div>
+    
     <div v-if="projects.length > 0">
-        
         <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-        
         <ion-list>
             <show-project 
                 v-for="project in projects"
@@ -74,19 +76,19 @@
                     const {data, last_page} = await this.fetchData();
                     // eslint-disable-next-line @typescript-eslint/camelcase
                     if (this.page === last_page) {
-                        console.log("No hay más proyectos")
+                        // console.log("No hay más proyectos")
                     }
                     this.projects = this.projects.concat(data);
 
-                    // console.log(">>>>>>>>>>data: ")
-                    // console.log(data);
+                    // // console.log(">>>>>>>>>>data: ")
+                    // // console.log(data);
 
                     if (ev) {
                         ev.target.complete();
                     }
                 }
                 catch (error) {
-                    console.log("Error: " + error);
+                    // console.log("Error: " + error);
                 }
             },
             async fetchData() {
@@ -106,8 +108,8 @@
                 } else {
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
-                console.log(data)
-                this.loaded = false
+                // console.log(data)
+                this.loaded = true
                 return data;
             }
         },

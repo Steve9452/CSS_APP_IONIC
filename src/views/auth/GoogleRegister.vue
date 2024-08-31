@@ -154,8 +154,8 @@ export default {
         };
     },
     async created() {
-        console.log(this.$router)
-        console.log(this.$router.query)
+        // console.log(this.$router)
+        // console.log(this.$router.query)
 
         this.user = {
                 userId: this.$router.currentRoute._value.query.userId,

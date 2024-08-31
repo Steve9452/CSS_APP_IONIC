@@ -93,7 +93,7 @@ router.beforeEach(async (to, from, next) => {
 	const module = to.meta.module;
 	const userIsAuthenticated = user != '' ? true : false;
 
-	// console.log("Auth");
+	// // console.log("Auth");
 	
 	switch(module) {
 		case 'auth':

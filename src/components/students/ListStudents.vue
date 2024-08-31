@@ -76,26 +76,26 @@ export default {
                     }
                     
                     if(!isNaN(s)){
-                        console.log("Carnet", s)
+                        // console.log("Carnet", s)
                         return item.correo.toLowerCase().includes(s)
                     }
                     else{
                         
                         if (s.toLowerCase().includes("@")) {
-                            console.log(item)
+                            // console.log(item)
                             return item.correo.toLowerCase().includes(s)
                             
                         }else{
-                            console.log(item.nombres+" "+item.apellidos)
+                            // console.log(item.nombres+" "+item.apellidos)
                             return (item.nombres+" "+item.apellidos).toLowerCase().includes(s)
                         }
                     }
                 }
                 catch (e) {
-                    console.log("Error to find")
+                    // console.log("Error to find")
                 }
             })
-            console.log(this.students)
+            // console.log(this.students)
         },
         filterStudentsv2() {
             if (this.search !== '') {

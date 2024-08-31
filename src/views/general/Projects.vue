@@ -102,9 +102,9 @@ export default {
 		this.apiToken = await this.getApiToken();
 		this.getApplyPermission();
 		
-		console.log("Permisos apply/active")
+		// console.log("Permisos apply/active")
 		
-		console.log(this.applyPermission, this.activeProject)
+		// console.log(this.applyPermission, this.activeProject)
 
 
 		if(this.userRol === 1) {
@@ -124,27 +124,27 @@ export default {
 					'Authorization': 'Bearer ' + this.apiToken
 				}
 			}).then(response => {
-				// console.log(response)
+				// // console.log(response)
 				if (!response.ok) {
 					this.error = true;
 					throw new Error('La solicitud no pudo ser completada');
 				}
 				return response.json();
 			}).then(data => {
-				//console.log(data)
+				//// console.log(data)
 				
 				this.applyPermission = data.permiso === 1 ? true : false;
 				this.activeProject = data.proyectoActivo === 0 ? false : true;
 				
 				try{
 					this.timeout = new Date(data.timeout).getTime() > Date.now();
-					console.log("timeout", data.timeout)
+					// console.log("timeout", data.timeout)
 				}catch{
 					this.timeout = false
-					console.log("timeout", data.timeout)
+					// console.log("timeout", data.timeout)
 				}
 				
-				// console.log("TIMED OUT", this.timeout)
+				// // console.log("TIMED OUT", this.timeout)
 			}).finally(() => {
 				this.loading = false;
 			}).catch(error => {

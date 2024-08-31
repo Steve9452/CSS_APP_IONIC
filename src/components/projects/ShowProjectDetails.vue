@@ -307,14 +307,14 @@
 
 
         <div class="my-3" v-if="view === 'students'">
-            <ion-card-content v-if="students.length > 0">
+            <ion-card-content v-if="project.students.length > 0">
                 <div class="form-group py-2 border-top border-bottom">
                     <h6 class="text-center text-muted font-weight-bold">
                         Solicitudes de Estudiantes
                     </h6>
                 </div>
 
-                <div v-for="student in students" :key="student.idUser">
+                <div v-for="student in project.students" :key="student.idUser">
                     <ion-item v-if="student.estado === 1 || userRol === 1">
                         <ion-label>
                             <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
@@ -420,7 +420,7 @@
                             <small>
                                 {{ student.correo }}
                                 <br>
-                                <small class="text-muted">{{ student.n_carrera}} -
+                                <small class="text-muted">{{ student.n_carrera }} -
                                     {{ student.n_facultad }}</small>
                             </small>
                         </ion-label>
@@ -532,7 +532,6 @@ export default {
                 students: [],
                 acceptedStudents: [],
             },
-            students: [],
             checkmark,
             closeCircle,
             list,
@@ -845,6 +844,24 @@ export default {
                 this.showErrorToast('Algo salió mal al obtener las carreras.');
             }
         },
+        async getStudents(idProyecto) {
+            const API_ENDOINT = this.getAPIEndpoint();
+            const request = await fetch(API_ENDOINT + `/admin/proyecto/estudiantes?idProyecto=${idProyecto}`, {
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    'Authorization': 'Bearer ' + this.apiToken
+                }
+            });
+
+            const data = await request.json();
+
+            if (request.status === 200) {
+                return data;
+            } else {
+                this.showErrorToast('Algo salió mal al obtener los estudiantes.');
+                return [];
+            }
+        },
         async setProjectData() {
             this.project.id = this.projectData.idProyecto;
             this.project.name = this.projectData.nombre;
@@ -872,35 +889,16 @@ export default {
                 });
             }
 
-            // if (this.userRol === 1 && this.projectData.carreras) {
-            //     const careerIds = [];
-            //     this.projectData.carreras.forEach(element => {
-            //         careerIds.push(element.idCarrera);
-            //     });
-            //     this.project.careers = careerIds;
-            // }
+            const estudiantes = await this.getStudents(this.projectData.idProyecto)
 
+            if (estudiantes) {
+                this.project.students = estudiantes;
 
-            const API_ENDPOINT = this.getAPIEndpoint();
-
-            const request = await fetch(API_ENDPOINT+'/admin/proyecto/estudiantes'+'?idProyecto='+this.project.id, {
-                method: "GET",
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    'Authorization': 'Bearer ' + this.apiToken
-                }
-            })
-
-            const data = await request.json();
-
-            if(request.status === 200){
-                this.students = data;
-            }else{
-                this.showErrorToast('Algo salió mal al obtener los estudiantes.');
+                // filter students accepted
+                this.project.acceptedStudents = this.project.students.filter(student => {
+                    return student.estado === 1;
+                });
             }
-
-
-
         },
         async closeModal() {
             await modalController.dismiss();
@@ -920,7 +918,7 @@ export default {
             const emails = [];
 
             this.project.acceptedStudents.forEach(element => {
-                console.log(element.correo)
+                // console.log(element.correo)
                 emails.push(element.correo);
             });
 
@@ -932,8 +930,8 @@ export default {
             const selectedDate = new Date(this.meetingScheduleDate);
             const parsedDate = selectedDate.toLocaleDateString('us-EN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-            // console.log("Body");
-            // console.log(JSON.stringify({
+            // // console.log("Body");
+            // // console.log(JSON.stringify({
             //         estudiantes: emails,
             //         fecha: parsedDate,
             //         hora: parsedTime,

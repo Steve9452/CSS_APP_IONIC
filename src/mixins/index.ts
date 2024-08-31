@@ -7,8 +7,7 @@ const mixin = {
             // return 'http://172.203.229.152/public/api';
             // return 'http://uca-css.test/css-proyecto/public/api'
             // return 'http://192.168.31.220/api'  
-            // return 'https://jgdevtech.lat/servicio-social/proyectos/public/api'  
-            // return 'http://localhost/api'
+
             //return 'http://127.0.0.1/api'
             // return 'https://uca.edu.sv/servicio-social/dev-proyectos/public/api'
             return 'https://uca.edu.sv/servicio-social/proyectos/public/api'

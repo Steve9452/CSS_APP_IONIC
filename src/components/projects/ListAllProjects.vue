@@ -3,7 +3,7 @@
     <div id="main-content">
         <div v-if="loading"  class="flex-center my-4">
                 <ion-spinner  name="crescent" color="primary"></ion-spinner>
-            </div>
+        </div>
         <ion-grid>
             <!-- <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
               <ion-refresher-content></ion-refresher-content>
@@ -125,7 +125,7 @@ export default {
             carrersAndFaculties: {},
             applyPermission: null,
             activeProject: null,
-            actionSheetButtons: null
+            actionSheetButtons: null,
         };
     },
     async created() {
@@ -169,8 +169,6 @@ export default {
                 }
             });
             const data = await request.json();
-            console.log(">>>>>>>>>>data: ")
-                console.log(data);
             if (request.status === 200) {
                 this.page++;
             } else {
@@ -181,34 +179,34 @@ export default {
             return data;
         },
         async getAllProjects(ev = null) {
-            // console.log(ev)
+            // // console.log(ev)
 
             try {
                 // const request = await fetch(API_ENDOINT + '/getProyectosDisponibles', {
                 const data = await this.fetchData();
                 if (this.page === data.pagination.lastPage) {
-                    console.log("No hay más proyectos")
+                    // console.log("No hay más proyectos")
                     return;
                 }
                 this.projects = this.projects.concat(data.proyectos.data);
 
-                // console.log(">>>>>>>>>>data: ")
-                // console.log(data);
+                // // console.log(">>>>>>>>>>data: ")
+                // // console.log(data);
 
                 if (ev) {
                     ev.target.complete();
                 }
             }
             catch (error) {
-                console.log("Error: " + error);
+                // console.log("Error: " + error);
             }
         },
         async loadData(resetPage) {
             // const API_ENDOINT = this.getAPIEndpoint();
             try {
                 const data = await this.fetchData(resetPage);
-                // console.log(">>>>>>>>>>data:")
-                // console.log(data);
+                // // console.log(">>>>>>>>>>data:")
+                // // console.log(data);
                 this.projects = data.proyectos.data;
                 // if (request.status === 200) {
                 //     this.page++;
@@ -218,7 +216,7 @@ export default {
                
             }
             catch (error) {
-                console.log("Error: " + error);
+                // console.log("Error: " + error);
             }
         },
         async handleRefresh(event) {
@@ -233,8 +231,12 @@ export default {
             this.loadData()
         },
         inputHandler(ev) {
-            this.nombreABuscar = ev.target.value;
-            this.resetData()
+
+                this.nombreABuscar = ev.target.value;
+                this.resetData()
+           
+
+            
         },
         handleOrder(order) {
             this.orderBy = order;

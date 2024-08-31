@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     googleHandler(res) {
-      console.log(res)
+      // console.log(res)
     },
     async Login(userData) {
       try {
@@ -31,7 +31,7 @@ export default {
         })
 
         const data = await request.json();
-        // console.log(data)
+        // // console.log(data)
 
         if (request.status === 200) {
           await this.setAuthenticatedUser(data.user);
@@ -50,7 +50,7 @@ export default {
           this.authStateChanged()
         }
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         this.showErrorToast('Revisa tu conexion a internet e intenta despues.');
       }
 
