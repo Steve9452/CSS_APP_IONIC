@@ -166,7 +166,8 @@ export default {
             userPerfil: "",
             userPerfilId: 0,
             page: 1,
-            loaded: false
+            loaded: false,
+            debounceTimeout: null,
         };
     },
 
@@ -286,9 +287,12 @@ export default {
             this.loadData()
         },
         inputHandler(ev) {
+            clearTimeout(this.debounceTimeout);
 
+            this.debounceTimeout = setTimeout(() => {
                 this.nombreABuscar = ev.target.value;
                 this.resetData()
+            }, 500); 
         },
         handleFilterTipo(label, filter, defaultv = false) {
             this.filtroTipoHoras = filter

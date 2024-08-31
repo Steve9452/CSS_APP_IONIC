@@ -126,6 +126,7 @@ export default {
             applyPermission: null,
             activeProject: null,
             actionSheetButtons: null,
+            debounceTimeout: null
         };
     },
     async created() {
@@ -231,9 +232,12 @@ export default {
             this.loadData()
         },
         inputHandler(ev) {
+            clearTimeout(this.debounceTimeout);
 
+            this.debounceTimeout = setTimeout(() => {
                 this.nombreABuscar = ev.target.value;
                 this.resetData()
+            }, 500);  
            
 
             
