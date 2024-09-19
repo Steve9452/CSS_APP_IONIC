@@ -10,7 +10,7 @@
 						{{ project.name }}
 					</ion-text>
 				</div>
-				<ion-text style="font-size: 14px; margin-top: 0.3rem;">
+				<ion-text style="font-size: 12px; margin-top: 0.3rem;">
 					{{ project.counterpart }}.
 				</ion-text>
 				<!-- <ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
@@ -219,13 +219,11 @@ export default {
 }
 
 .project_name_container{
-	/* color: var(--ion-color-primary); */
+	color: var(--color);
 	font-weight: 500;
-	color: var(--ion-background-color);
-	padding: 1rem;
-	background-color: var(--ion-color-tertiary);
+	/* color: var(--ion-background-color); */
+	/* background-color: var(--ion-color-tertiary); */
 	border-radius: 1rem;
-	margin-bottom: 0.3rem;
 }
 
 </style>
