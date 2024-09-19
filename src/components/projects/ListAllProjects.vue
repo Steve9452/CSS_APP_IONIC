@@ -125,7 +125,8 @@ export default {
             carrersAndFaculties: {},
             applyPermission: null,
             activeProject: null,
-            actionSheetButtons: null
+            actionSheetButtons: null,
+            debounceTimeout: null
         };
     },
     async created() {
@@ -231,8 +232,15 @@ export default {
             this.loadData()
         },
         inputHandler(ev) {
-            this.nombreABuscar = ev.target.value;
-            this.resetData()
+            clearTimeout(this.debounceTimeout);
+
+            this.debounceTimeout = setTimeout(() => {
+                this.nombreABuscar = ev.target.value;
+                this.resetData()
+            }, 500);  
+           
+
+            
         },
         handleOrder(order) {
             this.orderBy = order;
