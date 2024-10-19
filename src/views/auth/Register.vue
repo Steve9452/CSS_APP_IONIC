@@ -11,7 +11,7 @@
 
                     <div class="form-group">
                         <ion-router-link class="d-block text-center" href="/login" color="medium">
-                            ¿Ya tienes un cuenta?
+                            ¿Ya tienes cuenta? 
                         </ion-router-link>
                     </div>
 

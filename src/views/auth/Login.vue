@@ -3,22 +3,25 @@
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
                 <div class="col align-items-center flex-column">
-                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 1em;">
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 2em;">
                         <div class="flex-center" style="width:100%; height:auto">
                             <logotype></logotype>
                         </div>
                     </div>
-
-
+                    
+                    <google-auth-button v-on:doingAuth="doingGoogleAuth"></google-auth-button>
+                    <span class="d-block text-center">
+                             o
+                        </span>
                     <div class="form-group">
-                        <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
+                        <label class="text"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
                         <input v-model="user.carnet" type="text" class="form-control custom-form"
                             placeholder="Ingrese su carnet">
                         <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
                     </div>
 
                     <div class="form-group mt-4">
-                        <label class="text-muted"><i class="fas fa-unlock-alt"></i>&nbsp;Contraseña</label>
+                        <label class="text"><i class="fas fa-unlock-alt"></i>&nbsp;Contraseña</label>
                         <input v-model="user.password" type="password" class="form-control custom-form"
                             placeholder="Ingrese su contraseña">
                         <div class="text-danger">{{ validation.firstError('user.password') }}</div>
@@ -37,11 +40,8 @@
                                 Registrate aquí
                             </ion-router-link>
                         </p>
-                        <p class="d-block text-center">
-                             o
-                        </p>
+
                         </div>
-                        <google-auth-button v-on:doingAuth="doingGoogleAuth"></google-auth-button>
                         <br>
                         <ion-router-link class="d-block text-center" href="/forgot-password" color="medium">
                             ¿Olvidaste tu contraseña?
