@@ -1,29 +1,36 @@
 <template>
-    <ion-header translucent>
-        <ion-toolbar color="primary">
-            <ion-title><small>PERFIL DE ALUMNO</small></ion-title>
-            <ion-buttons slot="end">
-                <ion-button @click="closeModal()">CERRAR&nbsp;<i class="fas fa-chevron-down"></i></ion-button>
+    <ion-header class="ion-no-border" translucent>
+        <ion-toolbar class="pt-0">
+            <ion-buttons slot="start">
+                <ion-button @click="closeModal()"><ion-icon :icon="arrowBackOutline"></ion-icon></ion-button>
             </ion-buttons>
+            <ion-title>
+                <ion-text>
+                        Editar estudiante 
+                </ion-text>
+            </ion-title>
+            <ion-progress-bar v-if="fetching" type="indeterminate"></ion-progress-bar>
+
+
         </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding">
-        <ion-card color="primary" class="my-3">
+        <div class="my-3">
             <ion-card-content>
-                <ion-card-title color="primary" class="text-center">
+                <ion-card-title class="text-center">
                     {{ student.fname }} {{ student.lname }}
                 </ion-card-title>
 
-                <ion-card-subtitle color="medium" class="text-center">
+                <ion-card-subtitle class="text-center">
                     {{ student.email }}
                 </ion-card-subtitle>
             </ion-card-content>
-        </ion-card>
+        </div>
 
         <div class="form-group">
             <label class="text-muted font-weight-bold text-uppercase"><i class="fas fa-envelope-open-text"></i>&nbsp;Correo</label>
-            <input v-model="student.email" type="text" class="form-control" placeholder="0980980@uca.edu.sv">
+            <input v-model="student.email" type="text" class="form-control custom-form" placeholder="0980980@uca.edu.sv">
             <div class="text-danger">{{ validation.firstError('student.email') }}</div>
         </div>
 
@@ -78,16 +85,14 @@
             <div class="text-danger">{{ validation.firstError('student.profile') }}</div>
         </div>
 
-        <div class="form-group mt-4">
-            <ion-button expand="block" color="primary" @click="updateStudent()">
-                ACTUALIZAR
-            </ion-button>
-        </div>
+        <div class="form-group d-flex justify-content-around mt-4">
+            <ion-chip class="px-5 py-2" expand="block" color="primary" @click="updateStudent()">
+                Actualizar
+            </ion-chip>
 
-        <div class="form-group">
-            <ion-button expand="block" color="dark" @click="closeModal()">
-                REGRESAR
-            </ion-button>
+            <ion-chip class="px-5 py-2" expand="block" color="danger" @click="closeModal()">
+                Regresar
+            </ion-chip>
         </div>
    </ion-content>
 </template>
@@ -96,12 +101,16 @@
 import SimpleVueValidator from 'simple-vue-validator';
 const Validator = SimpleVueValidator.Validator;
 import { modalController } from "@ionic/vue";
+import {   
+    arrowBackOutline,
+} from 'ionicons/icons';
 
 export default {
     mixins: [SimpleVueValidator.mixin],
     props: ['studentData'],
     data() {
         return {
+            arrowBackOutline,
             apiToken: '',
             student: {
                 idUser: '',
@@ -136,7 +145,7 @@ export default {
         },
     },
     async created() {
-        this.apiToken = this.getApiToken();
+        this.apiToken = await this.getApiToken();
         await this.getAllFaculties();
         await this.getProfiles();
         this.setStudentData();

@@ -1,106 +1,138 @@
 <template>
-<ion-content :fullscreen="true">
-    <div class="container">
-        <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-            <div class="col-md-12 my-5" v-if="!processCompleted">
-                <img src="/assets/img/css.png">
+    <ion-content :fullscreen="true">
+        <div class="container">
+            <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+                <div class="col-md-12 my-5" v-if="!processCompleted">
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 1em;">
+                        <div class="flex-center" style="width:100%; height:auto">
+                            <logotype></logotype>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <ion-router-link class="d-block text-center" href="/login" color="medium">
-                        ¿Ya tengo una cuenta?
-                    </ion-router-link>
-                </div>
+                    <div class="form-group">
+                        <ion-router-link class="d-block text-center" href="/login" color="medium">
+                            ¿Ya tienes cuenta? 
+                        </ion-router-link>
+                    </div>
 
-                <div class="form-group">
-                    <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
-                    <input v-model="user.carnet" type="text" class="form-control" placeholder="Ingrese su carnet">
-                    <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
-                </div>
+                    <div class="form-group">
+                        <label class="text-muted"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
+                        <input v-model="user.carnet" type="text" class="form-control custom-form"
+                            placeholder="Ingrese su carnet">
+                        <div class="text-danger">{{ validation.firstError('user.carnet') }}</div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="text-muted"><i class="fas fa-align-center"></i>&nbsp;Nombres</label>
-                    <input v-model="user.fname" type="text" class="form-control" placeholder="Ingrese sus nombres">
-                    <div class="text-danger">{{ validation.firstError('user.fname') }}</div>
-                </div>
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-align-center"></i>&nbsp;Nombres</label>
+                        <input v-model="user.fname" type="text" class="form-control custom-form"
+                            placeholder="Ingrese sus nombres">
+                        <div class="text-danger">{{ validation.firstError('user.fname') }}</div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="text-muted"><i class="fas fa-align-center"></i>&nbsp;Apellidos</label>
-                    <input v-model="user.lname" type="text" class="form-control" placeholder="Ingrese sus apellidos">
-                    <div class="text-danger">{{ validation.firstError('user.lname') }}</div>
-                </div>
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-align-center"></i>&nbsp;Apellidos</label>
+                        <input v-model="user.lname" type="text" class="form-control custom-form"
+                            placeholder="Ingrese sus apellidos">
+                        <div class="text-danger">{{ validation.firstError('user.lname') }}</div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="text-muted"><i class="fas fa-female"></i><i class="fas fa-male"></i>&nbsp;Sexo/Género</label>
-                    <ion-select placeholder="Seleccionar" v-model="user.gender">
-                        <ion-select-option value="F">Femenino</ion-select-option>
-                        <ion-select-option value="M">Masculino</ion-select-option>
-                    </ion-select>
-                    <div class="text-danger">{{ validation.firstError('user.gender') }}</div>
-                </div>
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-female"></i><i
+                                class="fas fa-male"></i>&nbsp;Sexo/Género</label>
+                        <ion-select placeholder="Seleccionar" v-model="user.gender">
+                            <ion-select-option value="F">Femenino</ion-select-option>
+                            <ion-select-option value="M">Masculino</ion-select-option>
+                        </ion-select>
+                        <div class="text-danger">{{ validation.firstError('user.gender') }}</div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="text-muted"><i class="fas fa-university"></i>&nbsp;Facultad</label>
-                    <ion-select
-                        v-model="user.faculty"
-                        placeholder="Seleccionar"
-                        cancel-text="Cancelar">
-                            <ion-select-option 
-                                v-for="item in faculties"
-                                :key="item.idFacultad"
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-university"></i>&nbsp;Facultad</label>
+                        <ion-select v-model="user.faculty" placeholder="Seleccionar" cancel-text="Cancelar">
+                            <ion-select-option v-for="item in faculties" :key="item.idFacultad"
                                 :value="item.idFacultad">
-                                    {{ item.nombre }}
+                                {{ item.nombre }}
                             </ion-select-option>
-                    </ion-select>
-                    <div class="text-danger">{{ validation.firstError('user.faculty') }}</div>
-                </div>
+                        </ion-select>
+                        <div class="text-danger">{{ validation.firstError('user.faculty') }}</div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="text-muted"><i class="fas fa-graduation-cap"></i>&nbsp;Carrera</label>
-                    <ion-select
-                        placeholder="Seleccionar"
-                        v-model="user.collegeCareer"
-                        :disabled="isCollegeCareersDisabled"
-                        cancel-text="Cancelar">
-                            <ion-select-option
-                                v-for="item in collegeCareers"
-                                :key="item.idCarrera"
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-graduation-cap"></i>&nbsp;Carrera</label>
+                        <ion-select placeholder="Seleccionar" v-model="user.collegeCareer"
+                            :disabled="isCollegeCareersDisabled" cancel-text="Cancelar">
+                            <ion-select-option v-for="item in collegeCareers" :key="item.idCarrera"
                                 :value="item.idCarrera">
-                                    {{ item.nombre }}
+                                {{ item.nombre }}
                             </ion-select-option>
-                    </ion-select>
-                    <div class="text-danger">{{ validation.firstError('user.collegeCareer') }}</div>
-                </div>
+                        </ion-select>
+                        <div class="text-danger">{{ validation.firstError('user.collegeCareer') }}</div>
+                    </div>
 
-                <div class="form-group mt-4">
-                    <ion-button expand="block" @click="Register()">
-                        CREAR CUENTA
-                    </ion-button>
-                    <br>
-                    <ion-router-link class="d-block text-center" href="/forgot-password" color="medium">
-                        ¿Olvidé mi contraseña?
-                    </ion-router-link>
+                    <div class="form-group">
+                        <label class="text-muted"><i class="fas fa-graduation-cap"></i>&nbsp;Año de carrera</label>
+                        <ion-select placeholder="Seleccionar" v-model="user.profile"
+                            :disabled="isCollegeCareersDisabled" cancel-text="Cancelar">
+                            <ion-select-option :key="1"
+                                :value="1">
+                                Primer Año
+                            </ion-select-option>
+                            <ion-select-option :key="2"
+                                :value="2">
+                                Segundo Año
+                            </ion-select-option>
+                            <ion-select-option :key="3"
+                                :value="3">
+                                Tercer Año
+                            </ion-select-option>
+                            <ion-select-option :key="4"
+                                :value="4">
+                                Cuarto Año
+                            </ion-select-option>
+                            <ion-select-option :key="5"
+                                :value="5">
+                                Quinto Año
+                            </ion-select-option>
+                            <ion-select-option :key="6"
+                                :value="6">
+                                Egresado Año
+                            </ion-select-option>
+                        </ion-select>
+                        <div class="text-danger">{{ validation.firstError('user.profile') }}</div>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <ion-button mode="ios" expand="block" :disabled="fetching" @click="Register()">
+                            Crear cuenta
+                        </ion-button>
+                        <br>
+                        <ion-router-link class="d-block text-center" href="/forgot-password" color="medium">
+                            ¿Olvidaste tu contraseña?
+                        </ion-router-link>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12" v-else>
-                <img src="/assets/img/success.svg" class="img-fluid">
-                <h1 class="text-primary text-center font-weight-bolder">
-                    Bienvenido Al Centro de Servicio Social
-                </h1>
-                <p class="text-muted text-center">
-                    Se envió un correo a tu bandeja de entrada, favor verifica tu cuenta y completa el proceso de registro ahī.
-                </p>
-                <ion-button expand="block" href="/login">
-                    REGRESAR
-                </ion-button>
+                <div class="col-md-12" v-else>
+                    <img src="/assets/img/success.svg" class="img-fluid">
+                    <h1 class="text-primary text-center font-weight-bolder">
+                        Bienvenido Al Centro de Servicio Social
+                    </h1>
+                    <p class="text-muted text-center">
+                        Se envió un correo a tu bandeja de entrada, favor verifica tu cuenta y completa el proceso de
+                        registro ahī.
+                    </p>
+                    <ion-button expand="block" href="/login">
+                        Regresar
+                    </ion-button>
+                </div>
             </div>
         </div>
-    </div>
-</ion-content>
+    </ion-content>
 </template>
 
 
 <script>
 import SimpleVueValidator from 'simple-vue-validator';
+
 const Validator = SimpleVueValidator.Validator;
 
 export default {
@@ -115,12 +147,14 @@ export default {
                 gender: '',
                 faculty: '',
                 collegeCareer: '',
+                profile: '',
             },
+            fetching: false,
             faculties: [],
             collegeCareers: []
         };
     },
-    created() {
+    async created() {
         this.getAllFaculties();
     },
     validators: {
@@ -146,64 +180,77 @@ export default {
         'user.collegeCareer': function (value) {
             return Validator.value(value).required('El carrera es obligatoria.');
         },
+        'user.profile': function (value) {
+            return Validator.value(value).required('El año de carrera es obligatorio.');
+        },
     },
     methods: {
         async Register() {
             const validation = await this.$validate();
-            if(validation) {
+            if (validation) {
+                this.fetching = true;
                 let correo = this.user.carnet;
-                if(!correo.includes('@')) {
+                if (!correo.includes('@')) {
                     correo = correo + '@uca.edu.sv';
                 }
-
-                const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + '/registro', {
-                    method: "POST",
-                    body: JSON.stringify({
-                        correo: correo,
-                        nombres: this.user.fname,
-                        apellidos: this.user.lname,
-                        genero: this.user.gender,
-                        carrera: this.user.collegeCareer,
-                    }),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                })
-
-                if(request.status === 200) {
-                    this.processCompleted = true;
-                } else {
-                    localStorage.removeItem('user');
-                    this.showErrorToast('Ups! Algo salió mal.');
+                try {
+                    const API_ENDOINT = this.getAPIEndpoint();
+                    const request = await fetch(API_ENDOINT + '/registro', {
+                        method: "POST",
+                        body: JSON.stringify({
+                            correo: correo,
+                            nombres: this.user.fname,
+                            apellidos: this.user.lname,
+                            genero: this.user.gender,
+                            carrera: this.user.collegeCareer,
+                            perfil: this.user.profile,
+                        }),
+                        headers: { "Content-type": "application/json; charset=UTF-8" }
+                    })
+                    if (request.status === 200) {
+                        this.processCompleted = true;
+                    } else {
+                        localStorage.removeItem('user');
+                        this.showErrorToast('Ups! Algo salió mal.');
+                    }
+                    this.fetching = false;
+                } catch (e) {
+                    this.showErrorToast('Revisa tu conexión e intenta despues.');
+                    this.fetching = false;
                 }
+
             } else {
                 this.FormValidationFailed();
             }
+
         },
         async getAllFaculties() {
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/getFacultades`);
             const data = await request.json();
 
-            if(request.status === 200) {
+            if (request.status === 200) {
                 this.faculties = data;
             } else {
                 this.showErrorToast('Algo salio mal al cargar las facultades.');
             }
-        }
+        },
+
+
     },
     computed: {
-        isCollegeCareersDisabled: function(){
+        isCollegeCareersDisabled: function () {
             return this.collegeCareers.length > 0 ? false : true;
         }
     },
     watch: {
-        'user.faculty': async function() {
-            if(this.user.faculty != null && this.user.faculty != '') {
+        'user.faculty': async function () {
+            if (this.user.faculty != null && this.user.faculty != '') {
                 const API_ENDOINT = this.getAPIEndpoint();
                 const request = await fetch(API_ENDOINT + `/getCarrerasPorFacultad/${this.user.faculty}`);
                 const data = await request.json();
 
-                if(request.status === 200) {
+                if (request.status === 200) {
                     this.collegeCareers = data;
                 } else {
                     this.showErrorToast('Algo salio mal al obtener las carreras.');

@@ -2,8 +2,12 @@
     <ion-content :fullscreen="true">
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-                <div class="col">
-                    <img src="/assets/img/css.png">
+                <div class="col align-items-center flex-column">
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 1em;">
+                        <div class="flex-center" style="width:100%; height:auto">
+                            <logotype></logotype>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <p class="d-block text-primary text-center">
@@ -13,31 +17,34 @@
 
                     <div class="form-group">
                         <label>Código</label>
-                        <input v-model="code" type="text" class="form-control" placeholder="Ingrese el código de verificación">
+                        <input v-model="code" type="text" class="form-control custom-form"
+                            placeholder="Ingrese el código de verificación">
                         <div class="text-danger">{{ validation.firstError('code') }}</div>
                     </div>
 
                     <div class="form-group">
                         <label>Contraseña</label>
-                        <input v-model="password" type="password" class="form-control" placeholder="Ingrese su clave">
+                        <input v-model="password" type="password" class="form-control custom-form"
+                            placeholder="Ingrese su clave">
                         <div class="text-danger">{{ validation.firstError('password') }}</div>
                     </div>
 
                     <div class="form-group">
                         <label>Confirmar Contraseña</label>
-                        <input v-model="repeat" type="password" class="form-control" placeholder="Confirmar clave">
+                        <input v-model="repeat" type="password" class="form-control custom-form"
+                            placeholder="Confirmar clave">
                         <div class="text-danger font-weight-bold">{{ validation.firstError('repeat') }}</div>
                     </div>
 
                     <div class="form-group mt-3">
-                        <ion-button expand="block" @click="ResetPassword()">
-                            CAMBIAR CLAVE
+                        <ion-button mode="ios" expand="block" :disabled="fetching" @click="ResetPassword()">
+                            Cambiar clave
                         </ion-button>
                     </div>
 
                     <div class="form-group mt-3">
-                        <ion-button color="dark" expand="block" href="/login">
-                            REGRESAR
+                        <ion-button mode="ios" color="dark" expand="block" href="/login">
+                            Regresar
                         </ion-button>
                     </div>
                 </div>
@@ -54,6 +61,7 @@ export default {
     mixins: [SimpleVueValidator.mixin],
     data: function () {
         return {
+            fetching: false,
             code: '',
             password: '',
             repeat: '',
@@ -68,7 +76,8 @@ export default {
         'password': function (value) {
             return Validator.value(value)
                 .required('El contraseña es obligatoria.')
-                .minLength(8, 'La contraseña debe contener al menos 8 caracteres.');
+                .minLength(8, 'La contraseña debe contener al menos 8 caracteres.')
+                .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&^#])[A-Za-z0-9@$!%*?&^#]{8,}$/, 'La contraseña debe tener una mayúscula y un simbolo especial')
         },
         'repeat, password': function (repeat, password) {
             return Validator.value(repeat)
@@ -79,24 +88,35 @@ export default {
     methods: {
         async ResetPassword() {
             const validation = await this.$validate();
-            if(validation) {
+            if (validation) {
+                this.fetching = true;
                 const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + '/cambiar-clave', {
-                    method: "POST",
-                    body: JSON.stringify({
-                        token: this.code,
-                        clave: this.password,
-                        // eslint-disable-next-line
-                        confirmar_clave: this.repeat
-                    }),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                })
+                try {
 
-                if(request.status === 200) {
-                    window.location = '/login';
-                } else {
-                    this.showErrorToast('Ups! Algo salió mal.');
+                    const request = await fetch(API_ENDOINT + '/updatePassword', {
+                        method: "POST",
+                        body: JSON.stringify({
+                            token: this.code.trim(),
+                            clave: this.password.trim(),
+                            // eslint-disable-next-line
+                            confirmar_clave: this.repeat.trim()
+                        }),
+                        headers: { "Content-type": "application/json; charset=UTF-8" }
+                    })
+
+                    if (request.status === 200) {
+                        window.location = '/login';
+                    } else if (request.status === 404) {
+                        this.showErrorToast('Codígo invalido!');
+                    } else {
+                        this.showErrorToast('Ups! Algo salió mal.');
+                    }
+                } catch (e) {
+
+                    this.showErrorToast('Revisa tu conexión a internet e intenta despues');
+                    this.fetching = false;
                 }
+                this.fetching = false;
             } else {
                 this.FormValidationFailed();
             }

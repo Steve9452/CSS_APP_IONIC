@@ -1,338 +1,229 @@
 <template>
-	<ion-card class="my-3">
+	<div style="border-bottom: 3px solid var(--ion-separator);" class="px-3 mb-3">
+
+		<!-- <ion-item color="primary"> -->
+		<div>
+			<div @click="openModal">
+				<div class="project_name_container">
+					<!-- <ion-text style="color: var(--ion-color-primary-contrast)"> -->
+					<ion-text>
+						{{ project.name }}
+					</ion-text>
+				</div>
+				<ion-text style="font-size: 12px; margin-top: 0.3rem;">
+					{{ project.counterpart }}.
+				</ion-text>
+				<!-- <ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
+					{{ project.counterpart }}
+				</ion-card-subtitle>
+				<ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
+					{{ project.name }}
+				</ion-card-subtitle> -->
+				<p style="margin-top: 0.3rem;">
+					<ion-chip v-if="showUnapply && acepted" color="success" class="mr-1 success-border">
+						<small>Aceptado</small>
+					</ion-chip>
+					<ion-chip v-if="showUnapply && rejected" color="danger" class="mr-1 danger-border">
+						<small>Rechazado</small>
+					</ion-chip>
+					<ion-chip v-if="showUnapply && finished" color="warning" class="mr-1">
+						<small>Proyecto finalizado</small>
+					</ion-chip>
+					<ion-chip v-if="showUnapply && inProcess" color="warning" class="mr-1">
+						<small>Solicitud enviada</small>
+					</ion-chip>
+					<ion-chip color="primary" class="mr-1">
+						<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
+					</ion-chip>
+					<ion-chip class="mr-1">
+						<small>{{ project.hoursType }}</small>
+					</ion-chip>
+				</p>
+			</div>
+		</div>
+
+		<!-- <ion-card-content @click="openModal"> -->
+		<!-- <ion-card-subtitle style="color:var(--ion-text-color);">
+					{{ project.profile }}
+				</ion-card-subtitle> -->
+		<!-- <ion-card class="my-3">
+		
 		<ion-item color="primary">
-			<ion-label>
-				<ion-card-subtitle style="color:white;">
+			<ion-label @click="openModal">
+				<ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
+					{{ project.counterpart }}
+				</ion-card-subtitle>
+				<ion-card-subtitle style="color:var( --ion-color-primary-contrast);">
 					{{ project.name }}
 				</ion-card-subtitle>
+				
 			</ion-label>
-
-			<ion-buttons slot="end">
-				<ion-button v-if="project.status === 1" @click="presentActionSheet">
-					<ion-icon :icon="ellipsisHorizontal"></ion-icon>
-				</ion-button>
-			</ion-buttons>
 		</ion-item>
-		<ion-card-content>
-			<p>
-				<ion-badge color="primary" class="mr-1">
-					<small>{{ project.spaces_act }}/{{ project.spaces }} CUPOS</small>
-				</ion-badge>
-				<ion-badge :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
-					<small>{{ project.status === 1 ? 'ACTIVO' : 'INACTIVO'}}</small>
-				</ion-badge>
-			</p>
-			<p>
-				{{ project.description }}
-			</p>
-			<ion-button @click="openModal" color="primary" fill="clear" size="small" class="mt-2" expand="block">
-				Ver Detalles
-				<ion-icon :icon="chevronDown"></ion-icon>
-			</ion-button>
-		</ion-card-content>
-	</ion-card>
+		
+		<ion-card-content @click="openModal">
+			<ion-card-subtitle style="color:var(--ion-text-color);">
+					{{ project.profile }}
+				</ion-card-subtitle> -->
+		<!-- <p>
+				<ion-chip v-if="showUnapply && acepted" color="success" class="mr-1 success-border">
+					<small>Aceptado</small>
+				</ion-chip>
+				<ion-chip v-if="showUnapply && rejected" color="danger" class="mr-1 danger-border">
+					<small>Rechazado</small>
+				</ion-chip>
+				<ion-chip v-if="showUnapply && finished" color="warning" class="mr-1">
+					<small>Proyecto finalizado</small>
+				</ion-chip>
+				<ion-chip v-if="showUnapply && inProcess" color="warning" class="mr-1">
+					<small>Solicitud enviada</small>
+				</ion-chip>
+				<ion-chip color="primary" class="mr-1">
+					<small>{{ project.spaces_act }}/{{ project.spaces }} Cupos</small>
+				</ion-chip>
+				<ion-chip :color="project.status === 1 ? 'primary' : 'medium'" class="mr-1">
+					<small>{{ project.hoursType }}</small>
+				</ion-chip>
+			</p> -->
+
+		<!-- </ion-card-content>
+	</ion-card> -->
+		<!-- </ion-card-content> -->
+	</div>
 </template>
 
 <script>
-	import ShowProjectDetails from './ShowProjectDetails.vue';
-	import {
-		actionSheetController,
-		alertController,
-		modalController
-	} from '@ionic/vue';
-	import {
-		ellipsisHorizontal,
-		personRemove,
-		personAdd,
-		close,
-		create,
-		heart,
-		addCircle,
-		trash,
-		chevronDown
-	} from 'ionicons/icons';
+import ShowProjectDetails from './ShowProjectDetails.vue';
+import ShowProjectDetailsStudent from './ShowProjectDetailsStudent.vue';
+import {
+	modalController,
+	IonChip,
+} from '@ionic/vue';
+import {
+	ellipsisHorizontal,
+	personRemove,
+	personAdd,
+	close,
+	create,
+	heart,
+	addCircle,
+	trash,
+	chevronDown,
+} from 'ionicons/icons';
 
-	export default {
-		props: ['projectData', 'applyPermission', 'showUnapply'],
-		data: function () {
-			return {
-				userId: '',
-				userRol: '',
-				apiToken: '',
-				project: {
-					id: '',
-					name: '',
-					status: '',
-					counterpart: '',
-					spaces: '',
-					// eslint-disable-next-line
-					spaces_act: '',
-					description: '',
-					owner: '',
-					startDate: '',
-					endDate: '',
-					schedule: '',
-					hoursType: '',
-					ownerEmail: '',
-				},
-				projectOptions: [],
-				ellipsisHorizontal,
-				close,
-				personRemove,
-				personAdd,
-				heart,
-				create,
-				addCircle,
-				trash,
-				chevronDown,
-			};
-		},
-		async created() {
-			this.setProjectData();
-			this.apiToken = this.getApiToken();
-			this.userId = this.getUserId();
-			this.userRol = this.getUserRolId();
-		},
-		methods: {
-			setProjectData() {
-				this.project.id = this.projectData.idProyecto;
-				this.project.name = this.projectData.nombre;
-				this.project.status = this.projectData.estado;
-				this.project.counterpart = this.projectData.contraparte;
-				this.project.spaces = this.projectData.cupos;
+export default {
+	components: {
+		IonChip
+	},
+	props: ['projectData', 'applyPermission', 'showUnapply', 'activeProject', 'historyProject'],
+	data: function () {
+		return {
+			userId: '',
+			userRol: '',
+			apiToken: '',
+			project: {
+				id: '',
+				name: '',
+				status: '',
+				projectStatus: '',
+				counterpart: '',
+				spaces: '',
 				// eslint-disable-next-line
-				this.project.spaces_act = this.projectData.cupos_act;
-				this.project.description = this.projectData.descripcion;
-				this.project.owner = this.projectData.encargado;
-				this.project.startDate = this.projectData.fecha_inicio;
-				this.project.endDate = this.projectData.fecha_fin;
-				this.project.schedule = this.projectData.horario;
-				this.project.hoursType = this.projectData.tipo_horas;
-				this.project.ownerEmail = this.projectData.correo_encargado;
+				spaces_act: '',
+				description: '',
+				profile: '',
+				owner: '',
+				startDate: '',
+				endDate: '',
+				schedule: '',
+				hoursType: '',
+				ownerEmail: '',
 			},
-			async presentActionSheet() {
+			projectOptions: [],
+			ellipsisHorizontal,
+			close,
+			personRemove,
+			personAdd,
+			heart,
+			create,
+			addCircle,
+			trash,
+			chevronDown,
+			fetching: false,
+			inProcess: null,
+		};
+	},
+	async created() {
+		this.setProjectData();
+		this.apiToken = await this.getApiToken();
+		this.userId = await this.getUserId();
+		this.userRol = await this.getUserRolId();
 
-				if (this.userRol === 1) {
-					this.projectOptions = [{
-							text: this.project.status === 1 ? 'Desactivar' : 'Activar',
-							icon: trash,
-							role: 'changeStatus',
-						},
-						{
-							text: 'Editar',
-							icon: create,
-							role: 'details',
-						},
-						{
-							text: 'Agregar Alumno',
-							icon: addCircle,
-							role: 'addStudent',
-						},
-						{
-							text: 'Cancelar',
-							icon: close,
-							role: 'cancel'
-						},
-					];
-				} else {
+		if (this.projectData.estadoPxe !== undefined) {
 
-					if (this.showUnapply) {
-						this.projectOptions = [{
-								text: 'Desaplicar',
-								icon: personRemove,
-								role: 'unapply',
-							},
-							{
-								text: 'Ver Detalles',
-								icon: create,
-								role: 'details',
-							},
-							{
-								text: 'Cancelar',
-								icon: close,
-								role: 'cancel'
-							},
-						];
-					} else {
-						this.projectOptions = [{
-								text: 'Aplicar',
-								icon: personAdd,
-								role: 'apply'
-							},
-							{
-								text: 'Ver Detalles',
-								icon: create,
-								role: 'details',
-							},
-							{
-								text: 'Cancelar',
-								icon: close,
-								role: 'cancel'
-							},
-						];
-					}
-
-				}
-
-				const actionSheet = await actionSheetController
-					.create({
-						header: 'Opciones de Proyecto',
-						buttons: this.projectOptions,
-					});
-				await actionSheet.present();
-
-				const {
-					role
-				} = await actionSheet.onDidDismiss();
-
-				switch (role) {
-					case 'changeStatus':
-						this.changeProjectStatus();
-						break;
-					case 'details':
-						this.openModal();
-						break;
-
-					case 'addStudent':
-						this.addStudent();
-						break;
-
-					case 'apply':
-						this.applyToProject();
-						break;
-
-					case 'unapply':
-						this.unapplyToProject();
-						break;
-				}
-			},
-			async changeProjectStatus() {
-				const estado = !this.project.status;
-				const API_ENDOINT = this.getAPIEndpoint();
-				const request = await fetch(API_ENDOINT + '/admin/updateEstadoProyecto', {
-					method: "PUT",
-					body: JSON.stringify({
-						idProyecto: this.project.id,
-						estado: estado
-					}),
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-						'Authorization': 'Bearer ' + this.apiToken
-					}
-				})
-
-				if (request.status === 200) {
-					this.showSuccessToast('Proyecto actualizado exitosamente.');
-					this.$emit('dataUpdated');
-					// location.reload();
-				} else {
-					this.showErrorToast('Algo salió mal al actualizar el proyecto.');
-				}
-			},
-			async addStudent() {
-				const action = await alertController
-					.create({
-						header: 'Agregar alumno',
-						inputs: [ { name: 'carnet', type: 'number', placeholder: 'Ingrese carnet del alumno' } ],
-						buttons: [
-							{ text: 'Cancelar', role: 'cancel', cssClass: 'secondary' },
-							{ 
-								text: 'Ok',
-								role: 'add',
-								handler: (data) => {
-									this.addStudentToProject(data.carnet);
-								},
-							},
-						],
-					});
-				return action.present();
-			},
-			async addStudentToProject(carnet) {
-				const API_ENDOINT = this.getAPIEndpoint();
-				const request = await fetch(API_ENDOINT + `/admin/postApplyStudent`, {
-					method: "POST",
-					body: JSON.stringify({
-						idProyecto: this.project.id,
-						carnet: carnet,
-						estado: 1
-					}),
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-						'Authorization': 'Bearer ' + this.apiToken
-					}
-				})
-
-				if (request.status === 200) {
-					this.showSuccessToast('Alumno agregado exitosamente.');
-					this.$emit('dataUpdated');
-					location.reload();
-				} else {
-					this.showErrorToast('Algo salió mal al agregar el alumno.');
-				}
-			},
-			async applyToProject() {
-				if (this.applyPermission) {
-					const API_ENDOINT = this.getAPIEndpoint();
-					const request = await fetch(API_ENDOINT + `/postAplicarProyecto`, {
-						method: "POST",
-						body: JSON.stringify({
-							idProyecto: this.project.id,
-							idUser: this.userId,
-							estado: 0
-						}),
-						headers: {
-							"Content-type": "application/json; charset=UTF-8",
-							'Authorization': 'Bearer ' + this.apiToken
-						}
-					})
-
-					if (request.status === 200) {
-						this.showSuccessToast('Solicitud enviada exitosamente.');
-						this.$emit('dataUpdated');
-						// location.reload();
-					} else {
-						this.showErrorToast('Algo salió mal al enviar la solicitud.');
-					}
-				} else {
-					this.showErrorToast('No puede aplicar a otro proyecto este día. Inténtelo mañana nuevamente.');
-				}
-			},
-			async unapplyToProject() {
-				const API_ENDOINT = this.getAPIEndpoint();
-				const request = await fetch(API_ENDOINT + `/postDesaplicarProyecto`, {
-					method: "POST",
-					body: JSON.stringify({
-						idProyecto: this.project.id,
-						idUser: this.userId,
-						estado: 0
-					}),
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-						'Authorization': 'Bearer ' + this.apiToken
-					}
-				})
-
-				if (request.status === 200) {
-					this.showSuccessToast('Solicitud enviada exitosamente.');
-					this.$emit('dataUpdated');
-					location.reload();
-				} else {
-					this.showErrorToast('Algo salió mal al enviar la solicitud.');
-				}
-			},
-			async openModal() {
-				const modal = await modalController
-					.create({
-						component: ShowProjectDetails,
-						componentProps: {
-							projectData: this.projectData
-						},
-					});
-				modal.onDidDismiss().then(() => {
-					this.$emit('dataUpdated');
-				});
-				return await modal.present();
-			},
+			this.acepted = this.projectData.estadoPxe == 1
+			this.rejected = this.projectData.estadoPxe == 2
+			this.finished = this.projectData.estadoPxe == 3
+			this.inProcess = this.projectData.estadoPxe == 0
+			//// console.log("Aceptado", this.acepted)
 		}
+
+	},
+	methods: {
+		setProjectData() {
+			this.project.id = this.projectData.idProyecto;
+			this.project.name = this.projectData.nombre;
+			this.project.status = this.projectData.estado;
+			this.project.projectStatus = this.projectData.estado_proyecto;
+			this.project.counterpart = this.projectData.contraparte;
+			this.project.spaces = this.projectData.cupos;
+			// eslint-disable-next-line
+			this.project.spaces_act = this.projectData.cupos_act;
+			this.project.description = this.projectData.descripcion;
+			this.project.profile = this.projectData.perfil_estudiante;
+			this.project.owner = this.projectData.encargado;
+			this.project.startDate = this.projectData.fecha_inicio;
+			this.project.endDate = this.projectData.fecha_fin;
+			this.project.schedule = this.projectData.horario;
+			this.project.hoursType = this.projectData.tipo_horas;
+			this.project.ownerEmail = this.projectData.correo_encargado;
+
+		},
+
+		async openModal() {
+			const modal = await modalController
+				.create({
+					component: this.userRol === 1 ? ShowProjectDetails : ShowProjectDetailsStudent,
+					componentProps: {
+						projectData: this.projectData,
+						showUnapplyProp: this.showUnapply,
+						applyPermission: this.applyPermission,
+						activeProject: this.activeProject,
+						disableStatus: this.historyProject
+					},
+				});
+			modal.onDidDismiss().then(() => {
+				this.$emit('dataUpdated');
+			});
+			return await modal.present();
+		},
 	}
+}
 </script>
+<style>
+.success-border {
+	border: 2px solid var(--ion-color-success-shade)
+}
+
+.danger-border {
+	border: 2px solid var(--ion-color-danger-shade)
+}
+
+.project_name_container{
+	color: var(--color);
+	font-weight: 500;
+	/* color: var(--ion-background-color); */
+	/* background-color: var(--ion-color-tertiary); */
+	border-radius: 1rem;
+}
+
+</style>

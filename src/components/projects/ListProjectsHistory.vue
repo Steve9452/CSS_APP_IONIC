@@ -1,24 +1,37 @@
+<!-- eslint-disable @typescript-eslint/camelcase -->
 <template>
 <div>
+    <div v-if="!loaded"  class="flex-center my-4">
+                <ion-spinner  name="crescent" color="primary"></ion-spinner>
+        </div>
+    
     <div v-if="projects.length > 0">
-        <show-project 
-            v-for="project in projects"
-            :key="project.idProyecto"
-            :project-data="project"
-            :show-unapply="false"
-            v-on:dataUpdated="getProjectsHistory()">
-        </show-project>
+        <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+        <ion-list>
+            <show-project 
+                v-for="project in projects"
+                :key="project.idProyecto"
+                :project-data="project"
+                :show-unapply="false"
+                :historyProject="true"
+                v-on:dataUpdated="getProjectsHistory()">
+            </show-project>
+        </ion-list>
+        <ion-infinite-scroll threshold="100px" @ionInfinite="getProjectsHistory($event)">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más proyectos...">
+                </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
     </div>
 
-    <div class="container" v-else>
+    <div class="container" v-else-if="loaded">
         <div class="row justify-content-center align-items-center">
             <div class="col">
                 <img src="/assets/img/success.svg" class="img-fluid d-block mx-auto mt-5" style="width:50%;">
-                <h1 class="text-primary text-center font-weight-bolder">
-                    Hmmm
-                </h1>
+
                 <p class="text-muted text-center">
-                    Parece ser que no se encontraron registros.
+                    Parece ser que no se encontraron projectos.
                 </p>
             </div>
         </div>
@@ -28,15 +41,26 @@
 
 <script>
     import ShowProject from './ShowProject.vue'
+    import { IonInfiniteScroll,
+        IonInfiniteScrollContent,
+        IonRefresher,
+        IonRefresherContent,
+    } from '@ionic/vue';
 
 	export default {
 		components: {
-			ShowProject
+			ShowProject,
+            IonInfiniteScroll,
+            IonInfiniteScrollContent,
+            IonRefresher,
+            IonRefresherContent,
 		},
         data: function () {
             return {
                 apiToken: '',
-                projects: []
+                projects: [],
+                page: 1,
+                loaded: false,
             };
         },
         async created() {
@@ -44,9 +68,33 @@
             this.getProjectsHistory();
         },
         methods: {
-            async getProjectsHistory() {
+            async getProjectsHistory(ev = null) {
+                
+                try {
+                    // const request = await fetch(API_ENDOINT + '/getProyectosDisponibles', {
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                    const {data, last_page} = await this.fetchData();
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    if (this.page === last_page) {
+                        // console.log("No hay más proyectos")
+                    }
+                    this.projects = this.projects.concat(data);
+
+                    // // console.log(">>>>>>>>>>data: ")
+                    // // console.log(data);
+
+                    if (ev) {
+                        ev.target.complete();
+                    }
+                }
+                catch (error) {
+                    // console.log("Error: " + error);
+                }
+            },
+            async fetchData() {
+                this.loaded = false
                 const API_ENDOINT = this.getAPIEndpoint();
-                const request = await fetch(API_ENDOINT + '/admin/getHistorialDeProyectos', {
+                const request = await fetch(API_ENDOINT + `/admin/getHistorialDeProyectos?page=${this.page}`, {
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
                         'Authorization': 'Bearer ' + this.apiToken
@@ -56,10 +104,13 @@
                 const data = await request.json();
 
                 if(request.status === 200) {
-                    this.projects = data;
+                    this.page++;
                 } else {
                     this.showErrorToast('Ups! Algo salió mal.');
                 }
+                // console.log(data)
+                this.loaded = true
+                return data;
             }
         },
 	}

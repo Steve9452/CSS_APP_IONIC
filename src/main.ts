@@ -6,6 +6,13 @@ import router from './router';
 import mixins from './mixins';
 
 import {
+  IonChip,
+  IonCol,
+  IonGrid,
+  IonList,
+  IonMenu,
+  IonMenuToggle,
+  IonRow,
   IonicVue
 } from '@ionic/vue';
 
@@ -37,7 +44,9 @@ const app = createApp(App)
 
 router.isReady().then(() => {
   app.mount('#app');
+  
 });
+
 
 // -------------------------------------------------IMPORT IONIC COMPONENTS GLOBALLY-------------------------------------------------
 
@@ -73,8 +82,17 @@ import {
   IonItem,
   IonBadge,
   IonSegmentButton,
+
+  IonText, 
+
+  IonMenuButton, 
+
+  IonProgressBar
   
 } from '@ionic/vue';
+
+import Logo from '@/components/auth/helper/logotype.vue'
+import PulseLoader from '@/components/auth/helper/PulseLoader.vue'
 
 app.component('ion-app', IonApp);
 app.component('ion-page', IonPage);
@@ -107,3 +125,24 @@ app.component('ion-segment', IonSegment);
 app.component('ion-item', IonItem);
 app.component('ion-badge', IonBadge);
 app.component('ion-segment-button', IonSegmentButton);
+
+app.component('ion-row', IonRow);
+app.component('ion-grid', IonGrid);
+app.component('ion-col', IonCol);
+
+app.component('ion-searchbar', IonSearchbar);
+
+app.component('ion-menu-button', IonMenuButton);
+app.component('ion-menu-toogle', IonMenuToggle);
+app.component('ion-list', IonList);
+app.component('ion-menu', IonMenu);
+app.component('ion-chip', IonChip);
+
+app.component('ion-text', IonText);
+
+app.component('ion-progress-bar', IonProgressBar);
+app.component('logotype', Logo);
+app.component('pulse-loader', PulseLoader);
+
+
+

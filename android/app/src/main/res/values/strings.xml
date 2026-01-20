@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CSS UCA</string>
+    <string name="title_activity_main">CSS UCA</string>
+    <string name="package_name">com.cssuca.app.</string>
+    <string name="custom_url_scheme">com.cssuca.app.</string>
+
+    <string name="server_client_id">906270140776-2mu590prtgmi7or3fl4hop6j2c3njdvd.apps.googleusercontent.com</string>
+
+</resources>
