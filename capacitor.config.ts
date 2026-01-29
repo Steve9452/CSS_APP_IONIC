@@ -5,7 +5,6 @@ const config: CapacitorConfig = {
   appId: 'com.cssuca.app',
   appName: 'css_app',
   webDir: 'dist',
-  bundledWebRuntime: false,
   plugins: {
     GoogleAuth: {
       scopes: ["profile", "email"],
