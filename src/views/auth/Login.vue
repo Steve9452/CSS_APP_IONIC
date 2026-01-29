@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
                 <div class="col align-items-center flex-column">
-                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 2em;">
+                    <div style="width:80vw; height:auto; margin: auto; margin-bottom: 3em;">
                         <div class="flex-center" style="width:100%; height:auto">
                             <logotype></logotype>
                         </div>

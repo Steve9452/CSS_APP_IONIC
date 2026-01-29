@@ -125,7 +125,7 @@ import ShowProject from './ShowProject.vue'
 import { filterOutline, swapVerticalOutline, searchOutline } from 'ionicons/icons';
 import { closeCircle } from 'ionicons/icons';
 import { IonChip, actionSheetController, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonRefresher, IonRefresherContent, IonInput, IonSpinner } from '@ionic/vue';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 
 export default {
     components: {
@@ -235,7 +235,7 @@ export default {
         },
         async setTotalProjects(total) {
             if (this.defaultAno && this.defaultCarrera && this.defaultTipo) {
-                await Storage.set({ key: "TOTAL_PROJECTS", value: JSON.stringify(total) })
+                await Preferences.set({ key: "TOTAL_PROJECTS", value: JSON.stringify(total) })
             }
         },
         async getAvailableProjects(ev = null) {

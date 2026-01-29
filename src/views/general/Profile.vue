@@ -107,7 +107,7 @@
 
 <script>
 import { IonContent } from '@ionic/vue';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 
 export default {
 	components: {
@@ -223,7 +223,7 @@ export default {
 				// // console.log(this.data)
 				// // console.log(response)
 				// localStorage.setItem('user', JSON.stringify(this.data));
-				await Storage.set({
+				await Preferences.set({
 					key: 'user',
 					value: JSON.stringify(this.data)
 				});
@@ -263,7 +263,7 @@ export default {
 				// // console.log(this.data)
 				// // console.log(response)
 				// localStorage.setItem('user', JSON.stringify(this.data));
-				await Storage.set({
+				await Preferences.set({
 					key: 'user',
 					value: JSON.stringify(this.data)
 				});

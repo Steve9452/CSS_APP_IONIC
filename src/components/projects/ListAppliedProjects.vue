@@ -3,8 +3,8 @@
         <ion-spinner name="crescent" color="primary"></ion-spinner>
     </div>
     <div>
-        <div class="mt-3" v-if="projects.length > 0">
-            <show-project v-for="project in projects" :key="project.idProyecto" :project-data="project"
+        <div class="mt-3" v-if="projects.length > 0"> <!-- Filter rejected projects --> 
+            <show-project v-for="project in projects.filter(p => p.estadoPxe !== 2)" :key="project.idProyecto" :project-data="project"
                 :apply-permission="applyPermission" :show-unapply="true" v-on:dataUpdated="getMyProjects()">
             </show-project>
         </div>

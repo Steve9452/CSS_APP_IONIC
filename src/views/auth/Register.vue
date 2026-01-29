@@ -1,5 +1,8 @@
 <template>
     <ion-content :fullscreen="true">
+        <div v-if="fetching" class="flex-center my-1">
+            <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        </div>
         <div class="container">
             <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
                 <div class="col-md-12 my-5" v-if="!processCompleted">
@@ -11,7 +14,7 @@
 
                     <div class="form-group">
                         <ion-router-link class="d-block text-center" href="/login" color="medium">
-                            ¿Ya tienes cuenta? 
+                            ¿Ya tienes cuenta?
                         </ion-router-link>
                     </div>
 
@@ -38,10 +41,11 @@
 
                     <div class="form-group">
                         <label class="text-muted"><i class="fas fa-female"></i><i
-                                class="fas fa-male"></i>&nbsp;Sexo/Género</label>
+                                class="fas fa-male"></i>&nbsp;Género</label>
                         <ion-select placeholder="Seleccionar" v-model="user.gender">
                             <ion-select-option value="F">Femenino</ion-select-option>
                             <ion-select-option value="M">Masculino</ion-select-option>
+                            <ion-select-option value="O">Otro</ion-select-option>
                         </ion-select>
                         <div class="text-danger">{{ validation.firstError('user.gender') }}</div>
                     </div>
@@ -73,28 +77,22 @@
                         <label class="text-muted"><i class="fas fa-graduation-cap"></i>&nbsp;Año de carrera</label>
                         <ion-select placeholder="Seleccionar" v-model="user.profile"
                             :disabled="isCollegeCareersDisabled" cancel-text="Cancelar">
-                            <ion-select-option :key="1"
-                                :value="1">
+                            <ion-select-option :key="1" :value="1">
                                 Primer Año
                             </ion-select-option>
-                            <ion-select-option :key="2"
-                                :value="2">
+                            <ion-select-option :key="2" :value="2">
                                 Segundo Año
                             </ion-select-option>
-                            <ion-select-option :key="3"
-                                :value="3">
+                            <ion-select-option :key="3" :value="3">
                                 Tercer Año
                             </ion-select-option>
-                            <ion-select-option :key="4"
-                                :value="4">
+                            <ion-select-option :key="4" :value="4">
                                 Cuarto Año
                             </ion-select-option>
-                            <ion-select-option :key="5"
-                                :value="5">
+                            <ion-select-option :key="5" :value="5">
                                 Quinto Año
                             </ion-select-option>
-                            <ion-select-option :key="6"
-                                :value="6">
+                            <ion-select-option :key="6" :value="6">
                                 Egresado Año
                             </ion-select-option>
                         </ion-select>
@@ -111,16 +109,16 @@
                         </ion-router-link>
                     </div>
                 </div>
-                <div class="col-md-12" v-else>
-                    <img src="/assets/img/success.svg" class="img-fluid">
-                    <h1 class="text-primary text-center font-weight-bolder">
+                <div class="col-md-12 mx-4" v-else>
+                    <!-- <img src="/assets/img/success.svg" class="img-fluid"> -->
+                    <h1 class="mb-4 text-primary text-center font-weight-bolder">
                         Bienvenido Al Centro de Servicio Social
                     </h1>
-                    <p class="text-muted text-center">
+                    <p class="confirm-text">
                         Se envió un correo a tu bandeja de entrada, favor verifica tu cuenta y completa el proceso de
-                        registro ahī.
+                        registro ahí.
                     </p>
-                    <ion-button expand="block" href="/login">
+                    <ion-button mode="ios" expand="block" href="/login">
                         Regresar
                     </ion-button>
                 </div>
@@ -149,7 +147,7 @@ export default {
                 collegeCareer: '',
                 profile: '',
             },
-            fetching: false,
+            fetching: true,
             faculties: [],
             collegeCareers: []
         };
@@ -207,9 +205,15 @@ export default {
                         }),
                         headers: { "Content-type": "application/json; charset=UTF-8" }
                     })
+                    const data = await request.json()
+
                     if (request.status === 200) {
                         this.processCompleted = true;
-                    } else {
+                    }
+                    else if (request.status === 400 && data.correo != undefined) {
+                        this.showErrorToast('El carnet ya está registrado');
+                    }
+                    else {
                         localStorage.removeItem('user');
                         this.showErrorToast('Ups! Algo salió mal.');
                     }
@@ -225,6 +229,7 @@ export default {
 
         },
         async getAllFaculties() {
+            this.fetching = true
             const API_ENDOINT = this.getAPIEndpoint();
             const request = await fetch(API_ENDOINT + `/getFacultades`);
             const data = await request.json();
@@ -234,6 +239,7 @@ export default {
             } else {
                 this.showErrorToast('Algo salio mal al cargar las facultades.');
             }
+            this.fetching = false
         },
 
 
@@ -246,6 +252,7 @@ export default {
     watch: {
         'user.faculty': async function () {
             if (this.user.faculty != null && this.user.faculty != '') {
+                this.fetching = true
                 const API_ENDOINT = this.getAPIEndpoint();
                 const request = await fetch(API_ENDOINT + `/getCarrerasPorFacultad/${this.user.faculty}`);
                 const data = await request.json();
@@ -255,6 +262,7 @@ export default {
                 } else {
                     this.showErrorToast('Algo salio mal al obtener las carreras.');
                 }
+                this.fetching = false
             } else {
                 this.collegeCareers = [];
             }
@@ -262,3 +270,10 @@ export default {
     },
 }
 </script>
+<style lang="css" scoped>
+    .confirm-text {
+        font-size: 1.4em;
+        padding-top: 1em;
+        padding-bottom: 0.5em;
+    }
+</style>

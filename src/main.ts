@@ -130,8 +130,6 @@ app.component('ion-row', IonRow);
 app.component('ion-grid', IonGrid);
 app.component('ion-col', IonCol);
 
-app.component('ion-searchbar', IonSearchbar);
-
 app.component('ion-menu-button', IonMenuButton);
 app.component('ion-menu-toogle', IonMenuToggle);
 app.component('ion-list', IonList);

@@ -1,8 +1,8 @@
 <template>
     <ion-item @click="openModal()">
         <ion-avatar slot="start">
-            <img v-if="student.gender === 'M'" src="/assets/img/male-avatar.jpg" class="img-fluid">
-            <img v-else src="/assets/img/female-avatar.jpg" class="img-fluid">
+            <!-- <img v-if="student.gender === 'M'" src="/assets/img/male-avatar.jpg" class="img-fluid">
+            <img v-else src="/assets/img/female-avatar.jpg" class="img-fluid"> -->
         </ion-avatar>
 
         <ion-label>

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 
 // AUTH PAGE COMPONENTS
 import Login from '../views/auth/Login.vue'
@@ -88,7 +88,7 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from, next) => {
-	const { value: storageUser } = await Storage.get({ key: 'user' });
+	const { value: storageUser } = await Preferences.get({ key: 'user' });
 	const user = storageUser ? JSON.parse(storageUser) : '';
 	const module = to.meta.module;
 	const userIsAuthenticated = user != '' ? true : false;

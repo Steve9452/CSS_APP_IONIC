@@ -1,5 +1,5 @@
 import { toastController } from '@ionic/vue';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 
 const mixin = {
     methods: {
@@ -13,32 +13,32 @@ const mixin = {
             return 'https://uca.edu.sv/servicio-social/proyectos/public/api'
         },
         async setAuthenticatedUser(userData: any) {
-            await Storage.set({
+            await Preferences.set({
                 key: 'user',
                 value: JSON.stringify(userData),
               });
         },
         async getAuthenticatedUser() {
-            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const { value: storedUser } = await Preferences.get({ key: 'user' });
             return storedUser ? JSON.parse(storedUser) : '';
         },
         async getApiToken() {
-            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const { value: storedUser } = await Preferences.get({ key: 'user' });
             const user = storedUser ? JSON.parse(storedUser) : '';
             return user ? user.api_token : '';
         },
         async getUserId() {
-            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const { value: storedUser } = await Preferences.get({ key: 'user' });
             const user = storedUser ? JSON.parse(storedUser) : '';
             return user ? user.idUser : '';
         },
         async getUserRolId() {
-            const { value: storedUser } = await Storage.get({ key: 'user' });
+            const { value: storedUser } = await Preferences.get({ key: 'user' });
             const user = storedUser ? JSON.parse(storedUser) : '';
             return user ? user.idRol : '';
         },
         async signout() {
-            await Storage.remove({ key: 'user' });        
+            await Preferences.remove({ key: 'user' });        
         },
         async showSuccessToast(message: string) {
             const toast = await toastController

@@ -38,6 +38,7 @@
                         <ion-select placeholder="Seleccionar" v-model="user.gender">
                             <ion-select-option value="F">Femenino</ion-select-option>
                             <ion-select-option value="M">Masculino</ion-select-option>
+                            <ion-select-option value="O">Otro</ion-select-option>
                         </ion-select>
                         <div class="text-danger">{{ validation.firstError('user.gender') }}</div>
                     </div>

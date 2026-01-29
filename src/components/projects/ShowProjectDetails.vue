@@ -315,6 +315,7 @@
                 </div>
 
                 <div v-for="student in project.students" :key="student.idUser">
+                    
                     <ion-item v-if="student.estado === 1 || userRol === 1">
                         <ion-label>
                             <h6 class="text-primary text-uppercase">{{ student.nombres }} {{ student.apellidos }}</h6>
@@ -326,18 +327,14 @@
                             </small>
                         </ion-label>
 
-                        <ion-buttons v-if="userRol === 1 && student.estado === 0">
-                            <ion-button mode="ios" color="success" @click="sendApplicationRequest(student, 'accept')">
+                        <div class="buttons-cont" v-if="student.estado === 0">
+                            <ion-button  fill="solid" mode="ios" color="success" @click="sendApplicationRequest(student, 'accept')">
                                 <ion-icon :icon="checkmark"></ion-icon>
                             </ion-button>
-                            <ion-button mode="ios" color="danger" @click="sendApplicationRequest(student, 'deny')">
+                            <ion-button  mode="ios" color="danger" @click="sendApplicationRequest(student, 'deny')">
                                 <ion-icon :icon="closeCircle"></ion-icon>
                             </ion-button>
-                        </ion-buttons>
-
-                        <ion-badge v-else-if="student.estado === 0" color="medium">
-                            <small>PENDIENTE</small>
-                        </ion-badge>
+                        </div>
 
                         <ion-badge v-else-if="student.estado === 1" color="primary">
                             <small>ACEPTADO</small>
@@ -629,22 +626,22 @@ export default {
                     perfil: "Egresado"
                 },
             ]
-        },
-        agregarACP() {
+            },
+            agregarACP() {
 
-            const len = this.project.careers.length
-            const lastC = this.project.careers[len - 1]
-
-
-            if (lastC[0] != null) {
-                this.errorInProjectsEmpty = false;
-                this.project.careers.push([null, 1, 6])
-            } else {
-                this.errorInProjectsEmpty = true;
-            }
+                const len = this.project.careers.length
+                const lastC = this.project.careers[len - 1]
 
 
-            // Validar carreras
+                if (lastC[0] != null) {
+                    this.errorInProjectsEmpty = false;
+                    this.project.careers.push([null, 1, 6])
+                } else {
+                    this.errorInProjectsEmpty = true;
+                }
+
+
+                // Validar carreras
 
         },
         borrarACP(key) {
@@ -991,5 +988,10 @@ export default {
 <style scoped>
 ion-icon {
     font-size: 1.5em;
+}
+
+.buttons-cont{
+    width: 25%;
+    text-align: center;
 }
 </style>
