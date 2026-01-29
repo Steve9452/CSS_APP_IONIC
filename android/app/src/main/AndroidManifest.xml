@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/css_mono"
+        android:icon="@mipmap/css_logo_large"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/css_mono_round"
+        android:roundIcon="@mipmap/css_logo_large_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Starting">
 
