@@ -93,7 +93,7 @@ export default {
         const token = await this.$parent.getApiToken()
 
         const response = await axios.post(
-          `${API_ENDPOINT}/proyecto/importar-excel`,
+          `${API_ENDPOINT}/admin/importar-excel`,
           formData,
           {
             headers: {
@@ -123,14 +123,25 @@ export default {
 
           if (errorData.type === 'empty_excel') {
             await this.presentAlert(
-              errorData.error || "El archivo Excel está vacío",
+              errorData.error || 
+              "El archivo Excel está vacío o no contiene datos válidos.",
               "Excel Vacío"
             )
           }
 
           else if (errorData.type === 'invalid_template') {
             await this.presentAlert(
-              errorData.message || "Plantilla incorrecta",
+              `
+              <div style="text-align:left;">
+                <p>${errorData.message || "La plantilla no es válida."}</p>
+                <p><strong>Por favor:</strong></p>
+                <ul>
+                  <li>Descargue la plantilla oficial</li>
+                  <li>No modifique los nombres de las columnas</li>
+                  <li>Mantenga el formato de los datos</li>
+                </ul>
+              </div>
+              `,
               "Plantilla Incorrecta"
             )
           }
@@ -140,27 +151,41 @@ export default {
             errorData.message.includes('No se especificó ninguna carrera')
           ) {
             await this.presentAlert(
-              errorData.message,
+              `
+              <div style="text-align:left;">
+                <p>${errorData.message}</p>
+                <p><strong>Debe:</strong></p>
+                <ul>
+                  <li>Especificar al menos una carrera en las columnas carrera_1 a carrera_5</li>
+                  <li>O marcar "SI" en "aplicar_todas_carreras"</li>
+                </ul>
+              </div>
+              `,
               "Error en Carreras"
             )
           }
 
           else {
             await this.presentAlert(
-              errorData.message || "Error al importar archivo",
-              "Error"
+              errorData.message || 
+              errorData.error || 
+              "Ha ocurrido un error al importar el archivo.",
+              "Error en Importación"
             )
           }
 
         } else {
+
           await this.presentAlert(
-            "No se pudo conectar con el servidor",
+            "No se pudo conectar con el servidor. Verifique su conexión a internet.",
             "Error de Conexión"
           )
+
         }
 
         this.cancelUpload()
       }
+
     },
 
     cancelUpload() {
@@ -183,7 +208,7 @@ async handleImportComplete() {
       const alert = await alertController.create({
         header,
         message,
-        buttons: ['Aceptar']
+        buttons: ['Entendido']
       })
       await alert.present()
     }
