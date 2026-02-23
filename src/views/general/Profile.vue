@@ -84,6 +84,51 @@
 						@click="setShowModal(true)" fill="outline">
 						Editar perfil
 					</ion-chip>
+
+					<ion-chip v-if="user.rol === 1" class="px-4 py-2 mb-2" size="large" expand="block" color="secondary" 
+						@click="showAdminList = !showAdminList" fill="outline">
+						<i class="fas fa-users-cog me-2"></i> Administrar administradores
+					</ion-chip>
+
+					<div v-if="showAdminList" class="admin-list-container mb-3 p-3 border rounded">
+						<h5 class="mb-3">Selecciona administrador para eliminar</h5>
+						
+						<div v-if="loadingAdmins" class="text-center">
+							<ion-spinner name="crescent"></ion-spinner>
+						</div>
+						
+						<div v-else>
+							<ion-list>
+								<ion-item v-for="admin in admins" :key="admin.idUser" 
+									:disabled="admin.idUser === user.idUsuario"
+									:class="{ 'text-muted': admin.idUser === user.idUsuario }">
+									
+									<ion-label>
+										<h3>{{ admin.nombres }} {{ admin.apellidos }}</h3>
+										<p>{{ admin.correo }}</p>
+										<small v-if="admin.idUser === user.idUsuario" class="text-warning">
+											<i class="fas fa-exclamation-triangle"></i> No puedes eliminarte a ti mismo
+										</small>
+									</ion-label>
+									
+									<ion-button slot="end" color="danger" fill="clear" 
+										@click="confirmDeleteAdmin(admin)"
+										:disabled="admin.idUser === user.idUsuario || loading">
+										<ion-icon :icon="trash"></ion-icon>
+									</ion-button>
+								</ion-item>
+							</ion-list>
+							
+							<div v-if="admins.length === 0" class="text-center text-muted py-3">
+								No hay otros administradores
+							</div>
+						</div>
+						
+						<ion-button expand="block" fill="clear" @click="showAdminList = false" class="mt-2">
+							Cerrar
+						</ion-button>
+					</div>
+
 					<div class="" v-if="showModal">
 						<ion-chip class="px-4 py-2" size="large" expand="block"
 							@click="updateProfile(); updateCarrera();" :disabled="loading">
@@ -106,12 +151,19 @@
 </template>
 
 <script>
-import { IonContent } from '@ionic/vue';
+import { IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon, IonSpinner } from '@ionic/vue';
+import { trash } from 'ionicons/icons';
 import { Preferences } from '@capacitor/preferences';
 
 export default {
 	components: {
-		IonContent
+		IonContent,
+		IonList,
+		IonItem,
+		IonLabel,
+		IonButton,
+		IonIcon,
+		IonSpinner
 	},
 	data: function () {
 		return {
@@ -136,7 +188,11 @@ export default {
 			newProfile: 0,
 			newCareer: 0,
 			apiToken: '',
-			loading: false
+			loading: false,
+			showAdminList: false,
+			admins: [],
+			loadingAdmins: false,
+			trash: trash
 		}
 	},
 	async created() {
@@ -274,6 +330,97 @@ export default {
 			}
 			this.setShowModal(false);
 		},
+
+		async fetchAdmins() {
+			try {
+				this.loadingAdmins = true;
+				const API_ENDPOINT = this.getAPIEndpoint();
+				
+				const request = await fetch(API_ENDPOINT + `/admin/users/admin/all`, {
+					headers: {
+						'Authorization': `Bearer ${this.apiToken}`
+					}
+				});
+				
+				const data = await request.json();
+				if (request.status === 200) {
+					this.admins = data.users;
+				} else {
+					this.showErrorToast('Error al cargar administradores');
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				this.showErrorToast('Error de conexión');
+			} finally {
+				this.loadingAdmins = false;
+			}
+		},
+
+		confirmDeleteAdmin(admin) {
+			// El backend ya maneja la validación, pero mostramos un mensaje amigable
+			const alert = document.createElement('ion-alert');
+			alert.header = 'Confirmar eliminación';
+			alert.message = `¿Estás seguro de eliminar al administrador ${admin.nombres} ${admin.apellidos}?`;
+			alert.buttons = [
+				{
+					text: 'Cancelar',
+					role: 'cancel'
+				},
+				{
+					text: 'Eliminar',
+					handler: () => {
+						this.deleteAdmin(admin.idUser);
+					}
+				}
+			];
+			document.body.appendChild(alert);
+			alert.present();
+		},
+
+		async deleteAdmin(userId) {
+			try {
+				this.loading = true;
+				const API_ENDPOINT = this.getAPIEndpoint();
+				
+				const request = await fetch(API_ENDPOINT + `/admin/deleteAdmin`, {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${this.apiToken}`
+					},
+					body: JSON.stringify({
+						id: userId
+					})
+				});
+
+				const response = await request.json();
+
+				if (request.status === 200) {
+					this.showSuccessToast('Administrador eliminado correctamente');
+					// Recargar la lista
+					await this.fetchAdmins();
+				} else {
+					// El backend ya envía mensajes como:
+					// "No se puede eliminar su propio usuario" o 
+					// "No se puede eliminar el ultimo administrador"
+					this.showErrorToast(response.message || 'Error al eliminar administrador');
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				this.showErrorToast('Error de conexión');
+			} finally {
+				this.loading = false;
+			}
+		}
+	},
+
+	// Modificar watch o created para cargar admins cuando se abre el panel
+	watch: {
+		showAdminList(newValue) {
+			if (newValue && this.admins.length === 0) {
+				this.fetchAdmins();
+			}
+		}
 	}
 }
 </script>

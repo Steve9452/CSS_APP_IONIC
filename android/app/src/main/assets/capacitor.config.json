@@ -12,5 +12,12 @@
 			"serverClientId": "906270140776-2mu590prtgmi7or3fl4hop6j2c3njdvd.apps.googleusercontent.com",
 			"forceCodeForRefreshToken": true
 		}
+	},
+	"server": {
+		"androidScheme": "http",
+		"cleartext": true
+	},
+	"android": {
+		"allowMixedContent": true
 	}
 }
