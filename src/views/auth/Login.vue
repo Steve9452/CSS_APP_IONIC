@@ -8,11 +8,11 @@
                             <logotype></logotype>
                         </div>
                     </div>
-                    
+<!--                     
                     <google-auth-button v-on:doingAuth="doingGoogleAuth"></google-auth-button>
                     <span class="d-block text-center">
                              o
-                        </span>
+                        </span> -->
                     <div class="form-group">
                         <label class="text"><i class="far fa-id-card"></i>&nbsp;Carnet</label>
                         <input v-model="user.carnet" type="text" class="form-control custom-form"
@@ -55,13 +55,13 @@
 
 <script>
 import SimpleVueValidator from 'simple-vue-validator';
-import GoogleAuthButton from '../../components/auth/GoogleAuthButton.vue' 
+//import GoogleAuthButton from '../../components/auth/GoogleAuthButton.vue' 
 const Validator = SimpleVueValidator.Validator;
 
 export default {
     mixins: [SimpleVueValidator.mixin],
     components: {
-        GoogleAuthButton,
+        // GoogleAuthButton,
     },
     data: function () {
         return {
